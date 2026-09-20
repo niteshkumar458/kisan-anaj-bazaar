@@ -1,0 +1,826 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+
+<title>किसान अनाज बाजार</title>
+
+<style>
+*{box-sizing:border-box}
+
+html{
+scroll-behavior:smooth;
+}
+
+body{
+margin:0;
+font-family:Arial,sans-serif;
+background:#f5f8f5;
+color:#17351f;
+}
+
+header{
+background:#fff;
+position:sticky;
+top:0;
+z-index:100;
+box-shadow:0 2px 12px #0002;
+}
+
+.nav{
+max-width:1200px;
+margin:auto;
+padding:12px;
+display:flex;
+align-items:center;
+gap:10px;
+}
+
+.logo{
+font-size:20px;
+font-weight:bold;
+color:#11833a;
+white-space:nowrap;
+}
+
+.search{
+flex:1;
+padding:12px 16px;
+border:1px solid #ddd;
+border-radius:25px;
+}
+
+button{
+border:0;
+border-radius:9px;
+padding:11px 16px;
+font-weight:bold;
+cursor:pointer;
+}
+
+.green{
+background:#11833a;
+color:white;
+}
+
+.orange{
+background:#f59e0b;
+color:white;
+}
+
+.white{
+background:white;
+color:#11833a;
+}
+
+/* HERO */
+
+.hero{
+background:
+linear-gradient(90deg,#075b2cdd,#075b2c55),
+url("https://images.unsplash.com/photo-1500937386664-56d1dfef3854?auto=format&fit=crop&w=1800&q=80")
+center/cover;
+color:white;
+}
+
+.hero-in{
+max-width:1200px;
+margin:auto;
+padding:70px 18px;
+}
+
+.hero h1{
+font-size:clamp(38px,7vw,68px);
+margin:15px 0;
+}
+
+.hero p{
+max-width:650px;
+font-size:18px;
+line-height:1.7;
+}
+
+/* QUICK BUTTONS */
+
+.quick-area{
+max-width:1200px;
+margin:25px auto;
+padding:0 16px;
+}
+
+.quick-buttons{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:18px;
+}
+
+.quick-card{
+background:white;
+padding:28px;
+border-radius:18px;
+text-align:center;
+box-shadow:0 8px 25px #0001;
+}
+
+.quick-card .icon{
+font-size:55px;
+}
+
+/* ACTIVE SECTION */
+
+.main-panel{
+display:none;
+}
+
+.main-panel.active{
+display:block;
+animation:openPanel .3s ease;
+}
+
+@keyframes openPanel{
+from{
+opacity:0;
+transform:translateY(15px);
+}
+to{
+opacity:1;
+transform:translateY(0);
+}
+}
+
+.panel-head{
+display:flex;
+justify-content:space-between;
+align-items:center;
+gap:10px;
+margin-bottom:20px;
+}
+
+.panel-head h2{
+margin:0;
+}
+
+.wrap{
+max-width:1200px;
+margin:auto;
+padding:35px 16px;
+}
+
+.title{
+text-align:center;
+margin-bottom:25px;
+}
+
+.title h2{
+font-size:30px;
+}
+
+/* CATEGORIES */
+
+.categories{
+display:grid;
+grid-template-columns:repeat(6,1fr);
+gap:15px;
+}
+
+.category{
+background:white;
+padding:18px;
+border-radius:15px;
+text-align:center;
+box-shadow:0 6px 20px #0001;
+cursor:pointer;
+}
+
+.category .icon{
+font-size:42px;
+}
+
+/* PRODUCTS */
+
+.products{
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:18px;
+}
+
+.card{
+background:white;
+border-radius:16px;
+overflow:hidden;
+box-shadow:0 7px 25px #0001;
+}
+
+.card img{
+width:100%;
+height:180px;
+object-fit:cover;
+}
+
+.card-body{
+padding:16px;
+}
+
+.price{
+font-size:22px;
+font-weight:bold;
+color:#11833a;
+}
+
+.small{
+font-size:13px;
+color:#66736a;
+}
+
+.cart-row{
+display:flex;
+gap:8px;
+margin-top:12px;
+}
+
+.qty{
+width:90px;
+padding:10px;
+border:1px solid #ddd;
+border-radius:8px;
+}
+
+/* RATES */
+
+.rates{
+background:#09652f;
+color:white;
+}
+
+.rate-grid{
+display:grid;
+grid-template-columns:repeat(6,1fr);
+gap:12px;
+}
+
+.rate{
+background:#ffffff18;
+padding:16px;
+border-radius:12px;
+}
+
+.rate strong{
+display:block;
+font-size:21px;
+margin-top:5px;
+}
+
+/* SELL */
+
+.sell-box{
+background:white;
+padding:22px;
+border-radius:16px;
+box-shadow:0 8px 25px #0001;
+}
+
+form{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:12px;
+}
+
+input,select,textarea{
+width:100%;
+padding:12px;
+border:1px solid #d5e0d7;
+border-radius:8px;
+font-size:15px;
+}
+
+.full{
+grid-column:1/-1;
+}
+
+/* FEATURES */
+
+.features{
+display:grid;
+grid-template-columns:repeat(4,1fr);
+gap:15px;
+}
+
+.feature{
+background:white;
+padding:22px;
+border-radius:15px;
+box-shadow:0 7px 20px #0001;
+}
+
+/* FOOTER */
+
+footer{
+background:#07351e;
+color:white;
+padding:40px 18px;
+}
+
+/* MODAL */
+
+.modal{
+display:none;
+position:fixed;
+inset:0;
+background:#0009;
+z-index:500;
+align-items:center;
+justify-content:center;
+padding:15px;
+}
+
+.modal.show{
+display:flex;
+}
+
+.modal-box{
+background:white;
+width:min(650px,100%);
+max-height:90vh;
+overflow:auto;
+border-radius:18px;
+padding:22px;
+}
+
+.close{
+float:right;
+background:#eee;
+border-radius:50%;
+}
+
+/* CART */
+
+.cart-item{
+display:flex;
+justify-content:space-between;
+align-items:center;
+gap:10px;
+border-bottom:1px solid #eee;
+padding:13px 0;
+}
+
+.total{
+text-align:right;
+font-size:24px;
+color:#11833a;
+font-weight:bold;
+margin:18px;
+}
+
+/* PAYMENT */
+
+.payment-box{
+margin-top:20px;
+padding:20px;
+background:#e9f7ec;
+border-radius:12px;
+text-align:center;
+}
+
+.payment-box img{
+width:230px;
+max-width:100%;
+}
+
+.success{
+margin-top:20px;
+padding:18px;
+background:#e9f7ec;
+border-radius:12px;
+}
+
+/* MOBILE */
+
+@media(max-width:900px){
+
+.categories{
+grid-template-columns:repeat(3,1fr);
+}
+
+.products{
+grid-template-columns:repeat(2,1fr);
+}
+
+.rate-grid{
+grid-template-columns:repeat(3,1fr);
+}
+
+.features{
+grid-template-columns:repeat(2,1fr);
+}
+
+.nav{
+flex-wrap:wrap;
+}
+
+.search{
+order:5;
+flex-basis:100%;
+}
+
+}
+
+@media(max-width:600px){
+
+.quick-buttons{
+grid-template-columns:1fr;
+}
+
+.categories{
+grid-template-columns:1fr 1fr;
+}
+
+.products{
+grid-template-columns:1fr;
+}
+
+.rate-grid{
+grid-template-columns:1fr 1fr;
+}
+
+.features{
+grid-template-columns:1fr;
+}
+
+form{
+grid-template-columns:1fr;
+}
+
+.full{
+grid-column:auto;
+}
+
+.nav button{
+flex:1;
+}
+
+.hero-in{
+padding:45px 18px;
+}
+
+}
+</style>
+</head>
+
+<body>
+
+<!-- HEADER -->
+
+<header>
+
+<div class="nav">
+
+<div class="logo">
+🌾 किसान अनाज बाजार
+</div>
+
+<input
+class="search"
+id="search"
+placeholder="धान, गेहूं, मक्का, दाल खोजें..."
+oninput="showProducts()">
+
+<button
+class="green"
+onclick="openBuy()">
+🛒 खरीदें
+</button>
+
+<button
+class="orange"
+onclick="openSell()">
+🌾 बेचें
+</button>
+
+<button
+class="green"
+onclick="openCart()">
+🛍️ कार्ट (<span id="cartCount">0</span>)
+</button>
+
+</div>
+
+</header>
+
+
+<!-- HERO -->
+
+<section class="hero">
+
+<div class="hero-in">
+
+<div>
+🌱 किसानों से सीधे • बिहार से शुरुआत
+</div>
+
+<h1>
+किसान अनाज बाजार
+</h1>
+
+<p>
+किसानों से सीधे कृषि उत्पाद खरीदें या अपना सामान बेचें।
+Admin द्वारा तय रेट, minimum quantity, order और payment की सुविधा।
+</p>
+
+<button
+class="orange"
+onclick="openBuy()">
+🛒 सामान खरीदें
+</button>
+
+<button
+class="white"
+onclick="openSell()">
+🌾 सामान बेचें
+</button>
+
+</div>
+
+</section>
+
+
+<!-- BUY / SELL QUICK -->
+
+<section class="quick-area">
+
+<div class="quick-buttons">
+
+<div class="quick-card">
+
+<div class="icon">🛒</div>
+
+<h2>
+सामान खरीदें
+</h2>
+
+<p>
+धान, गेहूं, मक्का, दाल और दूसरे कृषि उत्पाद खरीदें।
+</p>
+
+<button
+class="green"
+onclick="openBuy()">
+पूरी खरीदारी खोलें
+</button>
+
+</div>
+
+
+<div class="quick-card">
+
+<div class="icon">🌾</div>
+
+<h2>
+सामान बेचें
+</h2>
+
+<p>
+किसान अपना सामान, मात्रा और location भेज सकते हैं।
+</p>
+
+<button
+class="orange"
+onclick="openSell()">
+पूरा Sell Form खोलें
+</button>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- BUY PANEL -->
+
+<section
+id="buyPanel"
+class="main-panel">
+
+<div class="wrap">
+
+<div class="panel-head">
+
+<h2>
+🛒 सामान खरीदें
+</h2>
+
+<button
+class="orange"
+onclick="closePanels()">
+✕ बंद करें
+</button>
+
+</div>
+
+
+<!-- CATEGORY -->
+
+<div class="title">
+
+<h2>
+कृषि उत्पाद
+</h2>
+
+<p>
+अपनी जरूरत के अनुसार सामान चुनें
+</p>
+
+</div>
+
+<div class="categories">
+
+<div
+class="category"
+onclick="filterCategory('धान')">
+
+<div class="icon">🌾</div>
+
+<b>धान</b>
+
+<p>
+Minimum 50 kg
+</p>
+
+</div>
+
+
+<div
+class="category"
+onclick="filterCategory('गेहूं')">
+
+<div class="icon">🌾</div>
+
+<b>गेहूं</b>
+
+<p>
+Minimum 50 kg
+</p>
+
+</div>
+
+
+<div
+class="category"
+onclick="filterCategory('मक्का')">
+
+<div class="icon">🌽</div>
+
+<b>मक्का</b>
+
+<p>
+Minimum 50 kg
+</p>
+
+</div>
+
+
+<div
+class="category"
+onclick="filterCategory('दलहन')">
+
+<div class="icon">🫘</div>
+
+<b>दलहन / दाल</b>
+
+<p>
+Minimum 5 kg
+</p>
+
+</div>
+
+
+<div
+class="category"
+onclick="filterCategory('सब्जी')">
+
+<div class="icon">🥬</div>
+
+<b>सब्जी</b>
+
+<p>
+Minimum 5 kg
+</p>
+
+</div>
+
+
+<div
+class="category"
+onclick="filterCategory('अन्य')">
+
+<div class="icon">📦</div>
+
+<b>अन्य</b>
+
+<p>
+Minimum 1 kg
+</p>
+
+</div>
+
+</div>
+
+
+<div class="title">
+
+<h2>
+उपलब्ध सामान
+</h2>
+
+<p>
+Admin द्वारा तय रेट • Minimum quantity लागू
+</p>
+
+</div>
+
+<div
+class="products"
+id="products">
+</div>
+
+</div>
+
+</section>
+
+
+<!-- RATES -->
+
+<section class="rates">
+
+<div class="wrap">
+
+<div class="title">
+
+<h2>
+आज के खरीद रेट
+</h2>
+
+</div>
+
+<div
+class="rate-grid"
+id="rates">
+</div>
+
+</div>
+
+</section>
+
+
+<!-- SELL PANEL -->
+
+<section
+id="sellPanel"
+class="main-panel">
+
+<div class="wrap">
+
+<div class="panel-head">
+
+<h2>
+🌾 किसान अपना सामान बेचें
+</h2>
+
+<button
+class="green"
+onclick="closePanels()">
+✕ बंद करें
+</button>
+
+</div>
+
+
+<div class="sell-box">
+
+<p>
+अपना सामान चुनें, मात्रा भरें और location की अनुमति दें।
+</p>
+
+<form onsubmit="submitSell(event)">
+
+<input
+id="farmerName"
+placeholder="किसान का नाम"
+required>
+
+
+<input
+id="mobile"
+type="tel"
+maxlength="10"
+placeholder="मोबाइल नंबर"
+required>
+
+
+<select
+id="sellCategory"
+required>
+
+<option value="">
+साम
