@@ -1,0 +1,1184 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Kisan Anaj Bazaar | किसान अनाज बाजार</title>
+
+  <meta name="description"
+        content="किसानों से सीधे कृषि सामान खरीदें और अपना सामान बेचें।">
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      background: #f5f7f5;
+      color: #222;
+    }
+
+    header {
+      background: #198754;
+      color: white;
+      padding: 15px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .header-inner {
+      max-width: 1100px;
+      margin: auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .logo {
+      font-size: 20px;
+      font-weight: bold;
+    }
+
+    button {
+      border: none;
+      border-radius: 8px;
+      padding: 10px 15px;
+      cursor: pointer;
+      font-size: 15px;
+    }
+
+    .cart-btn {
+      background: white;
+      color: #198754;
+      font-weight: bold;
+    }
+
+    .hero {
+      background: #dff5e7;
+      padding: 45px 15px;
+      text-align: center;
+    }
+
+    .hero h1 {
+      color: #146c43;
+      margin-bottom: 10px;
+      font-size: 32px;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: auto;
+      padding: 20px 15px;
+    }
+
+    .search-box {
+      display: grid;
+      grid-template-columns: 1fr 200px;
+      gap: 10px;
+      margin-bottom: 25px;
+    }
+
+    input,
+    select,
+    textarea {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      margin-top: 6px;
+      font-size: 15px;
+    }
+
+    label {
+      display: block;
+      margin-top: 12px;
+      font-weight: bold;
+    }
+
+    .section-title {
+      margin: 25px 0 15px;
+      color: #146c43;
+    }
+
+    .products {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 15px;
+    }
+
+    .card {
+      background: white;
+      border-radius: 12px;
+      padding: 18px;
+      box-shadow: 0 2px 10px rgba(0,0,0,.08);
+    }
+
+    .card h3 {
+      color: #146c43;
+      margin-bottom: 8px;
+    }
+
+    .price {
+      font-size: 22px;
+      font-weight: bold;
+      color: #198754;
+      margin: 10px 0;
+    }
+
+    .info {
+      margin: 7px 0;
+      color: #555;
+    }
+
+    .primary {
+      background: #198754;
+      color: white;
+      margin-top: 12px;
+      width: 100%;
+    }
+
+    .secondary {
+      background: #0d6efd;
+      color: white;
+      margin-top: 8px;
+      width: 100%;
+    }
+
+    .danger {
+      background: #dc3545;
+      color: white;
+    }
+
+    .box {
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      margin-top: 25px;
+      box-shadow: 0 2px 10px rgba(0,0,0,.07);
+    }
+
+    .success {
+      background: #d1e7dd;
+      color: #0f5132;
+      padding: 12px;
+      border-radius: 8px;
+      margin-top: 12px;
+      display: none;
+    }
+
+    .error {
+      background: #f8d7da;
+      color: #842029;
+      padding: 12px;
+      border-radius: 8px;
+      margin-top: 12px;
+      display: none;
+    }
+
+    .admin-box {
+      border: 2px solid #ffc107;
+    }
+
+    .rate-row {
+      display: grid;
+      grid-template-columns: 1fr 130px 100px;
+      gap: 10px;
+      align-items: center;
+      margin: 10px 0;
+    }
+
+    .rate-row input {
+      margin: 0;
+    }
+
+    .location-status {
+      background: #eef7ff;
+      padding: 10px;
+      border-radius: 8px;
+      margin-top: 10px;
+    }
+
+    .cart-item {
+      border-bottom: 1px solid #ddd;
+      padding: 12px 0;
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .total {
+      font-size: 22px;
+      font-weight: bold;
+      margin-top: 15px;
+    }
+
+    footer {
+      margin-top: 40px;
+      background: #146c43;
+      color: white;
+      text-align: center;
+      padding: 20px;
+    }
+
+    @media(max-width:600px) {
+      .search-box {
+        grid-template-columns: 1fr;
+      }
+
+      .rate-row {
+        grid-template-columns: 1fr;
+      }
+
+      .header-inner {
+        flex-direction: column;
+      }
+
+      .hero h1 {
+        font-size: 26px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="logo">🌾 Kisan Anaj Bazaar</div>
+    <button class="cart-btn" onclick="showCart()">
+      🛒 Cart (<span id="cartCount">0</span>)
+    </button>
+  </div>
+</header>
+
+<section class="hero">
+  <h1>किसान अनाज बाजार</h1>
+  <p>किसानों से सीधे कृषि सामान खरीदें और अपना सामान बेचें</p>
+</section>
+
+<div class="container">
+
+  <!-- SEARCH -->
+  <h2 class="section-title">🔎 सामान खोजें</h2>
+
+  <div class="search-box">
+    <input
+      type="text"
+      id="search"
+      placeholder="धान, गेहूं, किसान या स्थान खोजें..."
+    >
+
+    <select id="category">
+      <option value="all">सभी सामान</option>
+      <option value="धान">धान</option>
+      <option value="गेहूं">गेहूं</option>
+      <option value="मक्का">मक्का</option>
+      <option value="दलहन">दलहन</option>
+      <option value="सब्जी">सब्जी</option>
+      <option value="अन्य">अन्य</option>
+    </select>
+  </div>
+
+  <!-- PRODUCTS -->
+  <h2 class="section-title">🌾 उपलब्ध सामान</h2>
+
+  <div id="products" class="products">
+    सामान लोड हो रहा है...
+  </div>
+
+  <!-- FARMER LOGIN -->
+  <div class="box">
+
+    <h2 class="section-title">👨‍🌾 किसान Login / Register</h2>
+
+    <p id="loginStatus">
+      पहले मोबाइल नंबर से Login करें।
+    </p>
+
+    <label>मोबाइल नंबर</label>
+
+    <input
+      type="tel"
+      id="phoneNumber"
+      placeholder="+91XXXXXXXXXX"
+    >
+
+    <button class="primary" onclick="sendOTP()">
+      📱 OTP भेजें
+    </button>
+
+    <div id="recaptcha-container"></div>
+
+    <div id="otpArea" style="display:none;">
+
+      <label>OTP</label>
+
+      <input
+        type="text"
+        id="otp"
+        placeholder="6 अंकों का OTP"
+        maxlength="6"
+      >
+
+      <button class="primary" onclick="verifyOTP()">
+        ✅ OTP Verify करें
+      </button>
+
+    </div>
+
+    <button
+      id="logoutBtn"
+      class="danger"
+      style="display:none;margin-top:10px;"
+      onclick="logoutUser()">
+      Logout
+    </button>
+
+  </div>
+
+  <!-- SELL -->
+  <div class="box" id="sellForm">
+
+    <h2 class="section-title">🌾 अपना सामान बेचें</h2>
+
+    <p>
+      <b>ध्यान दें:</b>
+      सामान का रेट किसान खुद नहीं बदल सकता।
+      वेबसाइट पर Admin द्वारा तय किया गया रेट लगेगा।
+    </p>
+
+    <label>सामान का नाम</label>
+    <input
+      type="text"
+      id="productName"
+      placeholder="जैसे बासमती धान"
+    >
+
+    <label>Category</label>
+
+    <select id="productCategory">
+      <option value="धान">धान</option>
+      <option value="गेहूं">गेहूं</option>
+      <option value="मक्का">मक्का</option>
+      <option value="दलहन">दलहन</option>
+      <option value="सब्जी">सब्जी</option>
+      <option value="अन्य">अन्य</option>
+    </select>
+
+    <div class="location-status">
+      💰 इस सामान का रेट Admin द्वारा तय किया जाएगा।
+      <br>
+      <b>Current Rate:</b>
+      ₹<span id="currentRate">--</span> / kg
+    </div>
+
+    <label>कितनी मात्रा है? (kg)</label>
+
+    <input
+      type="number"
+      id="productQuantity"
+      placeholder="जैसे 500"
+      min="1"
+    >
+
+    <label>किसान का नाम</label>
+
+    <input
+      type="text"
+      id="farmerName"
+      placeholder="अपना नाम"
+    >
+
+    <label>गांव / जिला</label>
+
+    <input
+      type="text"
+      id="location"
+      placeholder="गांव, जिला, बिहार"
+    >
+
+    <label>विवरण</label>
+
+    <textarea
+      id="description"
+      rows="4"
+      placeholder="सामान की जानकारी"
+    ></textarea>
+
+    <button
+      class="secondary"
+      onclick="getFarmerLocation()">
+      📍 मेरी Current Location लें
+    </button>
+
+    <div id="locationStatus" class="location-status">
+      Location अभी नहीं ली गई है।
+    </div>
+
+    <button
+      class="primary"
+      onclick="postProduct()">
+      📤 सामान पोस्ट करें
+    </button>
+
+    <div id="sellSuccess" class="success"></div>
+    <div id="sellError" class="error"></div>
+
+  </div>
+
+  <!-- ADMIN -->
+  <div class="box admin-box">
+
+    <h2 class="section-title">👨‍💼 Admin Rate Setting</h2>
+
+    <p>
+      यहां से Admin हर सामान का खरीद रेट तय कर सकता है।
+    </p>
+
+    <label>Admin PIN</label>
+
+    <input
+      type="password"
+      id="adminPin"
+      placeholder="Admin PIN"
+    >
+
+    <button class="primary" onclick="openAdmin()">
+      🔐 Admin Panel खोलें
+    </button>
+
+    <div id="adminPanel" style="display:none;margin-top:20px;">
+
+      <div id="rateList"></div>
+
+      <button
+        class="primary"
+        onclick="saveRates()">
+        💾 सभी Rates Save करें
+      </button>
+
+      <div id="adminSuccess" class="success"></div>
+      <div id="adminError" class="error"></div>
+
+    </div>
+
+  </div>
+
+  <!-- CART -->
+  <div class="box" id="cartSection">
+
+    <h2 class="section-title">🛒 आपका Cart</h2>
+
+    <div id="cartItems">
+      Cart खाली है।
+    </div>
+
+    <div class="total">
+      Total: ₹<span id="cartTotal">0</span>
+    </div>
+
+  </div>
+
+  <!-- ORDER -->
+  <div class="box">
+
+    <h2 class="section-title">📦 Order करें</h2>
+
+    <label>Customer Name</label>
+
+    <input
+      type="text"
+      id="customerName"
+      placeholder="आपका नाम"
+    >
+
+    <label>Mobile Number</label>
+
+    <input
+      type="tel"
+      id="customerPhone"
+      placeholder="10 अंकों का मोबाइल नंबर"
+    >
+
+    <label>Address</label>
+
+    <textarea
+      id="customerAddress"
+      rows="4"
+      placeholder="पूरा पता"
+    ></textarea>
+
+    <h3 style="margin-top:20px;">
+      💳 Payment
+    </h3>
+
+    <p style="margin-top:10px;">
+      UPI ID:
+      <b id="upiId"></b>
+    </p>
+
+    <button
+      class="primary"
+      onclick="placeUPIOrder()">
+      💳 UPI Order
+    </button>
+
+    <button
+      class="secondary"
+      onclick="placeCODOrder()">
+      💵 Cash on Delivery
+    </button>
+
+    <div id="orderSuccess" class="success"></div>
+    <div id="orderError" class="error"></div>
+
+  </div>
+
+</div>
+
+<footer>
+  © 2026 Kisan Anaj Bazaar
+  <br>
+  किसानों से सीधे खरीदारी
+</footer>
+
+
+<script type="module">
+
+  import {
+    initializeApp
+  } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
+
+  import {
+    getFirestore,
+    collection,
+    addDoc,
+    getDocs,
+    doc,
+    getDoc,
+    setDoc,
+    serverTimestamp
+  } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js";
+
+  import {
+    getAuth,
+    RecaptchaVerifier,
+    signInWithPhoneNumber,
+    onAuthStateChanged,
+    signOut
+  } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-auth.js";
+
+
+  /* =========================
+     FIREBASE CONFIG
+  ========================= */
+
+  const firebaseConfig = {
+
+    apiKey:
+      "AIzaSyDxjigog6ctxY25UFGrH7M3pYx1IN2RWSw",
+
+    authDomain:
+      "kissan-bajar.firebaseapp.com",
+
+    projectId:
+      "kissan-bajar",
+
+    storageBucket:
+      "kissan-bajar.firebasestorage.app",
+
+    messagingSenderId:
+      "629043004551",
+
+    appId:
+      "1:629043004551:web:f484c026c838399cff6422",
+
+    measurementId:
+      "G-TE6ZLGS1KF"
+  };
+
+
+  const app = initializeApp(firebaseConfig);
+
+  const db = getFirestore(app);
+
+  const auth = getAuth(app);
+
+
+  /* =========================
+     UPI
+  ========================= */
+
+  const UPI_ID = "niteshai64910@nyes";
+
+  document.getElementById("upiId").textContent = UPI_ID;
+
+
+  /* =========================
+     ADMIN
+  ========================= */
+
+  /*
+    यह सिर्फ शुरुआती testing PIN है।
+
+    Production में Firebase Admin Authentication
+    + Security Rules लगाना जरूरी है।
+  */
+
+  const ADMIN_PIN = "123456";
+
+
+  /* =========================
+     DEFAULT RATES
+  ========================= */
+
+  let rates = {
+
+    "धान": 32,
+    "गेहूं": 28,
+    "मक्का": 24,
+    "दलहन": 70,
+    "सब्जी": 20,
+    "अन्य": 10
+
+  };
+
+
+  /* =========================
+     PRODUCTS
+  ========================= */
+
+  let products = [];
+
+  let cart = [];
+
+  let farmerLatitude = null;
+
+  let farmerLongitude = null;
+
+
+  /* =========================
+     LOAD RATES
+  ========================= */
+
+  async function loadRates() {
+
+    try {
+
+      const ref =
+        doc(db, "settings", "prices");
+
+      const snap =
+        await getDoc(ref);
+
+      if (snap.exists()) {
+
+        const data = snap.data();
+
+        rates = {
+          ...rates,
+          ...data
+        };
+
+      }
+
+    } catch (error) {
+
+      console.log("Rates load error:", error);
+
+    }
+
+    updateCurrentRate();
+
+  }
+
+
+  /* =========================
+     CURRENT RATE
+  ========================= */
+
+  function updateCurrentRate() {
+
+    const category =
+      document.getElementById("productCategory").value;
+
+    const rate =
+      rates[category] || 0;
+
+    document.getElementById("currentRate")
+      .textContent = rate;
+
+  }
+
+
+  document
+    .getElementById("productCategory")
+    .addEventListener(
+      "change",
+      updateCurrentRate
+    );
+
+
+  /* =========================
+     LOAD PRODUCTS
+  ========================= */
+
+  async function loadProducts() {
+
+    products = [];
+
+    try {
+
+      const snapshot =
+        await getDocs(
+          collection(db, "products")
+        );
+
+      snapshot.forEach((item) => {
+
+        products.push({
+          id: item.id,
+          ...item.data()
+        });
+
+      });
+
+    } catch (error) {
+
+      console.log(error);
+
+    }
+
+    displayProducts();
+
+  }
+
+
+  /* =========================
+     DISPLAY PRODUCTS
+  ========================= */
+
+  function displayProducts() {
+
+    const container =
+      document.getElementById("products");
+
+    const search =
+      document
+        .getElementById("search")
+        .value
+        .toLowerCase()
+        .trim();
+
+    const category =
+      document
+        .getElementById("category")
+        .value;
+
+
+    const filtered =
+      products.filter(product => {
+
+        const text = (
+
+          (product.name || "") +
+          " " +
+          (product.farmerName || "") +
+          " " +
+          (product.location || "")
+
+        ).toLowerCase();
+
+
+        const searchMatch =
+          text.includes(search);
+
+
+        const categoryMatch =
+          category === "all" ||
+          product.category === category;
+
+
+        return searchMatch &&
+               categoryMatch;
+
+      });
+
+
+    if (filtered.length === 0) {
+
+      container.innerHTML =
+        `<div class="card">
+          अभी कोई सामान उपलब्ध नहीं है।
+        </div>`;
+
+      return;
+
+    }
+
+
+    container.innerHTML = "";
+
+
+    filtered.forEach(product => {
+
+      const card =
+        document.createElement("div");
+
+      card.className = "card";
+
+
+      let mapButton = "";
+
+      if (
+        product.latitude &&
+        product.longitude
+      ) {
+
+        const mapUrl =
+          `https://www.google.com/maps/dir/?api=1&destination=${product.latitude},${product.longitude}`;
+
+        mapButton = `
+          <button
+            class="secondary"
+            onclick="window.open('${mapUrl}','_blank')">
+            🗺️ रास्ता देखें
+          </button>
+        `;
+
+      }
+
+
+      card.innerHTML = `
+
+        <h3>
+          ${escapeHTML(product.name || "")}
+        </h3>
+
+        <div class="info">
+          🌾 Category:
+          ${escapeHTML(product.category || "")}
+        </div>
+
+        <div class="price">
+          ₹${Number(product.adminPrice || product.price || 0)}
+          / kg
+        </div>
+
+        <div class="info">
+          📦 मात्रा:
+          ${Number(product.quantity || 0)} kg
+        </div>
+
+        <div class="info">
+          👨‍🌾 किसान:
+          ${escapeHTML(product.farmerName || "")}
+        </div>
+
+        <div class="info">
+          📍 स्थान:
+          ${escapeHTML(product.location || "")}
+        </div>
+
+        <div class="info">
+          ${escapeHTML(product.description || "")}
+        </div>
+
+        <button
+          class="primary"
+          onclick="addToCart('${product.id}')">
+          🛒 Cart में डालें
+        </button>
+
+        ${mapButton}
+
+      `;
+
+
+      container.appendChild(card);
+
+    });
+
+  }
+
+
+  /* =========================
+     SEARCH
+  ========================= */
+
+  document
+    .getElementById("search")
+    .addEventListener(
+      "input",
+      displayProducts
+    );
+
+
+  document
+    .getElementById("category")
+    .addEventListener(
+      "change",
+      displayProducts
+    );
+
+
+  /* =========================
+     ESCAPE HTML
+  ========================= */
+
+  function escapeHTML(value) {
+
+    return String(value || "")
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#039;");
+
+  }
+
+
+  /* =========================
+     CART
+  ========================= */
+
+  window.addToCart = function(id) {
+
+    const product =
+      products.find(
+        item => item.id === id
+      );
+
+    if (!product) return;
+
+    cart.push(product);
+
+    updateCart();
+
+    alert("सामान Cart में जोड़ दिया गया।");
+
+  };
+
+
+  function updateCart() {
+
+    const box =
+      document.getElementById("cartItems");
+
+    document.getElementById("cartCount")
+      .textContent = cart.length;
+
+
+    if (cart.length === 0) {
+
+      box.innerHTML =
+        "Cart खाली है।";
+
+      document.getElementById("cartTotal")
+        .textContent = "0";
+
+      return;
+
+    }
+
+
+    let total = 0;
+
+
+    box.innerHTML = "";
+
+
+    cart.forEach((item, index) => {
+
+      const price =
+        Number(
+          item.adminPrice ||
+          item.price ||
+          0
+        );
+
+      const quantity =
+        Number(item.quantity || 0);
+
+
+      total += price * quantity;
+
+
+      box.innerHTML += `
+
+        <div class="cart-item">
+
+          <div>
+            <b>
+              ${escapeHTML(item.name)}
+            </b>
+
+            <br>
+
+            ₹${price}/kg
+
+            <br>
+
+            Quantity:
+            ${quantity} kg
+
+          </div>
+
+          <button
+            class="danger"
+            onclick="removeFromCart(${index})">
+            हटाएं
+          </button>
+
+        </div>
+
+      `;
+
+    });
+
+
+    document.getElementById("cartTotal")
+      .textContent = total;
+
+  }
+
+
+  window.removeFromCart = function(index) {
+
+    cart.splice(index, 1);
+
+    updateCart();
+
+  };
+
+
+  window.showCart = function() {
+
+    document
+      .getElementById("cartSection")
+      .scrollIntoView({
+        behavior: "smooth"
+      });
+
+  };
+
+
+  /* =========================
+     FARMER PHONE OTP
+  ========================= */
+
+  let confirmationResult = null;
+
+  let recaptchaVerifier = null;
+
+
+  window.sendOTP = async function() {
+
+    const phone =
+      document
+        .getElementById("phoneNumber")
+        .value
+        .trim();
+
+
+    if (!/^\+91[0-9]{10}$/.test(phone)) {
+
+      alert(
+        "मोबाइल नंबर इस तरह डालें: +919876543210"
+      );
+
+      return;
+
+    }
+
+
+    try {
+
+      if (!recaptchaVerifier) {
+
+        recaptchaVerifier =
+          new RecaptchaVerifier(
+            auth,
+            "recaptcha-container",
+            {
+              size: "normal"
+            }
+          );
+
+      }
+
+
+      confirmationResult =
+        await signInWithPhoneNumber(
+          auth,
+          phone,
+          recaptchaVerifier
+        );
+
+
+      document.getElementById("otpArea")
+        .style.display = "block";
+
+
+      alert("OTP भेज दिया गया है।");
+
+    } catch (error) {
+
+      console.error(error);
+
+      alert(
+        "OTP नहीं भेजा गया। Firebase Authentication में Phone Login चालू है या नहीं देखें।"
+      );
+
+    }
+
+  };
+
+
+  window.verifyOTP = async function() {
+
+    const otp =
+      document
+        .getElementById("otp")
+        .value
+        .trim();
+
+
+    if (!confirmationResult) {
+
+      alert("पहले OTP भेजें।");
+
+      return;
+
+    }
+
+
+    try {
+
+      const result =
+        await confirmationResult.confirm(otp);
+
+
+      const user = result.user;
+
+
+      await setDoc(
+        doc(db, "users", user.uid),
+        {
+          phone: user.phoneNumber,
+          role: "farmer",
+          updatedAt: serverTimestamp()
+        },
+        {
+          merge: true
+        }
+      );
+
+
+      alert("Login सफल 
