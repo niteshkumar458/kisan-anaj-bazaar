@@ -1,0 +1,78 @@
+<section id="support">
+
+  <div class="card">
+
+    <h2>📞 कस्टमर सपोर्ट</h2>
+
+    <div class="info">
+      <b>कस्टमर सपोर्ट नंबर:</b><br>
+      📱 7042894282
+    </div>
+
+    <button
+      class="action"
+      onclick="window.open('https://wa.me/917042894282?text=नमस्ते%20किसान%20अनाज%20बाजार,%20मुझे%20सहायता%20चाहिए।','_blank')"
+    >
+      💬 WhatsApp पर मैसेज करें
+    </button>
+
+    <button
+      class="action secondary"
+      onclick="window.location.href='sms:7042894282?body=नमस्ते किसान अनाज बाजार, मुझे सहायता चाहिए।'"
+    >
+      ✉️ SMS भेजें
+    </button>
+
+    <button
+      class="action"
+      onclick="window.location.href='tel:7042894282'"
+    >
+      📞 कॉल करें
+    </button>
+
+    <hr style="margin:20px 0;">
+
+    <h3>📩 अपनी समस्या भेजें</h3>
+
+    <label>नाम</label>
+    <input
+      id="supportName"
+      type="text"
+      placeholder="नाम"
+    >
+
+    <label>मोबाइल नंबर</label>
+    <input
+      id="supportPhone"
+      type="tel"
+      placeholder="मोबाइल नंबर"
+    >
+
+    <label>समस्या का प्रकार</label>
+    <select id="supportType">
+      <option value="Order">ऑर्डर</option>
+      <option value="Payment">पेमेंट</option>
+      <option value="Delivery">डिलीवरी</option>
+      <option value="Seller">सामान बेचने से संबंधित</option>
+      <option value="Other">अन्य</option>
+    </select>
+
+    <label>समस्या</label>
+    <textarea
+      id="supportProblem"
+      placeholder="अपनी समस्या लिखें"
+    ></textarea>
+
+    <button
+      class="action"
+      onclick="submitSupport()"
+    >
+      📩 शिकायत भेजें
+    </button>
+
+    <div id="supportSuccess" class="success"></div>
+    <div id="supportError" class="error"></div>
+
+  </div>
+
+</section>
