@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Kisan Anaj Bazaar</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      background: #f5f7f5;
+      color: #222;
+    }
+
+    header {
+      background: #16823b;
+      color: white;
+      padding: 15px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .top {
+      max-width: 1100px;
+      margin: auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .logo {
+      font-size: 23px;
+      font-weight: bold;
+    }
+
+    .cart-btn {
+      background: white;
+      color: #16823b;
+      border: none;
+      padding: 10px 15px;
+      border-radius: 8px;
+      font-weight: bold;
+    }
+
+    .hero {
+      background: linear-gradient(135deg, #16823b, #43a047);
+      color: white;
+      padding: 45px 20px;
+      text-align: center;
+    }
+
+    .hero h1 {
+      font-size: 35px;
+      margin-bottom: 12px;
+    }
+
+    .hero p {
+      font-size: 17px;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: auto;
+      padding: 20px;
+    }
+
+    .search-box {
+      display: flex;
+      gap: 10px;
+      margin: 20px 0;
+    }
+
+    .search-box input {
+      flex: 1;
+      padding: 13px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 16px;
+    }
+
+    select {
+      padding: 13px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      background: white;
+    }
+
+    .section-title {
+      margin: 25px 0 15px;
+      font-size: 25px;
+    }
+
+    .products {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 18px;
+    }
+
+    .product {
+      background: white;
+      border-radius: 12px;
+      padding: 18px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+    }
+
+    .product h3 {
+      color: #16823b;
+      margin-bottom: 8px;
+    }
+
+    .product p {
+      margin: 7px 0;
+    }
+
+    .price {
+      font-size: 20px;
+      font-weight: bold;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    .buy-btn,
+    .submit-btn {
+      width: 100%;
+      padding: 12px;
+      border: none;
+      border-radius: 8px;
+      background: #16823b;
+      color: white;
+      font-size: 16px;
+      margin-top: 10px;
+    }
+
+    .buy-btn:hover,
+    .submit-btn:hover {
+      background: #10652e;
+    }
+
+    .sell-box,
+    .order-box {
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      margin-top: 30px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+    }
+
+    .form-group {
+      margin-bottom: 14px;
+    }
+
+    .form-group label {
+      display: block;
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 15px;
+    }
+
+    textarea {
+      resize: vertical;
+    }
+
+    .cart {
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      margin-top: 30px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+    }
+
+    .cart-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid #ddd;
+      padding: 12px 0;
+      gap: 10px;
+    }
+
+    .remove-btn {
+      background: #d32f2f;
+      color: white;
+      border: none;
+      padding: 7px 10px;
+      border-radius: 6px;
+    }
+
+    .total {
+      font-size: 20px;
+      font-weight: bold;
+      margin-top: 15px;
+    }
+
+    .success {
+      display: none;
+      background: #dff5e5;
+      color: #146c2e;
+      padding: 15px;
+      border-radius: 8px;
+      margin-top: 15px;
+    }
+
+    footer {
+      margin-top: 40px;
+      background: #123b21;
+      color: white;
+      text-align: center;
+      padding: 25px;
+    }
+
+    @media(max-width:600px) {
+      .top {
+        flex-direction: column;
+      }
+
+      .hero h1 {
+        font-size: 27px;
+      }
+
+      .search-box {
+        flex-direction: column;
+      }
+
+      .cart-item {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <div class="top">
+    <div class="logo">🌾 Kisan Anaj Bazaar</div>
+
+    <button class="cart-btn" onclick="showCart()">
+      🛒 Cart (<span id="cartCount">0</span>)
+    </button>
+  </div>
+</header>
+
+<section class="hero">
+  <h1>किसान अनाज बाजार</h1>
+  <p>किसानों से सीधे कृषि सामान खरीदें और अपना सामान बेचें</p>
+</section>
+
+<div class="container">
+
+  <!-- SEARCH -->
+
+  <h2 class="section-title">🔎 कृषि सामान खोजें</h2>
+
+  <div class="search-box">
+    <input
+      type="text"
+      id="search"
+      placeholder="जैसे धान, गेहूं, मक्का..."
+      oninput="displayProducts()"
+    >
+
+    <select id="category" onchange="displayProducts()">
+      <option value="all">सभी सामान</option>
+      <option value="धान">धान</option>
+      <option value="गेहूं">गेहूं</option>
+      <option value="मक्का">मक्का</option>
+      <option value="दलहन">दलहन</option>
+      <option value="सब्जी">सब्जी</option>
+      <option value="अन्य
