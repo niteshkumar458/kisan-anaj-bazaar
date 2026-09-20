@@ -1,0 +1,959 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>किसान अनाज बाजार</title>
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0;font-family:Arial,sans-serif}
+body{background:#f4f7f4;color:#222}
+header{background:#138a36;color:#fff;text-align:center;padding:18px 10px}
+header h1{font-size:25px}
+header p{margin-top:6px}
+
+nav{
+ background:#fff;padding:10px;display:flex;gap:8px;overflow-x:auto;
+ position:sticky;top:0;z-index:99;box-shadow:0 2px 8px #0002
+}
+nav button{
+ border:0;background:#138a36;color:#fff;padding:11px 14px;
+ border-radius:8px;white-space:nowrap;cursor:pointer
+}
+
+section{display:none;padding:18px 12px;max-width:1100px;margin:auto}
+section.active{display:block}
+
+.card,.orderBox{
+ background:#fff;padding:18px;border-radius:12px;
+ margin-bottom:15px;box-shadow:0 2px 10px #0001
+}
+h2{color:#138a36;margin-bottom:15px}
+
+input,select,textarea{
+ width:100%;padding:12px;margin:6px 0 12px;
+ border:1px solid #ccc;border-radius:8px;font-size:15px
+}
+textarea{min-height:90px}
+
+button.action,.mainBtn{
+ border:0;background:#138a36;color:#fff;padding:13px;
+ border-radius:8px;font-size:16px;cursor:pointer;margin:5px 0;width:100%
+}
+button.action:hover,.mainBtn:hover,nav button:hover{background:#0d6828}
+.secondary{background:#555!important}
+.danger{background:#c62828!important}
+
+.mainBtns{
+ display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;margin-top:18px
+}
+.mainBtn{font-size:17px;padding:18px}
+
+.productGrid{
+ display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:15px
+}
+.product{
+ background:#fff;border-radius:12px;overflow:hidden;
+ box-shadow:0 2px 10px #0001
+}
+.product img{width:100%;height:160px;object-fit:cover;background:#eee}
+.productBody{padding:14px}
+.price{color:#138a36;font-size:19px;font-weight:bold;margin:7px 0}
+.badge{
+ display:inline-block;background:#e8f5e9;color:#138a36;
+ padding:5px 8px;border-radius:15px;font-size:12px
+}
+
+.info,.locationBox{
+ background:#eaf6ed;padding:12px;border-radius:8px;margin:10px 0
+}
+.warning{background:#fff3cd;padding:12px;border-radius:8px;margin:10px 0}
+.success,.error{
+ padding:12px;border-radius:8px;margin:10px 0;display:none
+}
+.success{background:#dff5e5;color:#126b2d}
+.error{background:#ffe0e0;color:#a00000}
+
+.photoPreview{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}
+.photoPreview img{width:90px;height:90px;object-fit:cover;border-radius:8px}
+
+.total{font-size:21px;font-weight:bold;color:#138a36;margin:10px 0}
+
+footer{
+ margin-top:30px;background:#123;color:#fff;text-align:center;padding:20px
+}
+.small{font-size:13px;color:#666}
+</style>
+</head>
+
+<body>
+
+<header>
+<h1>🌾 किसान अनाज बाजार</h1>
+<p>किसान और ग्राहक के लिए आसान ऑनलाइन बाजार</p>
+</header>
+
+<!-- NAVIGATION -->
+<nav>
+<button data-open="home">🏠 होम</button>
+<button data-open="buy">🛒 सामान खरीदें</button>
+<button data-open="sell">🌾 सामान बेचें</button>
+<button data-open="delivery">🚚 डिलीवरी बॉय</button>
+<button data-open="track">📍 लाइव ट्रैकिंग</button>
+<button data-open="support">📞 कस्टमर सपोर्ट</button>
+</nav>
+
+<!-- HOME -->
+<section id="home" class="active">
+
+<div class="card">
+<h2>🌾 किसान अनाज बाजार में आपका स्वागत है</h2>
+<p>किसान अपना सामान बेच सकते हैं और ग्राहक सामान खरीद सकते हैं।</p>
+
+<div class="mainBtns">
+<button class="mainBtn" data-open="buy">🛒 सामान खरीदें</button>
+<button class="mainBtn" data-open="sell">🌾 सामान बेचें</button>
+<button class="mainBtn" data-open="delivery">🚚 डिलीवरी बॉय</button>
+<button class="mainBtn" data-open="track">📍 ऑर्डर ट्रैक करें</button>
+<button class="mainBtn" data-open="support">📞 कस्टमर सपोर्ट</button>
+</div>
+</div>
+
+<div class="card">
+<h2>🔎 सामान खोजें</h2>
+<input id="homeSearch" placeholder="आलू, धान, गेहूँ..." oninput="searchHome()">
+</div>
+
+<div id="homeProducts" class="productGrid"></div>
+
+</section>
+
+<!-- BUY -->
+<section id="buy">
+
+<div class="card">
+<h2>🛒 सामान खरीदें</h2>
+
+<input id="buySearch" placeholder="सामान खोजें..." oninput="renderProducts()">
+
+<select id="buyCategory" onchange="renderProducts()">
+<option value="">सभी कैटेगरी</option>
+<option value="अनाज">अनाज</option>
+<option value="सब्जी">सब्जी</option>
+<option value="दलहन">दलहन</option>
+<option value="तिलहन">तिलहन</option>
+<option value="अन्य">अन्य</option>
+</select>
+</div>
+
+<div id="products" class="productGrid"></div>
+
+</section>
+
+<!-- SELL -->
+<section id="sell">
+
+<div class="card">
+<h2>🌾 अपना सामान बेचें</h2>
+
+<label>नाम</label>
+<input id="sellerName" placeholder="किसान/विक्रेता का नाम">
+
+<label>मोबाइल नंबर</label>
+<input id="sellerPhone" type="tel" placeholder="मोबाइल नंबर">
+
+<label>सामान का नाम</label>
+<input id="sellerProduct" placeholder="जैसे आलू, धान, गेहूँ">
+
+<label>कैटेगरी</label>
+<select id="sellerCategory">
+<option value="अनाज">अनाज</option>
+<option value="सब्जी">सब्जी</option>
+<option value="दलहन">दलहन</option>
+<option value="तिलहन">तिलहन</option>
+<option value="अन्य">अन्य</option>
+</select>
+
+<label>मात्रा</label>
+<input id="sellerQuantity" type="number" placeholder="मात्रा">
+
+<label>यूनिट</label>
+<select id="sellerUnit">
+<option value="kg">किलो</option>
+<option value="quintal">क्विंटल</option>
+<option value="ton">टन</option>
+<option value="piece">पीस</option>
+</select>
+
+<label>कीमत ₹</label>
+<input id="sellerPrice" type="number" placeholder="कीमत">
+
+<label>लोकेशन</label>
+<input id="sellerLocation" placeholder="गाँव / शहर / जिला">
+
+<button class="action secondary" onclick="getSellerLocation()">📍 मेरी लोकेशन लें</button>
+
+<div id="sellerLocationStatus" class="locationBox">
+लोकेशन अभी नहीं ली गई।
+</div>
+
+<label>विक्रेता UPI ID</label>
+<input id="sellerUPI" placeholder="example@upi">
+
+<label>सामान की जानकारी</label>
+<textarea id="sellerDetails" placeholder="सामान की पूरी जानकारी"></textarea>
+
+<label>📷 सामान की फोटो</label>
+<input id="sellerPhotos" type="file" accept="image/*" multiple onchange="previewSellerPhotos()">
+
+<div id="sellerPhotoPreview" class="photoPreview"></div>
+
+<button class="action" onclick="submitSellerPost()">📤 सामान पोस्ट करें</button>
+
+<div id="sellSuccess" class="success"></div>
+<div id="sellError" class="error"></div>
+
+</div>
+</section>
+
+<!-- ORDER -->
+<section id="order">
+
+<div class="orderBox">
+<h2>📦 ऑर्डर करें</h2>
+
+<div id="selectedProductInfo" class="info"></div>
+
+<label>नाम</label>
+<input id="customerName" placeholder="आपका नाम">
+
+<label>मोबाइल नंबर</label>
+<input id="customerPhone" type="tel" placeholder="मोबाइल नंबर">
+
+<label>मात्रा</label>
+<input id="orderQuantity" type="number" value="1" min="1" oninput="calculateOrder()">
+
+<label>डिलीवरी पता</label>
+<textarea id="customerLocation" placeholder="पूरा पता"></textarea>
+
+<button class="action secondary" onclick="getCustomerLocation()">📍 मेरी लोकेशन लें</button>
+
+<div id="customerLocationStatus" class="locationBox">
+लोकेशन अभी नहीं ली गई।
+</div>
+
+<label>पेमेंट तरीका</label>
+<select id="paymentMethod" onchange="calculateOrder()">
+<option value="COD">Cash on Delivery</option>
+<option value="UPI">UPI Payment</option>
+</select>
+
+<div id="orderCalculation" class="info"></div>
+
+<button class="action" onclick="startPayment()">💳 UPI से भुगतान करें</button>
+
+<label>UTR / Transaction नंबर</label>
+<input id="utr" placeholder="पेमेंट के बाद UTR नंबर">
+
+<button class="action" onclick="submitOrder()">✅ ऑर्डर कन्फर्म करें</button>
+
+<div id="orderSuccess" class="success"></div>
+<div id="orderError" class="error"></div>
+
+</div>
+</section>
+
+<!-- DELIVERY -->
+<section id="delivery">
+
+<div class="card">
+<h2>🚚 डिलीवरी बॉय</h2>
+
+<input id="deliveryName" placeholder="नाम">
+<input id="deliveryPhone" type="tel" placeholder="मोबाइल नंबर">
+
+<select id="deliveryVehicle">
+<option value="Bike">Bike</option>
+<option value="Scooty">Scooty</option>
+<option value="Cycle">Cycle</option>
+</select>
+
+<input id="deliveryVehicleNo" placeholder="वाहन नंबर">
+<input id="deliveryArea" placeholder="काम का क्षेत्र">
+
+<button class="action" onclick="registerDeliveryBoy()">🚚 रजिस्टर करें</button>
+
+<div id="deliverySuccess" class="success"></div>
+<div id="deliveryError" class="error"></div>
+</div>
+
+<div class="card">
+<h2>📍 लाइव लोकेशन</h2>
+
+<button class="action" onclick="startLiveLocation()">▶️ लोकेशन शुरू करें</button>
+<button class="action danger" onclick="stopLiveLocation()">⏹️ लोकेशन बंद करें</button>
+
+<div id="liveLocationStatus" class="locationBox">
+लाइव लोकेशन बंद है।
+</div>
+</div>
+
+<div class="card">
+<h2>📦 उपलब्ध ऑर्डर</h2>
+<button class="action" onclick="loadDeliveryOrders()">🔄 Refresh</button>
+<div id="deliveryOrders"></div>
+</div>
+
+</section>
+
+<!-- TRACK -->
+<section id="track">
+
+<div class="card">
+<h2>📍 ऑर्डर ट्रैक करें</h2>
+
+<input id="trackOrderId" placeholder="Order ID डालें">
+
+<button class="action" onclick="trackOrder()">🔎 ट्रैक करें</button>
+
+<div id="trackingResult"></div>
+</div>
+
+</section>
+
+<!-- SUPPORT -->
+<section id="support">
+
+<div class="card">
+<h2>📞 कस्टमर सपोर्ट</h2>
+
+<div class="info">
+<b>कस्टमर सपोर्ट:</b><br>
+📱 7042894282
+</div>
+
+<button class="action"
+onclick="window.open('https://wa.me/917042894282?text=नमस्ते%20किसान%20अनाज%20बाजार,%20मुझे%20सहायता%20चाहिए।','_blank')">
+💬 WhatsApp पर मैसेज करें
+</button>
+
+<button class="action secondary"
+onclick="window.location.href='sms:7042894282?body=नमस्ते किसान अनाज बाजार, मुझे सहायता चाहिए।'">
+✉️ SMS भेजें
+</button>
+
+<button class="action"
+onclick="window.location.href='tel:7042894282'">
+📞 कॉल करें
+</button>
+
+<hr style="margin:20px 0">
+
+<h3>📩 शिकायत भेजें</h3>
+
+<input id="supportName" placeholder="नाम">
+<input id="supportPhone" type="tel" placeholder="मोबाइल नंबर">
+
+<select id="supportType">
+<option value="Order">ऑर्डर</option>
+<option value="Payment">पेमेंट</option>
+<option value="Delivery">डिलीवरी</option>
+<option value="Seller">सामान बेचने से संबंधित</option>
+<option value="Other">अन्य</option>
+</select>
+
+<textarea id="supportProblem" placeholder="अपनी समस्या लिखें"></textarea>
+
+<button class="action" onclick="submitSupport()">📩 शिकायत भेजें</button>
+
+<div id="supportSuccess" class="success"></div>
+<div id="supportError" class="error"></div>
+
+</div>
+</section>
+
+<footer>
+🌾 किसान अनाज बाजार<br>
+किसान और ग्राहक को जोड़ने वाला ऑनलाइन बाजार
+</footer>
+
+
+<!-- =====================================================
+     NAVIGATION — Firebase से अलग
+     इसी वजह से सभी स्क्रीन खुलेंगी।
+===================================================== -->
+
+<script>
+(function(){
+
+function openSection(id){
+
+document.querySelectorAll("section").forEach(function(section){
+section.classList.remove("active");
+});
+
+var target=document.getElementById(id);
+
+if(target){
+target.classList.add("active");
+window.scrollTo(0,0);
+}
+
+}
+
+window.showSection=openSection;
+
+document.addEventListener("click",function(e){
+
+var button=e.target.closest("[data-open]");
+
+if(!button)return;
+
+e.preventDefault();
+
+openSection(button.getAttribute("data-open"));
+
+});
+
+})();
+</script>
+
+
+<!-- =====================================================
+     FIREBASE
+===================================================== -->
+
+<script type="module">
+
+import{initializeApp}
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+
+import{
+getFirestore,
+collection,
+addDoc,
+getDocs,
+doc,
+getDoc,
+updateDoc,
+serverTimestamp
+}
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+import{
+getStorage,
+ref,
+uploadBytes,
+getDownloadURL
+}
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
+
+
+/* अपनी Firebase Web Config यहाँ डालना है */
+
+const firebaseConfig={
+
+apiKey:"YOUR_API_KEY",
+
+authDomain:"YOUR_PROJECT.firebaseapp.com",
+
+projectId:"YOUR_PROJECT_ID",
+
+storageBucket:"YOUR_PROJECT.firebasestorage.app",
+
+messagingSenderId:"YOUR_SENDER_ID",
+
+appId:"YOUR_APP_ID"
+
+};
+
+
+const BUSINESS_UPI="niteshai64910@nyes";
+
+const COMMISSION_RATE=5;
+
+const ONLINE_DISCOUNT_RATE=2;
+
+const DELIVERY_RATE_PER_KM=10;
+
+let firebaseReady=false;
+let db=null;
+let storage=null;
+
+let selectedProduct=null;
+let deliveryBoyId=null;
+let liveWatchId=null;
+
+
+try{
+
+if(
+firebaseConfig.apiKey!=="YOUR_API_KEY" &&
+firebaseConfig.projectId!=="YOUR_PROJECT_ID"
+){
+
+const app=initializeApp(firebaseConfig);
+
+db=getFirestore(app);
+storage=getStorage(app);
+
+firebaseReady=true;
+
+}
+
+}catch(error){
+
+console.error(error);
+
+}
+
+
+/* PRODUCTS */
+
+const products=[
+
+{
+id:"potato",
+name:"आलू",
+category:"सब्जी",
+price:25,
+unit:"kg",
+image:"https://images.unsplash.com/photo-1518977676601-b53f82aba655?auto=format&fit=crop&w=800&q=80"
+},
+
+{
+id:"paddy",
+name:"धान",
+category:"अनाज",
+price:30,
+unit:"kg",
+image:"https://images.unsplash.com/photo-1536304993881-ff6e9eefa2a6?auto=format&fit=crop&w=800&q=80"
+},
+
+{
+id:"wheat",
+name:"गेहूँ",
+category:"अनाज",
+price:28,
+unit:"kg",
+image:"https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=800&q=80"
+},
+
+{
+id:"corn",
+name:"मक्का",
+category:"अनाज",
+price:24,
+unit:"kg",
+image:"https://images.unsplash.com/photo-1551754655-cd27e38d2076?auto=format&fit=crop&w=800&q=80"
+},
+
+{
+id:"mustard",
+name:"सरसों",
+category:"तिलहन",
+price:55,
+unit:"kg",
+image:"https://images.unsplash.com/photo-1599940824399-b87987ceb72a?auto=format&fit=crop&w=800&q=80"
+},
+
+{
+id:"gram",
+name:"चना",
+category:"दलहन",
+price:60,
+unit:"kg",
+image:"https://images.unsplash.com/photo-1601050690597-df0568f70950?auto=format&fit=crop&w=800&q=80"
+}
+
+];
+
+let allProducts=[...products];
+
+
+function productHTML(p){
+
+return `
+<div class="product">
+
+<img src="${p.image}" alt="${p.name}">
+
+<div class="productBody">
+
+<span class="badge">${p.category}</span>
+
+<h3>${p.name}</h3>
+
+<div class="price">
+₹${p.price}/${p.unit}
+</div>
+
+<p class="small">${p.location||""}</p>
+
+<button class="action" onclick="openOrder('${p.id}')">
+🛒 ऑर्डर करें
+</button>
+
+</div>
+</div>
+`;
+
+}
+
+
+window.renderHomeProducts=function(){
+
+var box=document.getElementById("homeProducts");
+
+if(!box)return;
+
+box.innerHTML=allProducts.map(productHTML).join("");
+
+};
+
+
+window.searchHome=function(){
+
+var value=document.getElementById("homeSearch").value.toLowerCase();
+
+var result=allProducts.filter(function(p){
+
+return p.name.toLowerCase().includes(value)||
+p.category.toLowerCase().includes(value);
+
+});
+
+document.getElementById("homeProducts").innerHTML=
+result.map(productHTML).join("");
+
+};
+
+
+window.renderProducts=function(){
+
+var search=(document.getElementById("buySearch").value||"").toLowerCase();
+
+var category=document.getElementById("buyCategory").value;
+
+var result=allProducts.filter(function(p){
+
+var a=!search||p.name.toLowerCase().includes(search)||p.category.toLowerCase().includes(search);
+
+var b=!category||p.category===category;
+
+return a&&b;
+
+});
+
+document.getElementById("products").innerHTML=
+result.length?result.map(productHTML).join(""):"<div class='card'>कोई सामान नहीं मिला।</div>";
+
+};
+
+
+/* ORDER */
+
+window.openOrder=function(id){
+
+selectedProduct=allProducts.find(function(p){
+return p.id===id;
+});
+
+if(!selectedProduct)return;
+
+document.getElementById("selectedProductInfo").innerHTML=
+`
+<b>${selectedProduct.name}</b><br>
+कैटेगरी: ${selectedProduct.category}<br>
+कीमत: ₹${selectedProduct.price}/${selectedProduct.unit}
+`;
+
+showSection("order");
+
+calculateOrder();
+
+};
+
+
+window.calculateOrder=function(){
+
+if(!selectedProduct)return;
+
+var q=Number(document.getElementById("orderQuantity").value)||1;
+
+var subtotal=selectedProduct.price*q;
+
+var method=document.getElementById("paymentMethod").value;
+
+var discount=method==="UPI"
+?subtotal*ONLINE_DISCOUNT_RATE/100:0;
+
+var commission=subtotal*COMMISSION_RATE/100;
+
+var total=subtotal-discount;
+
+document.getElementById("orderCalculation").innerHTML=
+`
+<p>सामान: ₹${subtotal.toFixed(2)}</p>
+<p>ऑनलाइन छूट: ₹${discount.toFixed(2)}</p>
+<div class="total">कुल: ₹${total.toFixed(2)}</div>
+<p class="small">कमीशन: ₹${commission.toFixed(2)}</p>
+`;
+
+};
+
+
+/* CUSTOMER LOCATION */
+
+window.getCustomerLocation=function(){
+
+navigator.geolocation.getCurrentPosition(
+
+function(pos){
+
+var text=pos.coords.latitude+","+pos.coords.longitude;
+
+document.getElementById("customerLocation").value=text;
+
+document.getElementById("customerLocationStatus").innerHTML=
+"📍 लोकेशन मिल गई: "+text;
+
+},
+
+function(){
+alert("फोन में Location Permission Allow करें।");
+}
+
+);
+
+};
+
+
+/* UPI */
+
+window.startPayment=function(){
+
+if(!selectedProduct){
+alert("पहले सामान चुनें।");
+return;
+}
+
+var q=Number(document.getElementById("orderQuantity").value)||1;
+
+var subtotal=selectedProduct.price*q;
+
+var discount=subtotal*ONLINE_DISCOUNT_RATE/100;
+
+var amount=subtotal-discount;
+
+var upi=
+"upi://pay?pa="+encodeURIComponent(BUSINESS_UPI)+
+"&pn="+encodeURIComponent("Kisan Anaj Bazar")+
+"&am="+encodeURIComponent(amount.toFixed(2))+
+"&cu=INR";
+
+window.location.href=upi;
+
+};
+
+
+/* ORDER SAVE */
+
+window.submitOrder=async function(){
+
+if(!firebaseReady){
+alert("पहले Firebase Config डालें।");
+return;
+}
+
+if(!selectedProduct){
+alert("पहले सामान चुनें।");
+return;
+}
+
+try{
+
+var q=Number(document.getElementById("orderQuantity").value)||1;
+
+var subtotal=selectedProduct.price*q;
+
+var method=document.getElementById("paymentMethod").value;
+
+var discount=method==="UPI"
+?subtotal*ONLINE_DISCOUNT_RATE/100:0;
+
+var commission=subtotal*COMMISSION_RATE/100;
+
+var total=subtotal-discount;
+
+var order=await addDoc(collection(db,"orders"),{
+
+customerName:document.getElementById("customerName").value,
+
+customerPhone:document.getElementById("customerPhone").value,
+
+customerLocation:document.getElementById("customerLocation").value,
+
+productName:selectedProduct.name,
+
+productId:selectedProduct.id,
+
+quantity:q,
+
+subtotal:subtotal,
+
+discount:discount,
+
+commission:commission,
+
+farmerAmount:subtotal-commission,
+
+total:total,
+
+paymentMethod:method,
+
+businessUPI:BUSINESS_UPI,
+
+utr:document.getElementById("utr").value,
+
+status:"Pending",
+
+createdAt:serverTimestamp()
+
+});
+
+document.getElementById("orderSuccess").innerHTML=
+"✅ ऑर्डर सफल।<br><br>Order ID: <b>"+order.id+"</b>";
+
+document.getElementById("orderSuccess").style.display="block";
+
+}catch(e){
+
+console.error(e);
+
+document.getElementById("orderError").innerHTML=
+"ऑर्डर सेव नहीं हुआ। Firebase Rules/Config चेक करें।";
+
+document.getElementById("orderError").style.display="block";
+
+}
+
+};
+
+
+/* SELLER PHOTOS */
+
+window.previewSellerPhotos=function(){
+
+var files=document.getElementById("sellerPhotos").files;
+
+var box=document.getElementById("sellerPhotoPreview");
+
+box.innerHTML="";
+
+Array.from(files).slice(0,5).forEach(function(file){
+
+var reader=new FileReader();
+
+reader.onload=function(e){
+
+var img=document.createElement("img");
+
+img.src=e.target.result;
+
+box.appendChild(img);
+
+};
+
+reader.readAsDataURL(file);
+
+});
+
+};
+
+
+/* SELLER LOCATION */
+
+window.getSellerLocation=function(){
+
+navigator.geolocation.getCurrentPosition(
+
+function(pos){
+
+var text=pos.coords.latitude+","+pos.coords.longitude;
+
+document.getElementById("sellerLocation").value=text;
+
+document.getElementById("sellerLocationStatus").innerHTML=
+"📍 लोकेशन मिल गई: "+text;
+
+},
+
+function(){
+alert("Location Permission Allow करें।");
+}
+
+);
+
+};
+
+
+/* SELLER POST */
+
+window.submitSellerPost=async function(){
+
+if(!firebaseReady){
+
+alert("Firebase Config डालें।");
+
+return;
+
+}
+
+try{
+
+var data={
+
+sellerName:document.getElementById("sellerName").value,
+
+sellerPhone:document.getElementById("sellerPhone").value,
+
+product:document.getElementById("sellerProduct").value,
+
+category:document.getElementById("sellerCategory").value,
+
+quantity:Number(document.getElementById("sellerQuantity").value),
+
+unit:document.getElementById("sellerUnit").value,
+
+price:Number(document.getElementById("sellerPrice").value),
+
+location:document.getElementById("sellerLocation").value,
+
+sellerUPI:document.getElementById("sellerUPI").value,
+
+details:document.getElementById("sellerDetails").value,
+
+status:"Pending",
+
+photoURLs:[],
+
+createdAt:serverTimestamp()
+
+};
+
+var post=await addDoc(collection(db,"sellRequests"),data);
+
+var files=Array.from(document.getElementById("sellerPhotos").files).slice(0,5);
+
+var urls=[];
+
+for(var file of files){
+
+if(file.size>5*1024*1024)continue;
+
+var fileRef=ref(storage,"sellerProducts/"+post.id+"/"+Date.now()+"-"+file.name);
+
+await uploadBytes(fileRef,file);
+
+urls.push(await getDownlo
