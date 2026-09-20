@@ -1,0 +1,1734 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+
+<title>किसान अनाज बाजार</title>
+
+<style>
+*{box-sizing:border-box}
+
+body{
+margin:0;
+font-family:Arial,sans-serif;
+background:#f4f8f4;
+color:#17351f;
+}
+
+button{
+border:0;
+border-radius:10px;
+padding:12px 17px;
+font-weight:bold;
+cursor:pointer;
+}
+
+.green{
+background:#11833a;
+color:white;
+}
+
+.orange{
+background:#f59e0b;
+color:white;
+}
+
+.red{
+background:#dc2626;
+color:white;
+}
+
+.white{
+background:white;
+color:#11833a;
+}
+
+/* HOME */
+
+.home{
+min-height:100vh;
+
+background:
+linear-gradient(90deg,#064d28df,#064d2870),
+url("https://images.unsplash.com/photo-1500937386664-56d1dfef3854?auto=format&fit=crop&w=2000&q=85")
+center/cover;
+
+display:flex;
+align-items:center;
+justify-content:center;
+
+padding:25px;
+}
+
+.home-box{
+width:min(850px,100%);
+text-align:center;
+color:white;
+}
+
+.logo{
+font-size:22px;
+font-weight:bold;
+margin-bottom:20px;
+}
+
+.home-box h1{
+font-size:clamp(40px,8vw,70px);
+margin:10px 0;
+text-shadow:0 3px 12px #0008;
+}
+
+.home-box p{
+font-size:18px;
+line-height:1.7;
+max-width:650px;
+margin:0 auto 35px;
+}
+
+.main-buttons{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:20px;
+max-width:720px;
+margin:auto;
+}
+
+.main-btn{
+border:0;
+border-radius:22px;
+padding:35px 20px;
+color:white;
+box-shadow:0 12px 35px #0006;
+transition:.2s;
+}
+
+.main-btn:hover{
+transform:translateY(-4px);
+}
+
+.buy-btn{
+background:#11833a;
+}
+
+.sell-btn{
+background:#f59e0b;
+}
+
+.big-icon{
+font-size:60px;
+display:block;
+margin-bottom:10px;
+}
+
+.main-btn strong{
+display:block;
+font-size:26px;
+}
+
+.main-btn span{
+display:block;
+margin-top:8px;
+}
+
+/* PANELS */
+
+.panel{
+display:none;
+position:fixed;
+inset:0;
+z-index:1000;
+background:#f4f8f4;
+overflow:auto;
+}
+
+.panel.show{
+display:block;
+}
+
+.panel-header{
+position:sticky;
+top:0;
+z-index:20;
+
+background:white;
+box-shadow:0 2px 12px #0002;
+
+padding:14px 18px;
+
+display:flex;
+align-items:center;
+justify-content:space-between;
+}
+
+.panel-title{
+font-size:22px;
+font-weight:bold;
+}
+
+.close{
+background:#eee;
+width:42px;
+height:42px;
+border-radius:50%;
+font-size:20px;
+}
+
+.content{
+max-width:1200px;
+margin:auto;
+padding:25px 16px 70px;
+}
+
+/* CATEGORIES */
+
+.categories{
+display:grid;
+grid-template-columns:repeat(6,1fr);
+gap:12px;
+margin:20px 0 30px;
+}
+
+.category{
+background:white;
+padding:18px 10px;
+border-radius:15px;
+text-align:center;
+cursor:pointer;
+box-shadow:0 5px 18px #0001;
+}
+
+.category .icon{
+font-size:38px;
+}
+
+/* PRODUCTS */
+
+.products{
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:18px;
+}
+
+.card{
+background:white;
+border-radius:16px;
+overflow:hidden;
+box-shadow:0 7px 25px #0001;
+}
+
+.card img{
+width:100%;
+height:180px;
+object-fit:cover;
+}
+
+.card-body{
+padding:16px;
+}
+
+.price{
+font-size:23px;
+font-weight:bold;
+color:#11833a;
+}
+
+.small{
+font-size:13px;
+color:#68736b;
+}
+
+.order-row{
+display:flex;
+gap:8px;
+margin-top:12px;
+}
+
+.qty{
+width:90px;
+padding:11px;
+border:1px solid #ddd;
+border-radius:8px;
+}
+
+/* SELL */
+
+.sell-box,
+.admin-box,
+.cart-box{
+background:white;
+padding:22px;
+border-radius:18px;
+box-shadow:0 8px 25px #0001;
+}
+
+form{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:13px;
+}
+
+input,
+select,
+textarea{
+width:100%;
+padding:13px;
+border:1px solid #d5e0d7;
+border-radius:8px;
+font-size:15px;
+}
+
+.full{
+grid-column:1/-1;
+}
+
+/* CART */
+
+.cart-item{
+display:flex;
+justify-content:space-between;
+align-items:center;
+gap:10px;
+padding:13px 0;
+border-bottom:1px solid #eee;
+}
+
+.total{
+text-align:right;
+font-size:25px;
+font-weight:bold;
+color:#11833a;
+margin:20px 0;
+}
+
+/* PAYMENT */
+
+.payment{
+margin-top:20px;
+padding:20px;
+background:#e9f7ec;
+border-radius:15px;
+text-align:center;
+}
+
+.payment img{
+width:230px;
+max-width:100%;
+}
+
+/* ADMIN */
+
+.admin-list{
+margin-top:20px;
+}
+
+.admin-row{
+display:grid;
+grid-template-columns:1.5fr 1fr 1fr 1fr auto;
+gap:10px;
+align-items:center;
+
+background:#f6faf6;
+padding:12px;
+border-radius:12px;
+margin-bottom:10px;
+}
+
+.admin-row input{
+background:white;
+}
+
+.admin-title{
+display:flex;
+justify-content:space-between;
+align-items:center;
+gap:10px;
+margin-bottom:20px;
+}
+
+.notice{
+background:#fff7df;
+padding:13px;
+border-radius:10px;
+margin-bottom:15px;
+font-size:14px;
+}
+
+/* MOBILE */
+
+@media(max-width:850px){
+
+.main-buttons{
+grid-template-columns:1fr;
+}
+
+.categories{
+grid-template-columns:repeat(3,1fr);
+}
+
+.products{
+grid-template-columns:1fr 1fr;
+}
+
+.admin-row{
+grid-template-columns:1fr 1fr;
+}
+
+}
+
+@media(max-width:550px){
+
+.home{
+padding:15px;
+}
+
+.home-box h1{
+font-size:42px;
+}
+
+.main-btn{
+padding:28px 15px;
+}
+
+.categories{
+grid-template-columns:1fr 1fr;
+}
+
+.products{
+grid-template-columns:1fr;
+}
+
+form{
+grid-template-columns:1fr;
+}
+
+.full{
+grid-column:auto;
+}
+
+.admin-row{
+grid-template-columns:1fr;
+}
+
+}
+</style>
+</head>
+
+<body>
+
+
+<!-- ==================================================
+HOME PAGE
+================================================== -->
+
+<section class="home">
+
+<div class="home-box">
+
+<div class="logo">
+🌾 किसान अनाज बाजार
+</div>
+
+<h1>
+किसान अनाज बाजार
+</h1>
+
+<p>
+किसानों से सीधे कृषि सामान खरीदें और अपना सामान आसानी से बेचें।
+बिहार से शुरुआत।
+</p>
+
+
+<div class="main-buttons">
+
+<button
+class="main-btn buy-btn"
+onclick="openBuy()">
+
+<span class="big-icon">🛒</span>
+
+<strong>सामान खरीदें</strong>
+
+<span>
+धान • गेहूं • मक्का • दाल • सब्जी
+</span>
+
+</button>
+
+
+<button
+class="main-btn sell-btn"
+onclick="openSell()">
+
+<span class="big-icon">🌾</span>
+
+<strong>सामान बेचें</strong>
+
+<span>
+अपना सामान • मात्रा • Location
+</span>
+
+</button>
+
+</div>
+
+<br><br>
+
+<button
+class="white"
+onclick="openAdmin()">
+
+⚙️ Admin Panel
+
+</button>
+
+</div>
+
+</section>
+
+
+<!-- ==================================================
+BUY PANEL
+================================================== -->
+
+<section
+id="buyPanel"
+class="panel">
+
+<div class="panel-header">
+
+<div class="panel-title">
+🛒 सामान खरीदें
+</div>
+
+<button
+class="close"
+onclick="closeBuy()">
+✕
+</button>
+
+</div>
+
+
+<div class="content">
+
+<h2>
+कृषि उत्पाद
+</h2>
+
+<div class="categories">
+
+<div class="category"
+onclick="filterProducts('सभी')">
+<div class="icon">📦</div>
+<b>सभी</b>
+</div>
+
+<div class="category"
+onclick="filterProducts('धान')">
+<div class="icon">🌾</div>
+<b>धान</b>
+</div>
+
+<div class="category"
+onclick="filterProducts('गेहूं')">
+<div class="icon">🌾</div>
+<b>गेहूं</b>
+</div>
+
+<div class="category"
+onclick="filterProducts('मक्का')">
+<div class="icon">🌽</div>
+<b>मक्का</b>
+</div>
+
+<div class="category"
+onclick="filterProducts('दलहन')">
+<div class="icon">🫘</div>
+<b>दलहन</b>
+</div>
+
+<div class="category"
+onclick="filterProducts('सब्जी')">
+<div class="icon">🥬</div>
+<b>सब्जी</b>
+</div>
+
+</div>
+
+
+<div
+id="products"
+class="products">
+</div>
+
+
+<!-- CART -->
+
+<div class="cart-box">
+
+<h2>
+🛍️ आपका कार्ट
+</h2>
+
+<div id="cartItems">
+कार्ट खाली है।
+</div>
+
+<div
+id="cartTotal"
+class="total">
+₹0
+</div>
+
+
+<h2>
+📦 Order & Billing
+</h2>
+
+<input
+id="buyerName"
+placeholder="खरीदार का नाम">
+
+<br><br>
+
+<input
+id="buyerPhone"
+type="tel"
+maxlength="10"
+placeholder="मोबाइल नंबर">
+
+<br><br>
+
+<textarea
+id="buyerAddress"
+rows="3"
+placeholder="पूरा पता">
+</textarea>
+
+<br><br>
+
+<select id="paymentMethod">
+
+<option value="UPI">
+💳 UPI Payment
+</option>
+
+<option value="COD">
+💵 Cash on Delivery
+</option>
+
+</select>
+
+<br><br>
+
+<button
+class="green"
+onclick="placeOrder()">
+
+✅ Order Confirm करें
+
+</button>
+
+<div id="paymentBox">
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- ==================================================
+SELL PANEL
+================================================== -->
+
+<section
+id="sellPanel"
+class="panel">
+
+<div class="panel-header">
+
+<div class="panel-title">
+🌾 सामान बेचें
+</div>
+
+<button
+class="close"
+onclick="closeSell()">
+✕
+</button>
+
+</div>
+
+
+<div class="content">
+
+<div class="sell-box">
+
+<h2>
+🌾 किसान अपना सामान बेचें
+</h2>
+
+<p>
+जानकारी भरें और Location की अनुमति दें।
+</p>
+
+
+<form onsubmit="submitSell(event)">
+
+<input
+id="farmerName"
+placeholder="किसान का नाम"
+required>
+
+<input
+id="mobile"
+type="tel"
+maxlength="10"
+placeholder="मोबाइल नंबर"
+required>
+
+<select
+id="sellCategory"
+required>
+
+<option value="">
+सामान चुनें
+</option>
+
+</select>
+
+<input
+id="sellQuantity"
+type="number"
+min="1"
+placeholder="कुल मात्रा KG"
+required>
+
+<input
+id="village"
+placeholder="गांव / जिला"
+required>
+
+<textarea
+id="description"
+class="full"
+rows="4"
+placeholder="सामान की जानकारी">
+</textarea>
+
+<button
+class="orange full">
+
+📍 Location लेकर सामान भेजें
+
+</button>
+
+</form>
+
+<div id="sellMessage"></div>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- ==================================================
+ADMIN PANEL
+================================================== -->
+
+<section
+id="adminPanel"
+class="panel">
+
+<div class="panel-header">
+
+<div class="panel-title">
+⚙️ Admin Panel
+</div>
+
+<button
+class="close"
+onclick="closeAdmin()">
+✕
+</button>
+
+</div>
+
+
+<div class="content">
+
+<div class="admin-box">
+
+<div class="admin-title">
+
+<h2>
+🌾 अनाज के रेट
+</h2>
+
+<button
+class="green"
+onclick="addProduct()">
+➕ नया अनाज
+</button>
+
+</div>
+
+
+<div class="notice">
+
+📱 यहाँ से आप मोबाइल पर किसी भी अनाज का
+नाम, रेट, Minimum KG और Stock बदल सकते हैं।
+<br><br>
+
+💾 <b>Save</b> करने के बाद इस browser में नया रेट सेव हो जाएगा।
+
+</div>
+
+
+<div
+id="adminList"
+class="admin-list">
+</div>
+
+<br>
+
+<button
+class="green"
+onclick="saveRates()">
+
+💾 सभी रेट Save करें
+
+</button>
+
+</div>
+
+</div>
+
+</section>
+
+
+<script>
+
+/* ==================================================
+UPI ID
+================================================== */
+
+const UPI_ID = "niteshai64910@nyes";
+
+const UPI_NAME = "Kisan Anaj Bazaar";
+
+
+/* ==================================================
+DEFAULT PRODUCTS
+================================================== */
+
+const defaultProducts = [
+
+{
+id:1,
+name:"धान",
+category:"धान",
+price:32,
+minimum:50,
+stock:500,
+icon:"🌾",
+image:"https://images.unsplash.com/photo-1536304993881-ff6e9e5b0e84?auto=format&fit=crop&w=800&q=80"
+},
+
+{
+id:2,
+name:"गेहूं",
+category:"गेहूं",
+price:28,
+minimum:50,
+stock:300,
+icon:"🌾",
+image:"https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?auto=format&fit=crop&w=800&q=80"
+},
+
+{
+id:3,
+name:"मक्का",
+category:"मक्का",
+price:24,
+minimum:50,
+stock:250,
+icon:"🌽",
+image:"https://images.unsplash.com/photo-1601593768792-1e37e1cdd6a6?auto=format&fit=crop&w=800&q=80"
+},
+
+{
+id:4,
+name:"दलहन / चना",
+category:"दलहन",
+price:70,
+minimum:5,
+stock:100,
+icon:"🫘",
+image:"https://images.unsplash.com/photo-1515543904379-3d757afe72e4?auto=format&fit=crop&w=800&q=80"
+},
+
+{
+id:5,
+name:"ताजी सब्जी",
+category:"सब्जी",
+price:20,
+minimum:5,
+stock:80,
+icon:"🥬",
+image:"https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&w=800&q=80"
+},
+
+{
+id:6,
+name:"अन्य कृषि उत्पाद",
+category:"अन्य",
+price:10,
+minimum:1,
+stock:100,
+icon:"📦",
+image:"https://images.unsplash.com/photo-1488459716781-31db52582fe9?auto=format&fit=crop&w=800&q=80"
+}
+
+];
+
+
+/* ==================================================
+LOAD PRODUCTS
+================================================== */
+
+let products =
+JSON.parse(localStorage.getItem("kisanProducts"))
+|| defaultProducts;
+
+let cart = [];
+
+let selectedCategory = "सभी";
+
+
+/* ==================================================
+SAVE PRODUCTS
+================================================== */
+
+function saveProducts(){
+
+localStorage.setItem(
+"kisanProducts",
+JSON.stringify(products)
+);
+
+}
+
+
+/* ==================================================
+HOME PANELS
+================================================== */
+
+function openBuy(){
+
+closeAllPanels();
+
+document
+.getElementById("buyPanel")
+.classList.add("show");
+
+showProducts();
+
+}
+
+function closeBuy(){
+
+document
+.getElementById("buyPanel")
+.classList.remove("show");
+
+}
+
+
+function openSell(){
+
+closeAllPanels();
+
+document
+.getElementById("sellPanel")
+.classList.add("show");
+
+fillSellCategories();
+
+}
+
+
+function closeSell(){
+
+document
+.getElementById("sellPanel")
+.classList.remove("show");
+
+}
+
+
+function openAdmin(){
+
+closeAllPanels();
+
+document
+.getElementById("adminPanel")
+.classList.add("show");
+
+renderAdmin();
+
+}
+
+
+function closeAdmin(){
+
+document
+.getElementById("adminPanel")
+.classList.remove("show");
+
+}
+
+
+function closeAllPanels(){
+
+document
+.querySelectorAll(".panel")
+.forEach(p=>{
+p.classList.remove("show");
+});
+
+}
+
+
+/* ==================================================
+PRODUCTS
+================================================== */
+
+function showProducts(){
+
+let list = products.filter(p => {
+
+return selectedCategory === "सभी"
+|| p.category === selectedCategory;
+
+});
+
+
+document.getElementById("products").innerHTML =
+
+list.map(p => `
+
+<div class="card">
+
+<img
+src="${p.image}"
+onerror="this.style.display='none'">
+
+<div class="card-body">
+
+<div class="small">
+${p.category}
+</div>
+
+<h3>
+${p.icon || "🌾"} ${p.name}
+</h3>
+
+<div class="price">
+₹${p.price} / kg
+</div>
+
+<p class="small">
+उपलब्ध: ${p.stock} kg
+</p>
+
+<p class="small">
+Minimum: <b>${p.minimum} kg</b>
+</p>
+
+<div class="order-row">
+
+<input
+class="qty"
+id="qty${p.id}"
+type="number"
+min="${p.minimum}"
+max="${p.stock}"
+value="${p.minimum}">
+
+<button
+class="green"
+onclick="addCart(${p.id})">
+
+🛒 Cart
+
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+`).join("");
+
+}
+
+
+function filterProducts(category){
+
+selectedCategory = category;
+
+showProducts();
+
+}
+
+
+/* ==================================================
+CART
+================================================== */
+
+function addCart(id){
+
+let product =
+products.find(p => p.id === id);
+
+if(!product) return;
+
+let qty =
+Number(
+document.getElementById("qty"+id).value
+);
+
+if(qty < product.minimum){
+
+alert(
+"Minimum quantity " +
+product.minimum +
+" kg है।"
+);
+
+return;
+
+}
+
+if(qty > product.stock){
+
+alert("इतना stock उपलब्ध नहीं है।");
+
+return;
+
+}
+
+
+let old =
+cart.find(x => x.id === id);
+
+if(old){
+
+old.quantity += qty;
+
+}else{
+
+cart.push({
+
+...product,
+
+quantity:qty
+
+});
+
+}
+
+
+updateCart();
+
+alert(
+"✅ " +
+qty +
+" kg " +
+product.name +
+" cart में जोड़ दिया गया।"
+);
+
+}
+
+
+function updateCart(){
+
+let totalQty =
+cart.reduce(
+(a,b)=>a+b.quantity,
+0
+);
+
+document.getElementById(
+"cartTotal"
+).innerText =
+"₹" + getCartTotal();
+
+renderCart();
+
+}
+
+
+function getCartTotal(){
+
+return cart.reduce(
+
+(sum,item)=>
+sum +
+(item.quantity * item.price),
+
+0
+
+);
+
+}
+
+
+function renderCart(){
+
+let box =
+document.getElementById("cartItems");
+
+if(cart.length === 0){
+
+box.innerHTML =
+"🛒 Cart खाली है।";
+
+return;
+
+}
+
+
+box.innerHTML =
+
+cart.map((item,index)=>`
+
+<div class="cart-item">
+
+<div>
+
+<b>
+${item.name}
+</b>
+
+<br>
+
+<span class="small">
+
+${item.quantity} kg × ₹${item.price}
+
+</span>
+
+</div>
+
+<div>
+
+<b>
+₹${item.quantity * item.price}
+</b>
+
+<br>
+
+<button
+class="red"
+onclick="removeCart(${index})">
+
+हटाएँ
+
+</button>
+
+</div>
+
+</div>
+
+`).join("");
+
+}
+
+
+function removeCart(index){
+
+cart.splice(index,1);
+
+updateCart();
+
+}
+
+
+/* ==================================================
+ORDER / PAYMENT
+================================================== */
+
+function placeOrder(){
+
+if(cart.length === 0){
+
+alert("पहले सामान Cart में डालें।");
+
+return;
+
+}
+
+
+let name =
+document.getElementById("buyerName")
+.value.trim();
+
+let phone =
+document.getElementById("buyerPhone")
+.value.trim();
+
+let address =
+document.getElementById("buyerAddress")
+.value.trim();
+
+
+if(!name || !phone || !address){
+
+alert(
+"नाम, मोबाइल और पूरा पता भरें।"
+);
+
+return;
+
+}
+
+
+let total = getCartTotal();
+
+let method =
+document.getElementById("paymentMethod")
+.value;
+
+
+if(method === "UPI"){
+
+let upiLink =
+"upi://pay" +
+"?pa=" +
+encodeURIComponent(UPI_ID) +
+"&pn=" +
+encodeURIComponent(UPI_NAME) +
+"&am=" +
+total.toFixed(2) +
+"&cu=INR";
+
+
+let qr =
+"https://api.qrserver.com/v1/create-qr-code/" +
+"?size=300x300&data=" +
+encodeURIComponent(upiLink);
+
+
+document.getElementById("paymentBox")
+.innerHTML = `
+
+<div class="payment">
+
+<h2>
+💳 ₹${total} Payment
+</h2>
+
+<p>
+नीचे QR scan करके payment करें
+</p>
+
+<img
+src="${qr}"
+alt="UPI QR">
+
+<br><br>
+
+<a
+href="${upiLink}"
+style="text-decoration:none">
+
+<button class="green">
+
+📱 UPI App से Payment करें
+
+</button>
+
+</a>
+
+<p>
+UPI ID:
+<b>${UPI_ID}</b>
+</p>
+
+<p class="small">
+Payment करने के बाद order details सुरक्षित रखें।
+</p>
+
+</div>
+
+`;
+
+}else{
+
+document.getElementById("paymentBox")
+.innerHTML = `
+
+<div class="payment">
+
+<h2>
+✅ COD Order
+</h2>
+
+<p>
+कुल राशि:
+<b>₹${total}</b>
+</p>
+
+<p>
+Delivery के समय payment करें।
+</p>
+
+</div>
+
+`;
+
+}
+
+
+/*
+Order details browser में save
+*/
+
+let order = {
+
+id:"ORD"+Date.now(),
+
+buyer:name,
+
+phone:phone,
+
+address:address,
+
+items:cart,
+
+total:total,
+
+payment:method,
+
+date:new Date().toLocaleString("hi-IN")
+
+};
+
+
+let oldOrders =
+JSON.parse(
+localStorage.getItem("kisanOrders")
+) || [];
+
+
+oldOrders.push(order);
+
+
+localStorage.setItem(
+"kisanOrders",
+JSON.stringify(oldOrders)
+);
+
+
+/*
+Cart खाली
+*/
+
+cart = [];
+
+updateCart();
+
+}
+
+
+/* ==================================================
+SELL
+================================================== */
+
+function fillSellCategories(){
+
+let select =
+document.getElementById("sellCategory");
+
+select.innerHTML =
+
+`<option value="">
+सामान चुनें
+</option>` +
+
+products.map(p => `
+
+<option value="${p.category}">
+${p.icon || "🌾"} ${p.name}
+</option>
+
+`).join("");
+
+}
+
+
+function submitSell(event){
+
+event.preventDefault();
+
+
+let name =
+document.getElementById("farmerName")
+.value.trim();
+
+let mobile =
+document.getElementById("mobile")
+.value.trim();
+
+let category =
+document.getElementById("sellCategory")
+.value;
+
+let quantity =
+Number(
+document.getElementById("sellQuantity")
+.value
+);
+
+let village =
+document.getElementById("village")
+.value.trim();
+
+let description =
+document.getElementById("description")
+.value.trim();
+
+
+if(!navigator.geolocation){
+
+alert(
+"इस browser में Location उपलब्ध नहीं है।"
+);
+
+return;
+
+}
+
+
+navigator.geolocation.getCurrentPosition(
+
+function(position){
+
+let lat =
+position.coords.latitude;
+
+let lng =
+position.coords.longitude;
+
+
+let maps =
+"https://www.google.com/maps/search/?api=1&query=" +
+lat +
+"," +
+lng;
+
+
+let sellData = {
+
+id:"SELL"+Date.now(),
+
+name:name,
+
+mobile:mobile,
+
+category:category,
+
+quantity:quantity,
+
+village:village,
+
+description:description,
+
+latitude:lat,
+
+longitude:lng,
+
+date:new Date().toLocaleString("hi-IN")
+
+};
+
+
+let sells =
+JSON.parse(
+localStorage.getItem("kisanSells")
+) || [];
+
+
+sells.push(sellData);
+
+
+localStorage.setItem(
+"kisanSells",
+JSON.stringify(sells)
+);
+
+
+document.getElementById(
+"sellMessage"
+).innerHTML = `
+
+<div class="payment">
+
+<h3>
+✅ सामान बेचने की जानकारी भेज दी गई
+</h3>
+
+<p>
+किसान:
+<b>${name}</b>
+</p>
+
+<p>
+सामान:
+<b>${category}</b>
+</p>
+
+<p>
+मात्रा:
+<b>${quantity} KG</b>
+</p>
+
+<p>
+गांव/जिला:
+<b>${village}</b>
+</p>
+
+<p>
+📍 Location:
+${lat.toFixed(5)},
+${lng.toFixed(5)}
+</p>
+
+<a
+href="${maps}"
+target="_blank">
+
+<button class="green">
+🗺️ Location देखें
+</button>
+
+</a>
+
+</div>
+
+`;
+
+},
+
+function(){
+
+alert(
+"📍 सामान बेचने के लिए Location permission दें।"
+);
+
+}
+
+);
+
+}
+
+
+/* ==================================================
+ADMIN PANEL
+================================================== */
+
+function renderAdmin(){
+
+let box =
+document.getElementById("adminList");
+
+
+box.innerHTML =
+
+products.map((p,index)=>`
+
+<div
+class="admin-row"
+data-index="${index}">
+
+<input
+class="admin-name"
+value="${p.name}"
+placeholder="अनाज का नाम">
+
+<input
+class="admin-category"
+value="${p.category}"
+placeholder="Category">
+
+<input
+class="admin-price"
+type="number"
+min="0"
+value="${p.price}"
+placeholder="Rate">
+
+<input
+class="admin-minimum"
+type="number"
+min="1"
+value="${p.minimum}"
+placeholder="Minimum KG">
+
+<input
+class="admin-stock"
+type="number"
+min="0"
+value="${p.stock}"
+placeholder="Stock">
+
+<button
+class="red"
+onclick="deleteProduct(${index})">
+
+🗑️
+
+</button>
+
+</div>
+
+`).join("");
+
+}
+
+
+/* ==================================================
+SAVE RATES
+================================================== */
+
+function saveRates(){
+
+let rows =
+document.querySelectorAll(".admin-row");
+
+
+rows.forEach((row,index)=>{
+
+let name =
+row.querySelector(".admin-name").value.trim();
+
+let category =
+row.querySelector(".admin-category").value.trim();
+
+let price =
+Number(
+row.querySelector(".admin-price").value
+);
+
+let minimum =
+Number(
+row.querySelector(".admin-minimum").value
