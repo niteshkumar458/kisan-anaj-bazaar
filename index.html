@@ -1,0 +1,1092 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Kisan Anaj Bazaar</title>
+
+<style>
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+  font-family:Arial,sans-serif;
+}
+
+body{
+  background:#f4f7f2;
+  color:#222;
+}
+
+button{
+  cursor:pointer;
+  border:0;
+}
+
+.home{
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  text-align:center;
+  padding:25px;
+  background:
+  linear-gradient(rgba(0,70,20,.55),rgba(0,40,10,.65)),
+  url("https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=1600&q=80")
+  center/cover;
+}
+
+.home h1{
+  color:white;
+  font-size:38px;
+  margin-bottom:12px;
+}
+
+.home p{
+  color:white;
+  font-size:18px;
+  margin-bottom:30px;
+}
+
+.main-buttons{
+  display:flex;
+  gap:15px;
+  flex-wrap:wrap;
+  justify-content:center;
+}
+
+.main-buttons button{
+  padding:16px 28px;
+  border-radius:12px;
+  font-size:18px;
+  font-weight:bold;
+}
+
+.buyBtn{background:#168a35;color:white;}
+.sellBtn{background:#f39c12;color:white;}
+.supportBtn{background:#1976d2;color:white;}
+.messageBtn{background:#7b1fa2;color:white;}
+.adminBtn{background:#222;color:white;}
+
+.panel{
+  display:none;
+  position:fixed;
+  inset:0;
+  z-index:1000;
+  background:#f5f7f5;
+  overflow-y:auto;
+}
+
+.panel.show{
+  display:block;
+}
+
+.header{
+  position:sticky;
+  top:0;
+  z-index:5;
+  background:#126b2c;
+  color:white;
+  padding:15px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+}
+
+.header h2{
+  font-size:21px;
+}
+
+.closeBtn{
+  background:white;
+  color:#126b2c;
+  padding:9px 14px;
+  border-radius:8px;
+  font-weight:bold;
+}
+
+.container{
+  max-width:1000px;
+  margin:auto;
+  padding:20px;
+}
+
+.card{
+  background:white;
+  border-radius:14px;
+  padding:18px;
+  margin-bottom:15px;
+  box-shadow:0 2px 10px #0001;
+}
+
+input,select,textarea{
+  width:100%;
+  padding:13px;
+  margin:7px 0 13px;
+  border:1px solid #ccc;
+  border-radius:8px;
+  font-size:16px;
+}
+
+textarea{
+  min-height:120px;
+  resize:vertical;
+}
+
+.submit{
+  width:100%;
+  padding:14px;
+  background:#168a35;
+  color:white;
+  border-radius:9px;
+  font-size:17px;
+  font-weight:bold;
+}
+
+.supportSubmit{
+  background:#1976d2;
+}
+
+.message{
+  border-left:5px solid #7b1fa2;
+}
+
+.message h3{
+  margin-bottom:8px;
+}
+
+.message small{
+  color:#666;
+}
+
+.status{
+  display:inline-block;
+  padding:6px 10px;
+  border-radius:20px;
+  background:#fff3cd;
+  color:#856404;
+  margin:8px 0;
+  font-size:13px;
+}
+
+.status.done{
+  background:#d4edda;
+  color:#155724;
+}
+
+.status.progress{
+  background:#cce5ff;
+  color:#004085;
+}
+
+.actionBtn{
+  padding:9px 12px;
+  border-radius:7px;
+  margin:4px;
+  color:white;
+}
+
+.progressBtn{
+  background:#1976d2;
+}
+
+.doneBtn{
+  background:#168a35;
+}
+
+.deleteBtn{
+  background:#d32f2f;
+}
+
+.empty{
+  text-align:center;
+  padding:40px;
+  color:#777;
+}
+
+.product{
+  display:flex;
+  justify-content:space-between;
+  gap:15px;
+  align-items:center;
+}
+
+.product button{
+  background:#168a35;
+  color:white;
+  padding:10px 15px;
+  border-radius:8px;
+}
+
+.total{
+  font-size:21px;
+  font-weight:bold;
+  margin:15px 0;
+}
+</style>
+</head>
+
+<body>
+
+<!-- HOME -->
+<section class="home" id="home">
+  <h1>🌾 किसान अनाज बाजार</h1>
+  <p>किसान से सीधे ग्राहक तक</p>
+
+  <div class="main-buttons">
+    <button class="buyBtn" onclick="openPanel('buyPanel')">
+      🛒 सामान खरीदें
+    </button>
+
+    <button class="sellBtn" onclick="openPanel('sellPanel')">
+      🌾 सामान बेचें
+    </button>
+
+    <button class="supportBtn" onclick="openPanel('supportPanel')">
+      🆘 Customer Support
+    </button>
+
+    <button class="messageBtn" onclick="openMessages()">
+      💬 Messages
+    </button>
+
+    <button class="adminBtn" onclick="openPanel('adminPanel')">
+      ⚙️ Admin
+    </button>
+  </div>
+</section>
+
+
+<!-- BUY PANEL -->
+<section class="panel" id="buyPanel">
+
+  <div class="header">
+    <h2>🛒 सामान खरीदें</h2>
+    <button class="closeBtn" onclick="closePanels()">✕ बंद करें</button>
+  </div>
+
+  <div class="container">
+
+    <div id="products">
+      <div class="empty">सामान लोड हो रहा है...</div>
+    </div>
+
+    <div class="card">
+      <h3>ऑर्डर विवरण</h3>
+
+      <input id="customerName" placeholder="आपका नाम">
+
+      <input id="customerPhone"
+             type="tel"
+             placeholder="मोबाइल नंबर">
+
+      <textarea id="customerAddress"
+                placeholder="डिलीवरी पता"></textarea>
+
+      <select id="paymentMethod">
+        <option value="COD">Cash on Delivery</option>
+        <option value="UPI">UPI Payment</option>
+      </select>
+
+      <div class="total">
+        कुल: ₹<span id="cartTotal">0</span>
+      </div>
+
+      <button class="submit" onclick="placeOrder()">
+        ऑर्डर करें
+      </button>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- SELL PANEL -->
+<section class="panel" id="sellPanel">
+
+  <div class="header">
+    <h2>🌾 सामान बेचें</h2>
+    <button class="closeBtn" onclick="closePanels()">✕ बंद करें</button>
+  </div>
+
+  <div class="container">
+
+    <div class="card">
+
+      <h3>अपना कृषि सामान बेचें</h3>
+
+      <input id="sellerName" placeholder="आपका नाम">
+
+      <input id="sellerPhone"
+             type="tel"
+             placeholder="मोबाइल नंबर">
+
+      <select id="sellerProduct">
+        <option>धान</option>
+        <option>गेहूं</option>
+        <option>मक्का</option>
+        <option>चना</option>
+        <option>दलहन</option>
+        <option>सब्जी</option>
+        <option>अन्य कृषि उत्पाद</option>
+      </select>
+
+      <input id="sellerQuantity"
+             type="number"
+             placeholder="कितनी मात्रा?">
+
+      <select id="sellerUnit">
+        <option>किलो</option>
+        <option>क्विंटल</option>
+        <option>टन</option>
+      </select>
+
+      <input id="sellerLocation"
+             placeholder="गांव / शहर / जिला">
+
+      <textarea id="sellerDetails"
+                placeholder="सामान की जानकारी"></textarea>
+
+      <button class="submit"
+              onclick="submitSellRequest()">
+        सामान बेचने का अनुरोध भेजें
+      </button>
+
+    </div>
+
+  </div>
+</section>
+
+
+<!-- CUSTOMER SUPPORT -->
+<section class="panel" id="supportPanel">
+
+  <div class="header">
+    <h2>🆘 Customer Support</h2>
+    <button class="closeBtn" onclick="closePanels()">✕ बंद करें</button>
+  </div>
+
+  <div class="container">
+
+    <div class="card">
+
+      <h3>अपनी समस्या बताएं</h3>
+
+      <p style="margin:10px 0;color:#666;">
+        नीचे अपनी समस्या लिखें। आपका संदेश हमारे Messages सेक्शन में आएगा।
+      </p>
+
+      <input id="supportName"
+             placeholder="आपका नाम">
+
+      <input id="supportPhone"
+             type="tel"
+             placeholder="मोबाइल नंबर">
+
+      <select id="supportTopic">
+        <option>ऑर्डर की समस्या</option>
+        <option>पेमेंट की समस्या</option>
+        <option>डिलीवरी की समस्या</option>
+        <option>सामान से संबंधित समस्या</option>
+        <option>वेबसाइट की समस्या</option>
+        <option>अन्य समस्या</option>
+      </select>
+
+      <textarea id="supportMessage"
+                placeholder="अपनी समस्या यहां लिखें..."></textarea>
+
+      <button class="submit supportSubmit"
+              onclick="sendSupportMessage()">
+        📩 संदेश भेजें
+      </button>
+
+    </div>
+
+  </div>
+</section>
+
+
+<!-- MESSAGES PANEL -->
+<section class="panel" id="messagesPanel">
+
+  <div class="header">
+    <h2>💬 Customer Messages</h2>
+    <button class="closeBtn" onclick="closePanels()">✕ बंद करें</button>
+  </div>
+
+  <div class="container">
+
+    <div class="card">
+      <h3>ग्राहकों के संदेश</h3>
+      <p style="margin-top:6px;color:#666;">
+        यहां Customer Support से भेजे गए सभी संदेश दिखाई देंगे।
+      </p>
+    </div>
+
+    <div id="messagesList">
+      <div class="empty">
+        संदेश लोड हो रहे हैं...
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ADMIN PANEL -->
+<section class="panel" id="adminPanel">
+
+  <div class="header">
+    <h2>⚙️ Admin Panel</h2>
+    <button class="closeBtn" onclick="closePanels()">✕ बंद करें</button>
+  </div>
+
+  <div class="container">
+
+    <div class="card">
+      <h3>वेबसाइट Admin</h3>
+      <p style="margin-top:8px;">
+        Customer Messages देखने के लिए नीचे बटन दबाएं।
+      </p>
+
+      <button class="submit"
+              style="margin-top:15px;background:#7b1fa2;"
+              onclick="openMessages()">
+        💬 Customer Messages
+      </button>
+    </div>
+
+  </div>
+</section>
+
+
+<script type="module">
+
+/* =========================================
+   FIREBASE CONFIG
+   यहां अपना Firebase Config डालें
+========================================= */
+
+import { initializeApp }
+from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
+
+import {
+  getFirestore,
+  collection,
+  addDoc,
+  getDocs,
+  query,
+  orderBy,
+  updateDoc,
+  deleteDoc,
+  doc,
+  serverTimestamp
+}
+from "https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js";
+
+
+const firebaseConfig = {
+
+  apiKey: "YOUR_API_KEY",
+
+  authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+
+  projectId: "YOUR_PROJECT_ID",
+
+  storageBucket: "YOUR_PROJECT_ID.firebasestorage.app",
+
+  messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+
+  appId: "YOUR_APP_ID"
+
+};
+
+
+const app = initializeApp(firebaseConfig);
+
+const db = getFirestore(app);
+
+
+/* =========================================
+   PANEL SYSTEM
+========================================= */
+
+window.openPanel = function(id){
+
+  closePanels();
+
+  document.getElementById(id)
+    .classList.add("show");
+};
+
+
+window.closePanels = function(){
+
+  document.querySelectorAll(".panel")
+    .forEach(panel=>{
+      panel.classList.remove("show");
+    });
+
+};
+
+
+/* =========================================
+   CUSTOMER SUPPORT MESSAGE
+========================================= */
+
+window.sendSupportMessage = async function(){
+
+  const name =
+    document.getElementById("supportName").value.trim();
+
+  const phone =
+    document.getElementById("supportPhone").value.trim();
+
+  const topic =
+    document.getElementById("supportTopic").value;
+
+  const message =
+    document.getElementById("supportMessage").value.trim();
+
+
+  if(!name || !phone || !message){
+
+    alert("कृपया नाम, मोबाइल नंबर और समस्या भरें।");
+
+    return;
+  }
+
+
+  try{
+
+    await addDoc(
+      collection(db,"customerMessages"),
+      {
+        name:name,
+        phone:phone,
+        topic:topic,
+        message:message,
+        status:"नई",
+        createdAt:serverTimestamp()
+      }
+    );
+
+
+    alert("✅ आपका संदेश भेज दिया गया है।");
+
+    document.getElementById("supportName").value="";
+    document.getElementById("supportPhone").value="";
+    document.getElementById("supportMessage").value="";
+
+    closePanels();
+
+  }
+  catch(error){
+
+    console.error(error);
+
+    alert(
+      "❌ संदेश भेजने में समस्या हुई। Firebase सेटिंग और Rules जांचें।"
+    );
+
+  }
+
+};
+
+
+/* =========================================
+   OPEN MESSAGES
+========================================= */
+
+window.openMessages = async function(){
+
+  closePanels();
+
+  document
+    .getElementById("messagesPanel")
+    .classList.add("show");
+
+  await loadMessages();
+
+};
+
+
+/* =========================================
+   LOAD CUSTOMER MESSAGES
+========================================= */
+
+async function loadMessages(){
+
+  const box =
+    document.getElementById("messagesList");
+
+  box.innerHTML =
+    '<div class="empty">संदेश लोड हो रहे हैं...</div>';
+
+
+  try{
+
+    const q = query(
+      collection(db,"customerMessages"),
+      orderBy("createdAt","desc")
+    );
+
+
+    const snapshot =
+      await getDocs(q);
+
+
+    if(snapshot.empty){
+
+      box.innerHTML =
+        '<div class="empty">अभी कोई Customer Message नहीं है।</div>';
+
+      return;
+    }
+
+
+    box.innerHTML="";
+
+
+    snapshot.forEach(item=>{
+
+      const data = item.data();
+
+
+      let statusClass="";
+
+      if(data.status==="हल हो गई"){
+        statusClass="done";
+      }
+
+      if(data.status==="देख रहे हैं"){
+        statusClass="progress";
+      }
+
+
+      let date="";
+
+      if(data.createdAt){
+
+        date =
+          data.createdAt.toDate()
+          .toLocaleString("hi-IN");
+
+      }
+
+
+      const div =
+        document.createElement("div");
+
+      div.className="card message";
+
+
+      div.innerHTML=`
+
+        <h3>👤 ${escapeHTML(data.name)}</h3>
+
+        <p>
+          📞 ${escapeHTML(data.phone)}
+        </p>
+
+        <p>
+          📌 समस्या:
+          ${escapeHTML(data.topic)}
+        </p>
+
+        <p style="margin-top:10px;">
+          💬 ${escapeHTML(data.message)}
+        </p>
+
+        <span class="status ${statusClass}">
+          ${escapeHTML(data.status || "नई")}
+        </span>
+
+        <p>
+          <small>
+            ${date}
+          </small>
+        </p>
+
+        <div style="margin-top:10px;">
+
+          <button
+            class="actionBtn progressBtn"
+            onclick="changeStatus('${item.id}','देख रहे हैं')">
+            देख रहे हैं
+          </button>
+
+          <button
+            class="actionBtn doneBtn"
+            onclick="changeStatus('${item.id}','हल हो गई')">
+            हल हो गई
+          </button>
+
+          <button
+            class="actionBtn deleteBtn"
+            onclick="deleteMessage('${item.id}')">
+            Delete
+          </button>
+
+        </div>
+
+      `;
+
+
+      box.appendChild(div);
+
+    });
+
+  }
+  catch(error){
+
+    console.error(error);
+
+    box.innerHTML=`
+      <div class="card">
+        ❌ Messages लोड नहीं हो पाए।
+        <br><br>
+        Firebase Firestore Rules और Config जांचें।
+      </div>
+    `;
+
+  }
+
+}
+
+
+/* =========================================
+   CHANGE MESSAGE STATUS
+========================================= */
+
+window.changeStatus = async function(id,status){
+
+  try{
+
+    await updateDoc(
+      doc(db,"customerMessages",id),
+      {
+        status:status
+      }
+    );
+
+
+    await loadMessages();
+
+  }
+  catch(error){
+
+    console.error(error);
+
+    alert("Status बदलने में समस्या हुई।");
+
+  }
+
+};
+
+
+/* =========================================
+   DELETE MESSAGE
+========================================= */
+
+window.deleteMessage = async function(id){
+
+  const ok =
+    confirm("क्या आप यह message delete करना चाहते हैं?");
+
+  if(!ok) return;
+
+
+  try{
+
+    await deleteDoc(
+      doc(db,"customerMessages",id)
+    );
+
+    await loadMessages();
+
+  }
+  catch(error){
+
+    console.error(error);
+
+    alert("Message delete नहीं हुआ।");
+
+  }
+
+};
+
+
+/* =========================================
+   SELL REQUEST
+========================================= */
+
+window.submitSellRequest = async function(){
+
+  const name =
+    document.getElementById("sellerName").value.trim();
+
+  const phone =
+    document.getElementById("sellerPhone").value.trim();
+
+  const product =
+    document.getElementById("sellerProduct").value;
+
+  const quantity =
+    document.getElementById("sellerQuantity").value;
+
+  const unit =
+    document.getElementById("sellerUnit").value;
+
+  const location =
+    document.getElementById("sellerLocation").value.trim();
+
+  const details =
+    document.getElementById("sellerDetails").value.trim();
+
+
+  if(!name || !phone || !quantity || !location){
+
+    alert("कृपया जरूरी जानकारी भरें।");
+
+    return;
+  }
+
+
+  try{
+
+    await addDoc(
+      collection(db,"sellRequests"),
+      {
+        name:name,
+        phone:phone,
+        product:product,
+        quantity:Number(quantity),
+        unit:unit,
+        location:location,
+        details:details,
+        createdAt:serverTimestamp()
+      }
+    );
+
+
+    alert("✅ आपका सामान बेचने का अनुरोध भेज दिया गया है।");
+
+
+    document
+      .getElementById("sellerName").value="";
+
+    document
+      .getElementById("sellerPhone").value="";
+
+    document
+      .getElementById("sellerQuantity").value="";
+
+    document
+      .getElementById("sellerLocation").value="";
+
+    document
+      .getElementById("sellerDetails").value="";
+
+
+    closePanels();
+
+  }
+  catch(error){
+
+    console.error(error);
+
+    alert("❌ अनुरोध भेजने में समस्या हुई।");
+
+  }
+
+};
+
+
+/* =========================================
+   SIMPLE PRODUCTS
+========================================= */
+
+const products = [
+
+  {
+    name:"धान",
+    price:32
+  },
+
+  {
+    name:"गेहूं",
+    price:28
+  },
+
+  {
+    name:"मक्का",
+    price:24
+  },
+
+  {
+    name:"चना",
+    price:70
+  },
+
+  {
+    name:"सब्जी",
+    price:20
+  }
+
+];
+
+
+let cartTotal=0;
+
+
+function showProducts(){
+
+  const box =
+    document.getElementById("products");
+
+  box.innerHTML="";
+
+
+  products.forEach((product,index)=>{
+
+    const div =
+      document.createElement("div");
+
+    div.className="card product";
+
+
+    div.innerHTML=`
+
+      <div>
+
+        <h3>🌾 ${product.name}</h3>
+
+        <p style="margin-top:6px;">
+          ₹${product.price} / किलो
+        </p>
+
+      </div>
+
+      <button onclick="addProduct(${index})">
+        जोड़ें
+      </button>
+
+    `;
+
+
+    box.appendChild(div);
+
+  });
+
+}
+
+
+window.addProduct = function(index){
+
+  cartTotal += products[index].price;
+
+  document
+    .getElementById("cartTotal")
+    .innerText=cartTotal;
+
+};
+
+
+window.placeOrder = async function(){
+
+  const name =
+    document.getElementById("customerName").value.trim();
+
+  const phone =
+    document.getElementById("customerPhone").value.trim();
+
+  const address =
+    document.getElementById("customerAddress").value.trim();
+
+  const payment =
+    document.getElementById("paymentMethod").value;
+
+
+  if(!name || !phone || !address){
+
+    alert("कृपया नाम, मोबाइल और पता भरें।");
+
+    return;
+  }
+
+
+  if(cartTotal<=0){
+
+    alert("कृपया सामान चुनें।");
+
+    return;
+  }
+
+
+  try{
+
+    await addDoc(
+      collection(db,"orders"),
+      {
+        customerName:name,
+        phone:phone,
+        address:address,
+        payment:payment,
+        total:cartTotal,
+        status:"नया",
+        createdAt:serverTimestamp()
+      }
+    );
+
+
+    alert("✅ आपका ऑर्डर भेज दिया गया है।");
+
+    cartTotal=0;
+
+    document
+      .getElementById("cartTotal")
+      .innerText="0";
+
+    closePanels();
+
+  }
+  catch(error){
+
+    console.error(error);
+
+    alert("❌ ऑर्डर भेजने में समस्या हुई।");
+
+  }
+
+};
+
+
+/* =========================================
+   SECURITY: TEXT ESCAPE
+========================================= */
+
+function escapeHTML(value){
+
+  return String(value ?? "")
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
+
+}
+
+
+/* =========================================
+   START
+========================================= */
+
+showProducts();
+
+</script>
+
+</body>
+</html>
