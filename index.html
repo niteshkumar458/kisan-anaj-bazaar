@@ -290,4 +290,547 @@
       <option value="अन्य<option value="सब्जी">सब्जी</option>
 <option value="अन्य">अन्य</option>
 </select>
+</div><!-- PRODUCTS SECTION -->  <h2 class="section-title">🌾 उपलब्ध कृषि सामान</h2>  <div class="products" id="products"></div>  <!-- SELL PRODUCT -->  <div class="sell-box"><h2 class="section-title">🚜 अपना सामान बेचें</h2>
+
+<form id="sellForm">
+
+  <div class="form-group">
+    <label>कृषि सामान का नाम</label>
+    <input
+      type="text"
+      id="productName"
+      placeholder="जैसे धान, गेहूं, मक्का"
+      required
+    >
+  </div>
+
+  <div class="form-group">
+    <label>श्रेणी</label>
+
+    <select id="productCategory" required>
+      <option value="">श्रेणी चुनें</option>
+      <option value="धान">धान</option>
+      <option value="गेहूं">गेहूं</option>
+      <option value="मक्का">मक्का</option>
+      <option value="दलहन">दलहन</option>
+      <option value="सब्जी">सब्जी</option>
+      <option value="अन्य">अन्य</option>
+    </select>
+  </div>
+
+  <div class="form-group">
+    <label>कीमत (₹ प्रति किलो)</label>
+
+    <input
+      type="number"
+      id="productPrice"
+      placeholder="जैसे 30"
+      min="1"
+      required
+    >
+  </div>
+
+  <div class="form-group">
+    <label>उपलब्ध मात्रा (किलो)</label>
+
+    <input
+      type="number"
+      id="productQuantity"
+      placeholder="जैसे 500"
+      min="1"
+      required
+    >
+  </div>
+
+  <div class="form-group">
+    <label>किसान का नाम</label>
+
+    <input
+      type="text"
+      id="farmerName"
+      placeholder="अपना नाम"
+      required
+    >
+  </div>
+
+  <div class="form-group">
+    <label>मोबाइल नंबर</label>
+
+    <input
+      type="tel"
+      id="farmerPhone"
+      placeholder="10 अंकों का मोबाइल नंबर"
+      maxlength="10"
+      required
+    >
+  </div>
+
+  <div class="form-group">
+    <label>स्थान</label>
+
+    <input
+      type="text"
+      id="location"
+      placeholder="गांव / शहर / जिला"
+      required
+    >
+  </div>
+
+  <div class="form-group">
+    <label>अतिरिक्त जानकारी</label>
+
+    <textarea
+      id="description"
+      rows="4"
+      placeholder="सामान के बारे में जानकारी लिखें..."
+    ></textarea>
+  </div>
+
+  <button type="submit" class="submit-btn">
+    📤 सामान पोस्ट करें
+  </button>
+
+</form>
+
+<div class="success" id="sellSuccess">
+  ✅ आपका सामान सफलतापूर्वक पोस्ट हो गया!
 </div>
+
+  </div>  <!-- CART -->  <div class="cart" id="cartSection"><h2 class="section-title">🛒 आपका Cart</h2>
+
+<div id="cartItems">
+  <p>Cart अभी खाली है।</p>
+</div>
+
+<div class="total" id="cartTotal">
+  कुल: ₹0
+</div>
+
+  </div>  <!-- ORDER FORM -->  <div class="order-box"><h2 class="section-title">📦 ऑर्डर की जानकारी</h2>
+
+<form id="orderForm">
+
+  <div class="form-group">
+    <label>ग्राहक का नाम</label>
+
+    <input
+      type="text"
+      id="customerName"
+      placeholder="अपना नाम"
+      required
+    >
+  </div>
+
+  <div class="form-group">
+    <label>मोबाइल नंबर</label>
+
+    <input
+      type="tel"
+      id="customerPhone"
+      placeholder="10 अंकों का मोबाइल नंबर"
+      maxlength="10"
+      required
+    >
+  </div>
+
+  <div class="form-group">
+    <label>डिलीवरी पता</label>
+
+    <textarea
+      id="customerAddress"
+      rows="4"
+      placeholder="पूरा पता लिखें..."
+      required
+    ></textarea>
+  </div>
+
+  <button type="submit" class="submit-btn">
+    ✅ ऑर्डर भेजें
+  </button>
+
+</form>
+
+<div class="success" id="orderSuccess">
+  ✅ आपका ऑर्डर सफलतापूर्वक भेज दिया गया!
+</div>
+
+  </div></div><!-- FOOTER --><footer>  <h3>🌾 Kisan Anaj Bazaar</h3>  <p>किसानों से सीधे कृषि सामान खरीदें और बेचें</p>  <p style="margin-top:10px;">
+    © 2026 Kisan Anaj Bazaar
+  </p></footer><script>
+
+  /* SAMPLE PRODUCTS */
+
+  let products = [
+
+    {
+      id: 1,
+      name: "धान",
+      category: "धान",
+      price: 32,
+      quantity: 500,
+      farmer: "किसान",
+      location: "बिहार"
+    },
+
+    {
+      id: 2,
+      name: "गेहूं",
+      category: "गेहूं",
+      price: 28,
+      quantity: 800,
+      farmer: "किसान",
+      location: "बिहार"
+    },
+
+    {
+      id: 3,
+      name: "मक्का",
+      category: "मक्का",
+      price: 24,
+      quantity: 600,
+      farmer: "किसान",
+      location: "बिहार"
+    },
+
+    {
+      id: 4,
+      name: "चना",
+      category: "दलहन",
+      price: 70,
+      quantity: 300,
+      farmer: "किसान",
+      location: "बिहार"
+    }
+
+  ];
+
+
+  /* CART */
+
+  let cart = [];
+
+
+  /* DISPLAY PRODUCTS */
+
+  function displayProducts() {
+
+    const container = document.getElementById("products");
+
+    const searchText =
+      document.getElementById("search").value.toLowerCase();
+
+    const category =
+      document.getElementById("category").value;
+
+
+    const filteredProducts = products.filter(function(product) {
+
+      const searchMatch =
+        product.name.toLowerCase().includes(searchText);
+
+      const categoryMatch =
+        category === "all" ||
+        product.category === category;
+
+      return searchMatch && categoryMatch;
+
+    });
+
+
+    if (filteredProducts.length === 0) {
+
+      container.innerHTML =
+        "<p>❌ कोई सामान नहीं मिला।</p>";
+
+      return;
+
+    }
+
+
+    container.innerHTML = filteredProducts.map(function(product) {
+
+      return `
+
+        <div class="product">
+
+          <h3>🌾 ${product.name}</h3>
+
+          <p>
+            📂 श्रेणी:
+            ${product.category}
+          </p>
+
+          <p class="price">
+            ₹${product.price} / किलो
+          </p>
+
+          <p>
+            📦 मात्रा:
+            ${product.quantity} किलो
+          </p>
+
+          <p>
+            👨‍🌾 किसान:
+            ${product.farmer}
+          </p>
+
+          <p>
+            📍 स्थान:
+            ${product.location}
+          </p>
+
+          <button
+            class="buy-btn"
+            onclick="addToCart(${product.id})"
+          >
+            🛒 Cart में डालें
+          </button>
+
+        </div>
+
+      `;
+
+    }).join("");
+
+  }
+
+
+  /* ADD TO CART */
+
+  function addToCart(id) {
+
+    const product =
+      products.find(function(item) {
+
+        return item.id === id;
+
+      });
+
+
+    if (!product) return;
+
+
+    cart.push(product);
+
+    updateCart();
+
+
+    alert("✅ सामान Cart में जोड़ दिया गया।");
+
+  }
+
+
+  /* UPDATE CART */
+
+  function updateCart() {
+
+    const cartItems =
+      document.getElementById("cartItems");
+
+    const cartCount =
+      document.getElementById("cartCount");
+
+    const cartTotal =
+      document.getElementById("cartTotal");
+
+
+    cartCount.innerText = cart.length;
+
+
+    if (cart.length === 0) {
+
+      cartItems.innerHTML =
+        "<p>Cart अभी खाली है।</p>";
+
+      cartTotal.innerText =
+        "कुल: ₹0";
+
+      return;
+
+    }
+
+
+    let total = 0;
+
+
+    cartItems.innerHTML =
+      cart.map(function(product, index) {
+
+        total += product.price;
+
+
+        return `
+
+          <div class="cart-item">
+
+            <div>
+
+              <strong>
+                🌾 ${product.name}
+              </strong>
+
+              <p>
+                ₹${product.price} / किलो
+              </p>
+
+            </div>
+
+            <button
+              class="remove-btn"
+              onclick="removeFromCart(${index})"
+            >
+              हटाएं
+            </button>
+
+          </div>
+
+        `;
+
+      }).join("");
+
+
+    cartTotal.innerText =
+      "कुल: ₹" + total;
+
+  }
+
+
+  /* REMOVE FROM CART */
+
+  function removeFromCart(index) {
+
+    cart.splice(index, 1);
+
+    updateCart();
+
+  }
+
+
+  /* SHOW CART */
+
+  function showCart() {
+
+    document
+      .getElementById("cartSection")
+      .scrollIntoView({
+        behavior: "smooth"
+      });
+
+  }
+
+
+  /* SELL FORM */
+
+  document
+    .getElementById("sellForm")
+    .addEventListener("submit", function(event) {
+
+      event.preventDefault();
+
+
+      const newProduct = {
+
+        id: Date.now(),
+
+        name:
+          document.getElementById("productName").value,
+
+        category:
+          document.getElementById("productCategory").value,
+
+        price:
+          Number(
+            document.getElementById("productPrice").value
+          ),
+
+        quantity:
+          Number(
+            document.getElementById("productQuantity").value
+          ),
+
+        farmer:
+          document.getElementById("farmerName").value,
+
+        location:
+          document.getElementById("location").value
+
+      };
+
+
+      products.push(newProduct);
+
+
+      displayProducts();
+
+
+      document
+        .getElementById("sellForm")
+        .reset();
+
+
+      const message =
+        document.getElementById("sellSuccess");
+
+
+      message.style.display = "block";
+
+
+      setTimeout(function() {
+
+        message.style.display = "none";
+
+      }, 3000);
+
+    });
+
+
+  /* ORDER FORM */
+
+  document
+    .getElementById("orderForm")
+    .addEventListener("submit", function(event) {
+
+      event.preventDefault();
+
+
+      if (cart.length === 0) {
+
+        alert("⚠️ पहले Cart में सामान जोड़ें।");
+
+        return;
+
+      }
+
+
+      const message =
+        document.getElementById("orderSuccess");
+
+
+      message.style.display = "block";
+
+
+      document
+        .getElementById("orderForm")
+        .reset();
+
+
+      cart = [];
+
+      updateCart();
+
+
+      setTimeout(function() {
+
+        message.style.display = "none";
+
+      }, 4000);
+
+    });
+
+
+  /* START WEBSITE */
+
+  displayProducts();
+
+</script></body>
+</html>
