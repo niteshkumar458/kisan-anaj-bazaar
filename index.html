@@ -1,0 +1,1257 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+
+<title>किसान अनाज बाजार</title>
+
+<style>
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+  font-family:Arial,sans-serif;
+}
+
+body{
+  background:#f3f7f2;
+  color:#222;
+}
+
+header{
+  background:#16803c;
+  color:#fff;
+  padding:18px 15px;
+  text-align:center;
+  position:sticky;
+  top:0;
+  z-index:20;
+}
+
+header h1{font-size:24px}
+header p{font-size:13px;margin-top:5px}
+
+.container{
+  max-width:1000px;
+  margin:auto;
+  padding:15px;
+}
+
+.menu{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:10px;
+  margin-bottom:15px;
+}
+
+.menu button{
+  border:0;
+  padding:15px 8px;
+  border-radius:12px;
+  background:#fff;
+  box-shadow:0 3px 10px #0002;
+  font-size:15px;
+  font-weight:bold;
+  color:#16803c;
+}
+
+.menu button.active{
+  background:#16803c;
+  color:#fff;
+}
+
+.section{display:none}
+.section.active{display:block}
+
+.card{
+  background:#fff;
+  padding:17px;
+  border-radius:14px;
+  margin-bottom:15px;
+  box-shadow:0 3px 12px #0001;
+}
+
+.card h2{
+  color:#16803c;
+  margin-bottom:14px;
+}
+
+label{
+  display:block;
+  margin-top:12px;
+  margin-bottom:5px;
+  font-weight:bold;
+}
+
+input,select,textarea{
+  width:100%;
+  padding:12px;
+  border:1px solid #ccc;
+  border-radius:8px;
+  font-size:15px;
+}
+
+textarea{
+  min-height:90px;
+  resize:vertical;
+}
+
+.btn{
+  width:100%;
+  border:0;
+  background:#16803c;
+  color:#fff;
+  padding:13px;
+  margin-top:12px;
+  border-radius:8px;
+  font-size:16px;
+  font-weight:bold;
+}
+
+.btn.orange{background:#e67e22}
+.btn.blue{background:#1769aa}
+.btn.red{background:#d63031}
+.btn.gray{background:#666}
+
+.product-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(230px,1fr));
+  gap:15px;
+}
+
+.product{
+  background:#fff;
+  border-radius:14px;
+  overflow:hidden;
+  box-shadow:0 3px 12px #0002;
+}
+
+.product img{
+  width:100%;
+  height:190px;
+  object-fit:cover;
+  background:#eee;
+}
+
+.product-body{padding:14px}
+.product-body h3{
+  color:#16803c;
+  margin-bottom:7px;
+}
+
+.price{
+  font-size:20px;
+  font-weight:bold;
+  color:#d35400;
+  margin:7px 0;
+}
+
+.small{
+  font-size:13px;
+  color:#666;
+  margin-top:5px;
+}
+
+.badge{
+  display:inline-block;
+  background:#eaf8ef;
+  color:#16803c;
+  padding:5px 9px;
+  border-radius:15px;
+  font-size:12px;
+}
+
+.order{
+  border-left:5px solid #16803c;
+  background:#fff;
+  padding:15px;
+  margin-bottom:12px;
+  border-radius:8px;
+}
+
+.cart-row{
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+  align-items:center;
+  padding:12px 0;
+  border-bottom:1px solid #eee;
+}
+
+.payment-box{
+  background:#eaf8ef;
+  border:1px solid #9bd4ae;
+  padding:15px;
+  border-radius:10px;
+  margin-top:15px;
+}
+
+.empty{
+  text-align:center;
+  padding:25px;
+  color:#666;
+}
+
+footer{
+  text-align:center;
+  padding:25px 10px;
+  color:#666;
+}
+
+.hidden{display:none!important}
+
+@media(max-width:600px){
+  header h1{font-size:21px}
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <h1>🌾 किसान अनाज बाजार</h1>
+  <p>किसान और ग्राहक के बीच खरीद-बिक्री का ऑनलाइन प्लेटफॉर्म</p>
+</header>
+
+<div class="container">
+
+  <div class="menu">
+
+    <button id="homeBtn" class="active"
+      onclick="showSection('home')">
+      🛒 सामान खरीदें
+    </button>
+
+    <button id="sellBtn"
+      onclick="showSection('sell')">
+      📦 सामान बेचें
+    </button>
+
+    <button
+      onclick="showSection('cart')">
+      🛍️ Cart
+    </button>
+
+    <button
+      onclick="showSection('orders')">
+      📦 My Orders
+    </button>
+
+    <button
+      onclick="showSection('account')">
+      👤 Account
+    </button>
+
+    <button
+      onclick="showSection('support')">
+      📞 सहायता
+    </button>
+
+  </div>
+
+
+  <!-- HOME -->
+
+  <section id="home" class="section active">
+
+    <div class="card">
+
+      <h2>🛒 सामान खरीदें</h2>
+
+      <input
+        id="search"
+        type="text"
+        placeholder="चावल, गेहूँ, दाल, मक्का..."
+        oninput="searchProducts()">
+
+      <select id="categoryFilter"
+        onchange="searchProducts()"
+        style="margin-top:10px">
+
+        <option value="">सभी श्रेणी</option>
+        <option value="अनाज">अनाज</option>
+        <option value="दाल">दाल</option>
+        <option value="चावल">चावल</option>
+        <option value="गेहूँ">गेहूँ</option>
+        <option value="मक्का">मक्का</option>
+        <option value="सब्जी">सब्जी</option>
+        <option value="फल">फल</option>
+        <option value="अन्य">अन्य</option>
+
+      </select>
+
+    </div>
+
+    <div id="productList"
+      class="product-grid">
+    </div>
+
+  </section>
+
+
+  <!-- SELL -->
+
+  <section id="sell" class="section">
+
+    <div class="card">
+
+      <h2>📦 अपना सामान बेचें</h2>
+
+      <div id="sellerLoginMessage"
+        class="empty">
+
+        Product बेचने के लिए पहले
+        Login / Signup करें।
+
+        <button class="btn"
+          onclick="showSection('account')">
+          👤 Login / Signup
+        </button>
+
+      </div>
+
+      <div id="sellForm"
+        class="hidden">
+
+        <label>सामान का नाम</label>
+
+        <input id="productName"
+          placeholder="जैसे चावल, गेहूँ, दाल">
+
+        <label>श्रेणी</label>
+
+        <select id="category">
+
+          <option value="अनाज">अनाज</option>
+          <option value="चावल">चावल</option>
+          <option value="गेहूँ">गेहूँ</option>
+          <option value="दाल">दाल</option>
+          <option value="मक्का">मक्का</option>
+          <option value="सब्जी">सब्जी</option>
+          <option value="फल">फल</option>
+          <option value="अन्य">अन्य</option>
+
+        </select>
+
+        <label>कीमत ₹</label>
+
+        <input id="price"
+          type="number"
+          placeholder="जैसे 2500">
+
+        <label>मात्रा</label>
+
+        <input id="quantity"
+          placeholder="जैसे 100 किलो">
+
+        <label>लोकेशन</label>
+
+        <input id="location"
+          placeholder="गांव / शहर / जिला">
+
+        <label>सामान की जानकारी</label>
+
+        <textarea id="description"
+          placeholder="सामान की पूरी जानकारी"></textarea>
+
+        <label>📷 Product Photo</label>
+
+        <input id="productImage"
+          type="file"
+          accept="image/*">
+
+        <button class="btn"
+          onclick="addProduct()">
+
+          📤 सामान Publish करें
+
+        </button>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- CART -->
+
+  <section id="cart" class="section">
+
+    <div class="card">
+
+      <h2>🛍️ आपका Cart</h2>
+
+      <div id="cartList"></div>
+
+      <button id="checkoutButton"
+        class="btn orange"
+        onclick="checkout()">
+
+        💳 Checkout करें
+
+      </button>
+
+    </div>
+
+  </section>
+
+
+  <!-- ORDERS -->
+
+  <section id="orders" class="section">
+
+    <div class="card">
+
+      <h2>📦 My Orders</h2>
+
+      <div id="ordersList">
+        <div class="empty">
+          Login करने के बाद आपके orders यहां दिखेंगे।
+        </div>
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- ACCOUNT -->
+
+  <section id="account" class="section">
+
+    <div class="card">
+
+      <h2>👤 Account</h2>
+
+      <div id="accountArea">
+
+        <label>नाम</label>
+
+        <input id="authName"
+          placeholder="आपका नाम">
+
+        <label>Mobile / Email</label>
+
+        <input id="authEmail"
+          type="email"
+          placeholder="Email">
+
+        <label>Password</label>
+
+        <input id="authPassword"
+          type="password"
+          placeholder="Password">
+
+        <button class="btn"
+          onclick="signup()">
+
+          📝 Signup
+
+        </button>
+
+        <button class="btn blue"
+          onclick="login()">
+
+          🔐 Login
+
+        </button>
+
+      </div>
+
+      <div id="loggedArea"
+        class="hidden">
+
+        <h3 id="userInfo"></h3>
+
+        <button class="btn red"
+          onclick="logout()">
+
+          Logout
+
+        </button>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- CHECKOUT -->
+
+  <section id="checkout" class="section">
+
+    <div class="card">
+
+      <h2>💳 Checkout</h2>
+
+      <div id="checkoutDetails"></div>
+
+    </div>
+
+  </section>
+
+
+  <!-- SUPPORT -->
+
+  <section id="support" class="section">
+
+    <div class="card">
+
+      <h2>📞 ग्राहक सहायता</h2>
+
+      <p>
+        किसी भी समस्या के लिए Customer Support से संपर्क करें।
+      </p>
+
+      <a href="tel:7042894282"
+        style="text-decoration:none">
+
+        <button class="btn blue">
+          📞 7042894282 पर कॉल करें
+        </button>
+
+      </a>
+
+    </div>
+
+  </section>
+
+</div>
+
+
+<footer>
+  © 2026 किसान अनाज बाजार
+</footer>
+
+
+<!-- Firebase -->
+
+<script type="module">
+
+import {
+  initializeApp
+} from
+"https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
+
+import {
+  getAuth,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  signOut,
+  onAuthStateChanged,
+  updateProfile
+} from
+"https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
+
+import {
+  getDatabase,
+  ref,
+  push,
+  set,
+  onValue,
+  get
+} from
+"https://www.gstatic.com/firebasejs/12.2.1/firebase-database.js";
+
+import {
+  getStorage,
+  ref as storageRef,
+  uploadBytes,
+  getDownloadURL
+} from
+"https://www.gstatic.com/firebasejs/12.2.1/firebase-storage.js";
+
+
+/* =====================================================
+   🔥 अपनी Firebase CONFIG यहां डालें
+===================================================== */
+
+const firebaseConfig = {
+
+  apiKey:
+    "अपनी_apiKey_यहां_डालें",
+
+  authDomain:
+    "अपना-project.firebaseapp.com",
+
+  databaseURL:
+    "https://अपना-project-default-rtdb.firebaseio.com",
+
+  projectId:
+    "अपना-project-id",
+
+  storageBucket:
+    "अपना-project.appspot.com",
+
+  messagingSenderId:
+    "अपना-messagingSenderId",
+
+  appId:
+    "अपना-appId"
+
+};
+
+
+/* =====================================================
+   Firebase Start
+===================================================== */
+
+const app =
+  initializeApp(firebaseConfig);
+
+const auth =
+  getAuth(app);
+
+const db =
+  getDatabase(app);
+
+const storage =
+  getStorage(app);
+
+
+/* =====================================================
+   PAYMENT
+===================================================== */
+
+const OWNER_UPI =
+  "niteshai64910@nyes";
+
+
+/* =====================================================
+   DATA
+===================================================== */
+
+let products = [];
+
+let cart =
+  JSON.parse(
+    localStorage.getItem("kisanCart")
+  ) || [];
+
+
+/* =====================================================
+   GLOBAL USER
+===================================================== */
+
+let currentUser = null;
+
+
+/* =====================================================
+   AUTH STATE
+===================================================== */
+
+onAuthStateChanged(
+  auth,
+  user => {
+
+    currentUser = user;
+
+    updateAccountUI();
+
+    if(user){
+
+      document
+        .getElementById("sellerLoginMessage")
+        .classList.add("hidden");
+
+      document
+        .getElementById("sellForm")
+        .classList.remove("hidden");
+
+      loadOrders();
+
+    }else{
+
+      document
+        .getElementById("sellerLoginMessage")
+        .classList.remove("hidden");
+
+      document
+        .getElementById("sellForm")
+        .classList.add("hidden");
+
+    }
+
+  }
+);
+
+
+/* =====================================================
+   SIGNUP
+===================================================== */
+
+window.signup = async function(){
+
+  const name =
+    document
+      .getElementById("authName")
+      .value.trim();
+
+  const email =
+    document
+      .getElementById("authEmail")
+      .value.trim();
+
+  const password =
+    document
+      .getElementById("authPassword")
+      .value;
+
+  if(!name || !email || !password){
+
+    alert("सभी जानकारी भरें।");
+    return;
+
+  }
+
+  try{
+
+    const result =
+      await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+
+    await updateProfile(
+      result.user,
+      {displayName:name}
+    );
+
+    await set(
+      ref(
+        db,
+        "users/" + result.user.uid
+      ),
+      {
+        name:name,
+        email:email,
+        createdAt:Date.now()
+      }
+    );
+
+    alert("Signup सफल हो गया।");
+
+  }catch(error){
+
+    alert(error.message);
+
+  }
+
+};
+
+
+/* =====================================================
+   LOGIN
+===================================================== */
+
+window.login = async function(){
+
+  const email =
+    document
+      .getElementById("authEmail")
+      .value.trim();
+
+  const password =
+    document
+      .getElementById("authPassword")
+      .value;
+
+  try{
+
+    await signInWithEmailAndPassword(
+      auth,
+      email,
+      password
+    );
+
+    alert("Login सफल हो गया।");
+
+  }catch(error){
+
+    alert(error.message);
+
+  }
+
+};
+
+
+/* =====================================================
+   LOGOUT
+===================================================== */
+
+window.logout = async function(){
+
+  await signOut(auth);
+
+  alert("Logout हो गया।");
+
+};
+
+
+/* =====================================================
+   ACCOUNT UI
+===================================================== */
+
+function updateAccountUI(){
+
+  const accountArea =
+    document.getElementById("accountArea");
+
+  const loggedArea =
+    document.getElementById("loggedArea");
+
+  const userInfo =
+    document.getElementById("userInfo");
+
+  if(currentUser){
+
+    accountArea.classList.add("hidden");
+
+    loggedArea.classList.remove("hidden");
+
+    userInfo.innerHTML =
+      "👤 " +
+      escapeHTML(
+        currentUser.displayName ||
+        currentUser.email
+      );
+
+  }else{
+
+    accountArea.classList.remove("hidden");
+
+    loggedArea.classList.add("hidden");
+
+  }
+
+}
+
+
+/* =====================================================
+   LOAD PRODUCTS
+===================================================== */
+
+const productsRef =
+  ref(db,"products");
+
+onValue(
+  productsRef,
+  snapshot => {
+
+    const data =
+      snapshot.val() || {};
+
+    products =
+      Object.keys(data)
+        .map(key => ({
+          id:key,
+          ...data[key]
+        }))
+        .filter(
+          product =>
+            product.status !== "deleted"
+        );
+
+    displayProducts(products);
+
+  }
+);
+
+
+/* =====================================================
+   DISPLAY PRODUCTS
+===================================================== */
+
+function displayProducts(list){
+
+  const box =
+    document.getElementById(
+      "productList"
+    );
+
+  box.innerHTML = "";
+
+  if(!list.length){
+
+    box.innerHTML = `
+      <div class="card empty">
+        अभी कोई सामान उपलब्ध नहीं है।
+      </div>
+    `;
+
+    return;
+  }
+
+
+  list.forEach(product => {
+
+    box.innerHTML += `
+
+      <div class="product">
+
+        ${
+          product.image
+          ?
+          `<img src="${escapeHTML(product.image)}">`
+          :
+          `
+          <div style="
+            height:190px;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            background:#eee;
+            font-size:55px">
+            🌾
+          </div>
+          `
+        }
+
+        <div class="product-body">
+
+          <span class="badge">
+            ${escapeHTML(product.category)}
+          </span>
+
+          <h3>
+            ${escapeHTML(product.name)}
+          </h3>
+
+          <div class="price">
+            ₹${Number(product.price)
+              .toLocaleString("en-IN")}
+          </div>
+
+          <div class="small">
+            📦 ${escapeHTML(product.quantity)}
+          </div>
+
+          <div class="small">
+            👨‍🌾 ${escapeHTML(product.sellerName)}
+          </div>
+
+          <div class="small">
+            📍 ${escapeHTML(product.location)}
+          </div>
+
+          <div class="small">
+            ${escapeHTML(product.description)}
+          </div>
+
+          <button class="btn"
+            onclick="addToCart('${product.id}')">
+
+            🛍️ Cart में डालें
+
+          </button>
+
+          <button class="btn orange"
+            onclick="buyNow('${product.id}')">
+
+            ⚡ अभी खरीदें
+
+          </button>
+
+        </div>
+
+      </div>
+
+    `;
+
+  });
+
+}
+
+
+/* =====================================================
+   SEARCH
+===================================================== */
+
+window.searchProducts = function(){
+
+  const text =
+    document
+      .getElementById("search")
+      .value
+      .toLowerCase();
+
+  const category =
+    document
+      .getElementById("categoryFilter")
+      .value;
+
+  const result =
+    products.filter(product => {
+
+      const matchText =
+        !text ||
+        product.name
+          .toLowerCase()
+          .includes(text) ||
+        product.category
+          .toLowerCase()
+          .includes(text) ||
+        product.location
+          .toLowerCase()
+          .includes(text);
+
+      const matchCategory =
+        !category ||
+        product.category === category;
+
+      return matchText &&
+             matchCategory;
+
+    });
+
+  displayProducts(result);
+
+};
+
+
+/* =====================================================
+   ADD PRODUCT
+===================================================== */
+
+window.addProduct = async function(){
+
+  if(!currentUser){
+
+    alert("पहले Login करें।");
+    return;
+
+  }
+
+  const name =
+    document
+      .getElementById("productName")
+      .value.trim();
+
+  const category =
+    document
+      .getElementById("category")
+      .value;
+
+  const price =
+    Number(
+      document
+        .getElementById("price")
+        .value
+    );
+
+  const quantity =
+    document
+      .getElementById("quantity")
+      .value.trim();
+
+  const location =
+    document
+      .getElementById("location")
+      .value.trim();
+
+  const description =
+    document
+      .getElementById("description")
+      .value.trim();
+
+  const imageFile =
+    document
+      .getElementById("productImage")
+      .files[0];
+
+
+  if(
+    !name ||
+    !price ||
+    !quantity ||
+    !location
+  ){
+
+    alert(
+      "Product की जरूरी जानकारी भरें।"
+    );
+
+    return;
+
+  }
+
+
+  try{
+
+    let imageURL = "";
+
+
+    if(imageFile){
+
+      const imagePath =
+        "products/" +
+        currentUser.uid +
+        "/" +
+        Date.now() +
+        "_" +
+        imageFile.name;
+
+      const imageRef =
+        storageRef(
+          storage,
+          imagePath
+        );
+
+      await uploadBytes(
+        imageRef,
+        imageFile
+      );
+
+      imageURL =
+        await getDownloadURL(
+          imageRef
+        );
+
+    }
+
+
+    const newProductRef =
+      push(
+        ref(db,"products")
+      );
+
+
+    await set(
+      newProductRef,
+      {
+
+        name:name,
+
+        category:category,
+
+        price:price,
+
+        quantity:quantity,
+
+        location:location,
+
+        description:description,
+
+        image:imageURL,
+
+        sellerId:
+          currentUser.uid,
+
+        sellerName:
+          currentUser.displayName ||
+          currentUser.email,
+
+        status:"active",
+
+        createdAt:Date.now()
+
+      }
+    );
+
+
+    alert(
+      "✅ आपका सामान सफलतापूर्वक Publish हो गया।"
+    );
+
+
+    document
+      .getElementById("productName")
+      .value = "";
+
+    document
+      .getElementById("price")
+      .value = "";
+
+    document
+      .getElementById("quantity")
+      .value = "";
+
+    document
+      .getElementById("location")
+      .value = "";
+
+    document
+      .getElementById("description")
+      .value = "";
+
+    document
+      .getElementById("productImage")
+      .value = "";
+
+    showSection("home");
+
+
+  }catch(error){
+
+    alert(
+      "Product upload error: " +
+      error.message
+    );
+
+  }
+
+};
+
+
+/* =====================================================
+   CART
+===================================================== */
+
+window.addToCart = function(id){
+
+  const product =
+    products.find(
+      p => p.id === id
+    );
+
+  if(!product)return;
+
+
+  const exists =
+    cart.find(
+      item => item.id === id
+    );
+
+  if(exists){
+
+    exists.quantity += 1;
+
+  }else{
+
+    cart.push({
+
+      id:id,
+
+      name:product.name,
+
+      price:Number(product.price),
+
+      quantity:1
+
+    });
+
+  }
+
+
+  localStorage.setItem(
+    "kisanCart",
+    JSON.stringify(cart)
+  );
+
+
+  displayCart();
+
+  alert(
+    "🛍️ Product Cart में जोड़ दिया गया।"
+  );
+
+};
+
+
+/* =====================================================
+   BUY NOW
+============
