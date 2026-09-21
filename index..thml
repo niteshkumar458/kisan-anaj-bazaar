@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kisan Anaj Bazaar</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      background: #f5f6f7;
+      color: #222;
+    }
+
+    header {
+      background: #1b7f3a;
+      color: white;
+      padding: 15px;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    .top {
+      max-width: 1100px;
+      margin: auto;
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      flex-wrap: wrap;
+    }
+
+    .logo {
+      font-size: 23px;
+      font-weight: bold;
+      white-space: nowrap;
+    }
+
+    .search {
+      flex: 1;
+      min-width: 200px;
+      padding: 12px;
+      border: none;
+      border-radius: 8px;
+      font-size: 15px;
+    }
+
+    .btn {
+      border: none;
+      border-radius: 7px;
+      padding: 11px 15px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .sell-btn {
+      background: #ffb000;
+      color: #111;
+    }
+
+    .cart-btn {
+      background: white;
+      color: #1b7f3a;
+    }
+
+    .hero {
+      background: white;
+      padding: 35px 15px;
+      text-align: center;
+    }
+
+    .hero h1 {
+      color: #176d32;
+      margin-bottom: 10px;
+      font-size: 32px;
+    }
+
+    .hero p {
+      color: #555;
+      margin-bottom: 20px;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: auto;
+      padding: 20px 15px;
+    }
+
+    .categories {
+      display: flex;
+      gap: 10px;
+      overflow-x: auto;
+      padding-bottom: 10px;
+    }
+
+    .category {
+      background: white;
+      padding: 12px 18px;
+      border-radius: 20px;
+      white-space: nowrap;
+      cursor: pointer;
+      border: 1px solid #ddd;
+    }
+
+    .category:hover {
+      background: #1b7f3a;
+      color: white;
+    }
+
+    h2 {
+      margin: 20px 0 15px;
+    }
+
+    .products {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      gap: 15px;
+    }
+
+    .card {
+      background: white;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px #00000015;
+    }
+
+    .product-img {
+      width: 100%;
+      height: 160px;
+      object-fit: cover;
+      background: #ddd;
+    }
+
+    .card-content {
+      padding: 13px;
+    }
+
+    .card h3 {
+      margin-bottom: 8px;
+    }
+
+    .price {
+      color: #16803a;
+      font-size: 20px;
+      font-weight: bold;
+      margin: 8px 0;
+    }
+
+    .buy {
+      width: 100%;
+      background: #1b7f3a;
+      color: white;
+    }
+
+    .buy:hover {
+      background: #12632c;
+    }
+
+    .sell-box {
+      display: none;
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      margin-top: 20px;
+      box-shadow: 0 2px 8px #00000015;
+    }
+
+    .sell-box input,
+    .sell-box select {
+      width: 100%;
+      padding: 12px;
+      margin: 7px 0;
+      border: 1px solid #ccc;
+      border-radius: 7px;
+    }
+
+    .submit {
+      width: 100%;
+      background: #1b7f3a;
+      color: white;
+      margin-top: 8px;
+    }
+
+    footer {
+      background: #123d22;
+      color: white;
+      text-align: center;
+      padding: 25px;
+      margin-top: 30px;
+    }
+
+    .empty {
+      text-align: center;
+      padding: 30px;
+      color: #777;
+    }
+
+    @media(max-width:600px) {
+      .hero h1 {
+        font-size: 25px;
+      }
+
+      .logo {
+        width: 100%;
+        text-align: center;
+      }
+
+      .search {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <div class="top">
+
+    <div class="logo">
+      🌾 Kisan Anaj Bazaar
+    </div>
+
+    <input
+      id="search"
+      class="search"
+      type="text"
+      placeholder="अनाज खोजें..."
+      oninput="searchProducts()"
+    >
+
+    <button class="btn sell-btn" onclick="showSellBox()">
+      बेचें
+    </button>
+
+    <button class="btn cart-btn" onclick="showCart()">
+      🛒 Cart (<span id="cartCount">0</span>)
+    </button>
+
+  </div>
+</header>
+
+<section class="hero">
+
+  <h1>किसान अनाज बाज़ार</h1>
+
+  <p>
+    किसान सीधे अपना अनाज बेचें और खरीदार सीधे खरीदें।
+  </p>
+
+  <button class="btn sell-btn" onclick="showSellBox()">
+    अपना अनाज बेचें
+  </button>
+
+</section>
+
+<div class="container">
+
+  <div class="categories">
+
+    <div class="category" onclick="filterCategory('सभी')">
+      सभी
+    </div>
+
+    <div class="category" onclick="filterCategory('गेहूं')">
+      🌾 गेहूं
+    </div>
+
+    <div class="category" onclick="filterCategory('धान')">
+      🌾 धान
+    </div>
+
+    <div class="category" onclick="filterCategory('चावल')">
+      🍚 चावल
+    </div>
+
+    <div class="category" onclick="filterCategory('मक्का')">
+      🌽 मक्का
+    </div>
+
+    <div class="category" onclick="filterCategory('आलू')">
+      🥔 आलू
+    </div>
+
+  </div>
+
+  <div id="sellBox" class="sell-box">
+
+    <h2>अपना सामान बेचें</h2>
+
+    <input
+      id="productName"
+      type="text"
+      placeholder="सामान का नाम"
+    >
+
+    <select id="productCategory">
+
+      <option value="गेहूं">गेहूं</option>
+      <option value="धान">धान</option>
+      <option value="चावल">चावल</option>
+      <option value="मक्का">मक्का</option>
+      <option value="आलू">आलू</option>
+
+    </select>
+
+    <input
+      id="productPrice"
+      type="number"
+      placeholder="कीमत ₹"
+    >
+
+    <input
+      id="productQuantity"
+      type="text"
+      placeholder="मात्रा जैसे 100 kg"
+    >
+
+    <input
+      id="productImage"
+      type="url"
+      placeholder="फोटो का URL"
+    >
+
+    <button class="btn submit" onclick="addProduct()">
+      सामान अपलोड करें
+    </button>
+
+  </div>
+
+  <h2>आज के सामान</h2>
+
+  <div id="products" class="products"></div>
+
+</div>
+
+<footer>
+
+  <h3>🌾 Kisan Anaj Bazaar</h3>
+
+  <p>
+    किसानों और खरीदारों को सीधे जोड़ने वाला ऑनलाइन बाज़ार।
+  </p>
+
+  <p style="margin-top:10px;">
+    © 2026 Kisan Anaj Bazaar
+  </p>
+
+</footer>
+
+<script>
+
+  let products = [
+
+    {
+      name: "गेहूं",
+      category: "गेहूं",
+      price: 28,
+      quantity: "100 kg",
+      image: "https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?auto=format&fit=crop&w=800&q=80"
+    },
+
+    {
+      name: "धान",
+      category: "धान",
+      price: 32,
+      quantity: "200 kg",
+      image: "https://images.unsplash.com/photo-1536304993881-ff6e9eefa2a6?auto=format&fit=crop&w=800&q=80"
+    },
+
+    {
+      name: "आलू",
+      category: "आलू",
+      price: 25,
+      quantity: "100 kg",
+      image: "https://images.unsplash.com/photo-1518977676601-b53f82aba655?auto=format&fit=crop&w=800&q=80"
+    },
+
+    {
+      name: "मक्का",
+      category: "मक्का",
+      price: 24,
+      quantity: "150 kg",
+      image: "https://images.unsplash.com/photo-1551754655-cd27e38d2076?auto=format&fit=crop&w=800&q=80"
+    }
+
+  ];
+
+  let cart = [];
+
+  function displayProducts(list = products) {
+
+    const box = document.getElementById("products");
+
+    box.innerHTML = "";
+
+    if (list.length === 0) {
+
+      box.innerHTML =
+        '<div class="empty">कोई सामान नहीं मिला।</div>';
+
+      return;
+
+    }
+
+    list.forEach((product, index) => {
+
+      box.innerHTML += `
+
+        <div class="card">
+
+          <img
+            class="product-img"
+            src="${product.image}"
+            alt="${product.name}"
+          >
+
+          <div class="card-content">
+
+            <h3>${product.name}</h3>
+
+            <p>मात्रा: ${product.quantity}</p>
+
+            <div class="price">
+              ₹${product.price} / kg
+            </div>
+
+            <button
+              class="btn buy"
+              onclick="addToCart(${index})"
+            >
+              🛒 खरीदें
+            </button>
+
+          </div>
+
+        </div>
+
+      `;
+
+    });
+
+  }
+
+  function addToCart(index) {
+
+    cart.push(products[index]);
+
+    document.getElementById("cartCount").innerText =
+      cart.length;
+
+    alert("सामान Cart में जोड़ दिया गया।");
+
+  }
+
+  function showCart() {
+
+    if (cart.length === 0) {
+
+      alert("आपका Cart खाली है।");
+
+      return;
+
+    }
+
+    let total = 0;
+
+    cart.forEach(item => {
+      total += Number(item.price);
+    });
+
+    alert(
+      "Cart में " +
+      cart.length +
+      " सामान हैं।\nकुल कीमत: ₹" +
+      total +
+      "\n\nPayment system अगली step में जोड़ा जा सकता है।"
+    );
+
+  }
+
+  function showSellBox() {
+
+    const box = document.getElementById("sellBox");
+
+    if (box.style.display === "block") {
+
+      box.style.display = "none";
+
+    } else {
+
+      box.style.display = "block";
+
+      box.scrollIntoView({
+        behavior: "smooth"
+      });
+
+    }
+
+  }
+
+  function addProduct() {
+
+    const name =
+      document.getElementById("productName").value;
+
+    const category =
+      document.getElementById("productCategory").value;
+
+    const price =
+      document.getElementById("productPrice").value;
+
+    const quantity =
+      document.getElementById("productQuantity").value;
+
+    const image =
+      document.getElementById("productImage").value;
+
+    if (!name || !price || !quantity) {
+
+      alert("कृपया सामान का नाम, कीमत और मात्रा भरें।");
+
+      return;
+
+    }
+
+    products.unshift({
+
+      name: name,
+
+      category: category,
+
+      price: Number(price),
+
+      quantity: quantity,
+
+      image: image ||
+        "https://images.unsplash.com/photo-1518843875459-f738682238a6?auto=format&fit=crop&w=800&q=80"
+
+    });
+
+    displayProducts();
+
+    document.getElementById("productName").value = "";
+    document.getElementById("productPrice").value = "";
+    document.getElementById("productQuantity").value = "";
+    document.getElementById("productImage").value = "";
+
+    alert("आपका सामान वेबसाइट पर दिखा दिया गया।");
+
+  }
+
+  function searchProducts() {
+
+    const text =
+      document.getElementById("search").value.toLowerCase();
+
+    const result =
+      products.filter(product =>
+        product.name.toLowerCase().includes(text) ||
+        product.category.toLowerCase().includes(text)
+      );
+
+    displayProducts(result);
+
+  }
+
+  function filterCategory(category) {
+
+    if (category === "सभी") {
+
+      displayProducts();
+
+      return;
+
+    }
+
+    const result =
+      products.filter(product =>
+        product.category === category
+      );
+
+    displayProducts(result);
+
+  }
+
+  displayProducts();
+
+</script>
+
+</body>
+</html>
