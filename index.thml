@@ -1,0 +1,1543 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+
+<title>किसान अनाज बाजार</title>
+
+<style>
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+  font-family:Arial,sans-serif
+}
+
+body{
+  background:#f3f6f3;
+  color:#222
+}
+
+header{
+  background:#16803c;
+  color:#fff;
+  padding:18px;
+  text-align:center
+}
+
+header h1{
+  font-size:25px;
+  margin-bottom:5px
+}
+
+.container{
+  max-width:1050px;
+  margin:auto;
+  padding:15px
+}
+
+.nav{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  margin-bottom:15px
+}
+
+.nav button{
+  flex:1;
+  min-width:130px;
+  padding:12px;
+  border:0;
+  border-radius:8px;
+  background:#16803c;
+  color:#fff;
+  font-weight:bold;
+  cursor:pointer
+}
+
+.section{
+  display:none
+}
+
+.section.active{
+  display:block
+}
+
+.card{
+  background:#fff;
+  padding:16px;
+  margin-bottom:15px;
+  border-radius:12px;
+  box-shadow:0 2px 8px #0001
+}
+
+input,select,textarea{
+  width:100%;
+  padding:12px;
+  margin:7px 0 12px;
+  border:1px solid #ccc;
+  border-radius:7px
+}
+
+textarea{
+  min-height:90px
+}
+
+button{
+  cursor:pointer
+}
+
+.btn{
+  background:#16803c;
+  color:#fff;
+  border:0;
+  padding:12px 18px;
+  border-radius:7px;
+  font-weight:bold;
+  margin:4px 2px
+}
+
+.btn.orange{
+  background:#ef8b00
+}
+
+.btn.red{
+  background:#c62828
+}
+
+.btn.blue{
+  background:#1769aa
+}
+
+.product{
+  background:#fff;
+  border:1px solid #ddd;
+  border-radius:12px;
+  padding:14px;
+  margin-bottom:15px
+}
+
+.product img,
+.product video{
+  width:100%;
+  max-height:280px;
+  object-fit:cover;
+  border-radius:9px;
+  margin-bottom:10px
+}
+
+.price{
+  color:#16803c;
+  font-size:21px;
+  font-weight:bold;
+  margin:7px 0
+}
+
+.small{
+  color:#666;
+  font-size:14px;
+  margin:5px 0
+}
+
+.summary{
+  background:#eef8f0;
+  padding:13px;
+  border-radius:8px;
+  margin:10px 0;
+  line-height:1.8
+}
+
+.cashback{
+  background:#fff5d7;
+  padding:15px;
+  border-radius:8px;
+  margin:10px 0
+}
+
+.badge{
+  display:inline-block;
+  background:#eee;
+  padding:6px 9px;
+  border-radius:5px;
+  margin-top:5px
+}
+
+.empty{
+  text-align:center;
+  padding:25px;
+  color:#666
+}
+
+#toast{
+  display:none;
+  position:fixed;
+  bottom:20px;
+  left:50%;
+  transform:translateX(-50%);
+  background:#222;
+  color:#fff;
+  padding:12px 18px;
+  border-radius:8px;
+  z-index:9999
+}
+
+hr{
+  border:0;
+  border-top:1px solid #ddd;
+  margin:10px 0
+}
+</style>
+</head>
+
+<body>
+
+<header>
+<h1>🌾 किसान अनाज बाजार</h1>
+<p>सामान खरीदें • सामान बेचें • Cashback पाएँ</p>
+</header>
+
+<div class="container">
+
+<div class="nav">
+<button onclick="showSection('buy')">🛒 सामान खरीदें</button>
+<button onclick="showSection('sell')">📦 सामान बेचें</button>
+<button onclick="showSection('orders')">📋 ऑर्डर</button>
+<button onclick="showSection('wallet')">💰 Cashback</button>
+<button onclick="showSection('support')">☎️ ग्राहक सहायता</button>
+</div>
+
+
+<!-- ================= BUY ================= -->
+
+<section id="buy" class="section active">
+
+<div class="card">
+<h2>🛒 सामान खरीदें</h2>
+
+<input id="searchBox"
+placeholder="सामान खोजें — गेहूं, धान, आलू..."
+oninput="renderProducts()">
+</div>
+
+<div id="productList"></div>
+
+</section>
+
+
+<!-- ================= SELL ================= -->
+
+<section id="sell" class="section">
+
+<div class="card">
+
+<h2>📦 अपना सामान बेचें</h2>
+
+<label>सामान का नाम</label>
+<input id="sellName" placeholder="जैसे गेहूं">
+
+<label>श्रेणी</label>
+<select id="sellCategory">
+<option>अनाज</option>
+<option>सब्जी</option>
+<option>फल</option>
+<option>दलहन</option>
+<option>अन्य</option>
+</select>
+
+<label>मात्रा</label>
+<input id="sellQty" type="number" min="1">
+
+<label>इकाई</label>
+<select id="sellUnit">
+<option>किलोग्राम</option>
+<option>क्विंटल</option>
+<option>टन</option>
+<option>बोरी</option>
+</select>
+
+<label>रेट / प्रति इकाई कीमत ₹</label>
+<input id="sellPrice" type="number" min="0" step="0.01">
+
+<label>सामान की फोटो</label>
+<input id="sellImage" type="file" accept="image/*">
+
+<label>सामान का वीडियो</label>
+<input id="sellVideo" type="file" accept="video/*">
+
+<label>Seller का नाम</label>
+<input id="sellerName">
+
+<label>मोबाइल नंबर</label>
+<input id="sellerPhone">
+
+<label>लोकेशन</label>
+<input id="sellerLocation" placeholder="गाँव / शहर / जिला">
+
+<label>सामान की जानकारी</label>
+<textarea id="sellDescription"
+placeholder="गुणवत्ता, किस्म आदि"></textarea>
+
+<button class="btn" onclick="addProduct()">
+सामान पोस्ट करें
+</button>
+
+</div>
+
+<div class="card">
+<h3>ℹ️ बाद में रेट बदलना</h3>
+<p class="small">
+आपके अपने पोस्ट किए हुए सामान में नीचे
+<strong>रेट बदलें</strong> विकल्प से नया रेट लगाया जा सकेगा।
+</p>
+</div>
+
+</section>
+
+
+<!-- ================= MY PRODUCTS ================= -->
+
+<section id="myProducts" class="section">
+
+<div class="card">
+<h2>📦 मेरे सामान</h2>
+<div id="myProductsList"></div>
+</div>
+
+</section>
+
+
+<!-- ================= ORDERS ================= -->
+
+<section id="orders" class="section">
+
+<div class="card">
+<h2>📋 मेरे ऑर्डर</h2>
+<div id="ordersList"></div>
+</div>
+
+</section>
+
+
+<!-- ================= WALLET ================= -->
+
+<section id="wallet" class="section">
+
+<div class="card">
+
+<h2>💰 Cashback</h2>
+
+<div class="cashback">
+
+<p>Available Cashback</p>
+
+<h1 id="cashbackBalance">
+₹0.00
+</h1>
+
+<p class="small">
+Cashback अगली खरीदारी में इस्तेमाल किया जा सकता है।
+</p>
+
+</div>
+
+<h3>Cashback History</h3>
+
+<div id="cashbackHistory"></div>
+
+</div>
+
+</section>
+
+
+<!-- ================= CHECKOUT ================= -->
+
+<section id="checkout" class="section">
+
+<div class="card">
+
+<h2>🧾 Order Checkout</h2>
+
+<div id="checkoutProduct"></div>
+
+<label>मात्रा</label>
+
+<input id="orderQty"
+type="number"
+min="1"
+value="1"
+oninput="calculateOrder()">
+
+
+<div class="summary">
+
+<p>
+सामान की कीमत:
+<strong id="itemAmount">₹0.00</strong>
+</p>
+
+<p>
+प्लेटफॉर्म कमीशन 5%:
+<strong id="commissionAmount">₹0.00</strong>
+</p>
+
+<p>
+ग्राहक Cashback 1%:
+<strong id="cashbackAmount">₹0.00</strong>
+</p>
+
+<p>
+Online Discount 2%:
+<strong id="onlineDiscount">₹0.00</strong>
+</p>
+
+<hr>
+
+<p>
+Final Amount:
+<strong id="finalAmount">₹0.00</strong>
+</p>
+
+</div>
+
+
+<div class="cashback">
+
+<label>
+<input id="useCashback"
+type="checkbox"
+style="width:auto"
+onchange="calculateOrder()">
+
+इस खरीदारी में मेरा Cashback इस्तेमाल करें
+</label>
+
+<p>
+Available:
+<strong id="availableCashback">₹0.00</strong>
+</p>
+
+</div>
+
+
+<h3>💳 Payment Method</h3>
+
+<select id="paymentMethod"
+onchange="calculateOrder()">
+
+<option value="online">
+Online / UPI Payment
+</option>
+
+<option value="cash">
+Cash Payment
+</option>
+
+</select>
+
+
+<div class="summary">
+
+<p>
+Payment UPI ID:
+<strong>niteshai64910@nyes</strong>
+</p>
+
+<p id="paymentMessage">
+Online payment पर 2% discount लागू होगा।
+</p>
+
+</div>
+
+
+<h3>👤 Customer Details</h3>
+
+<input id="buyerName"
+placeholder="ग्राहक का नाम">
+
+<input id="buyerPhone"
+placeholder="मोबाइल नंबर">
+
+<input id="buyerLocation"
+placeholder="डिलीवरी लोकेशन">
+
+
+<button class="btn"
+onclick="placeOrder()">
+ऑर्डर कन्फर्म करें
+</button>
+
+<button class="btn orange"
+onclick="showSection('buy')">
+वापस जाएँ
+</button>
+
+</div>
+
+</section>
+
+
+<!-- ================= SUPPORT ================= -->
+
+<section id="support" class="section">
+
+<div class="card">
+
+<h2>☎️ ग्राहक सहायता</h2>
+
+<input id="supportName"
+placeholder="आपका नाम">
+
+<input id="supportPhone"
+placeholder="मोबाइल नंबर">
+
+<textarea id="supportMessage"
+placeholder="अपनी समस्या लिखें"></textarea>
+
+<button class="btn"
+onclick="sendSupport()">
+संदेश भेजें
+</button>
+
+</div>
+
+</section>
+
+</div>
+
+<div id="toast"></div>
+
+
+<script>
+
+/* =====================================================
+   BASIC SETTINGS
+===================================================== */
+
+const MERCHANT_UPI = "niteshai64910@nyes";
+
+const COMMISSION_RATE = 0.05;
+
+const CASHBACK_RATE = 0.01;
+
+const ONLINE_DISCOUNT_RATE = 0.02;
+
+
+/* =====================================================
+   LOCAL DATA
+   Firebase लगाने पर यही data Firestore में जाएगा।
+===================================================== */
+
+let products =
+JSON.parse(localStorage.getItem("kabaar_products") || "null");
+
+let orders =
+JSON.parse(localStorage.getItem("kabaar_orders") || "[]");
+
+let cashback =
+Number(localStorage.getItem("kabaar_cashback") || 0);
+
+let cashbackHistory =
+JSON.parse(
+localStorage.getItem("kabaar_cashback_history") || "[]"
+);
+
+let selectedProduct = null;
+
+
+/* =====================================================
+   DEMO PRODUCTS
+===================================================== */
+
+if(!products){
+
+products=[
+
+{
+id:1,
+name:"गेहूं",
+category:"अनाज",
+qty:100,
+unit:"किलोग्राम",
+price:35,
+image:"",
+video:"",
+seller:"किसान",
+phone:"",
+location:"बिहार",
+description:"अच्छी गुणवत्ता का गेहूं"
+},
+
+{
+id:2,
+name:"धान",
+category:"अनाज",
+qty:200,
+unit:"किलोग्राम",
+price:28,
+image:"",
+video:"",
+seller:"किसान",
+phone:"",
+location:"बिहार",
+description:"अच्छी गुणवत्ता का धान"
+},
+
+{
+id:3,
+name:"आलू",
+category:"सब्जी",
+qty:100,
+unit:"किलोग्राम",
+price:25,
+image:"",
+video:"",
+seller:"किसान",
+phone:"",
+location:"बिहार",
+description:"ताजा आलू"
+}
+
+];
+
+saveData();
+
+}
+
+
+/* =====================================================
+   SAVE
+===================================================== */
+
+function saveData(){
+
+localStorage.setItem(
+"kabaar_products",
+JSON.stringify(products)
+);
+
+localStorage.setItem(
+"kabaar_orders",
+JSON.stringify(orders)
+);
+
+localStorage.setItem(
+"kabaar_cashback",
+cashback.toFixed(2)
+);
+
+localStorage.setItem(
+"kabaar_cashback_history",
+JSON.stringify(cashbackHistory)
+);
+
+}
+
+
+/* =====================================================
+   NAVIGATION
+===================================================== */
+
+function showSection(id){
+
+document
+.querySelectorAll(".section")
+.forEach(section=>{
+section.classList.remove("active");
+});
+
+const section =
+document.getElementById(id);
+
+if(section){
+section.classList.add("active");
+}
+
+if(id==="buy")
+renderProducts();
+
+if(id==="orders")
+renderOrders();
+
+if(id==="wallet")
+renderWallet();
+
+if(id==="myProducts")
+renderMyProducts();
+
+window.scrollTo({
+top:0,
+behavior:"smooth"
+});
+
+}
+
+
+/* =====================================================
+   IMAGE / VIDEO READER
+===================================================== */
+
+function readFile(file){
+
+return new Promise((resolve,reject)=>{
+
+if(!file){
+
+resolve("");
+
+return;
+
+}
+
+const reader =
+new FileReader();
+
+reader.onload=()=>{
+resolve(reader.result);
+};
+
+reader.onerror=reject;
+
+reader.readAsDataURL(file);
+
+});
+
+}
+
+
+/* =====================================================
+   ADD PRODUCT
+===================================================== */
+
+async function addProduct(){
+
+const name =
+document.getElementById("sellName")
+.value.trim();
+
+const category =
+document.getElementById("sellCategory")
+.value;
+
+const qty =
+Number(document.getElementById("sellQty")
+.value);
+
+const unit =
+document.getElementById("sellUnit")
+.value;
+
+const price =
+Number(document.getElementById("sellPrice")
+.value);
+
+const seller =
+document.getElementById("sellerName")
+.value.trim();
+
+const phone =
+document.getElementById("sellerPhone")
+.value.trim();
+
+const location =
+document.getElementById("sellerLocation")
+.value.trim();
+
+const description =
+document.getElementById("sellDescription")
+.value.trim();
+
+const imageFile =
+document.getElementById("sellImage")
+.files[0];
+
+const videoFile =
+document.getElementById("sellVideo")
+.files[0];
+
+
+if(!name ||
+!qty ||
+price<0 ||
+!seller ||
+!phone ||
+!location){
+
+alert("कृपया जरूरी जानकारी भरें।");
+
+return;
+
+}
+
+
+if(videoFile &&
+videoFile.size > 15*1024*1024){
+
+alert(
+"Demo में वीडियो 15MB से छोटा रखें।"
+);
+
+return;
+
+}
+
+
+const image =
+await readFile(imageFile);
+
+const video =
+await readFile(videoFile);
+
+
+const product={
+
+id:Date.now(),
+
+name:name,
+
+category:category,
+
+qty:qty,
+
+unit:unit,
+
+price:price,
+
+image:image,
+
+video:video,
+
+seller:seller,
+
+phone:phone,
+
+location:location,
+
+description:description,
+
+createdAt:
+new Date().toISOString(),
+
+updatedAt:
+new Date().toISOString()
+
+};
+
+
+products.unshift(product);
+
+saveData();
+
+
+alert(
+"सामान सफलतापूर्वक पोस्ट हो गया।"
+);
+
+
+document
+.querySelectorAll("#sell input")
+.forEach(input=>{
+
+if(input.type!=="file")
+input.value="";
+
+});
+
+document
+.getElementById("sellDescription")
+.value="";
+
+
+showSection("buy");
+
+}
+
+
+/* =====================================================
+   PRODUCT LIST
+===================================================== */
+
+function renderProducts(){
+
+const list =
+document.getElementById("productList");
+
+const search =
+(
+document.getElementById("searchBox")
+?.value || ""
+).toLowerCase();
+
+list.innerHTML="";
+
+
+const filtered =
+products.filter(product=>{
+
+return (
+product.name
+.toLowerCase()
+.includes(search)
+||
+product.category
+.toLowerCase()
+.includes(search)
+);
+
+});
+
+
+if(filtered.length===0){
+
+list.innerHTML=
+"<div class='card empty'>कोई सामान नहीं मिला।</div>";
+
+return;
+
+}
+
+
+filtered.forEach(product=>{
+
+const div =
+document.createElement("div");
+
+div.className="product";
+
+
+div.innerHTML=`
+
+${
+product.image
+?
+`<img src="${product.image}" alt="सामान">`
+:
+""
+}
+
+${
+product.video
+?
+`<video controls src="${product.video}"></video>`
+:
+""
+}
+
+<h3>
+${escapeHtml(product.name)}
+</h3>
+
+<p class="small">
+श्रेणी:
+${escapeHtml(product.category)}
+</p>
+
+<p>
+उपलब्ध मात्रा:
+<strong>
+${product.qty}
+${escapeHtml(product.unit)}
+</strong>
+</p>
+
+<p class="price">
+₹${Number(product.price).toFixed(2)}
+/
+${escapeHtml(product.unit)}
+</p>
+
+<p class="small">
+👨‍🌾 Seller:
+${escapeHtml(product.seller)}
+</p>
+
+<p class="small">
+📍 ${escapeHtml(product.location)}
+</p>
+
+<p>
+${escapeHtml(product.description)}
+</p>
+
+<br>
+
+<button class="btn"
+onclick="openCheckout(${product.id})">
+🛒 खरीदें
+</button>
+
+`;
+
+
+list.appendChild(div);
+
+});
+
+}
+
+
+/* =====================================================
+   EDIT PRODUCT PRICE
+===================================================== */
+
+function renderMyProducts(){
+
+const list =
+document.getElementById("myProductsList");
+
+list.innerHTML="";
+
+
+if(products.length===0){
+
+list.innerHTML=
+"<div class='empty'>अभी कोई सामान नहीं है।</div>";
+
+return;
+
+}
+
+
+products.forEach(product=>{
+
+const div =
+document.createElement("div");
+
+div.className="product";
+
+div.innerHTML=`
+
+<h3>
+${escapeHtml(product.name)}
+</h3>
+
+<p>
+वर्तमान रेट:
+<strong>
+₹${product.price.toFixed(2)}
+/
+${escapeHtml(product.unit)}
+</strong>
+</p>
+
+<p>
+मात्रा:
+${product.qty}
+${escapeHtml(product.unit)}
+</p>
+
+<button class="btn"
+onclick="changePrice(${product.id})">
+✏️ रेट बदलें
+</button>
+
+<button class="btn red"
+onclick="deleteProduct(${product.id})">
+🗑️ हटाएँ
+</button>
+
+`;
+
+list.appendChild(div);
+
+});
+
+}
+
+
+/* =====================================================
+   CHANGE PRICE
+===================================================== */
+
+function changePrice(id){
+
+const product =
+products.find(p=>p.id===id);
+
+if(!product)
+return;
+
+
+const newPrice =
+prompt(
+"नया रेट डालें:",
+product.price
+);
+
+
+if(newPrice===null)
+return;
+
+
+const price =
+Number(newPrice);
+
+
+if(!price || price<0){
+
+alert("सही रेट डालें।");
+
+return;
+
+}
+
+
+product.price=price;
+
+product.updatedAt =
+new Date().toISOString();
+
+saveData();
+
+showToast(
+"रेट सफलतापूर्वक बदल दिया गया।"
+);
+
+renderMyProducts();
+
+renderProducts();
+
+}
+
+
+/* =====================================================
+   DELETE PRODUCT
+===================================================== */
+
+function deleteProduct(id){
+
+if(!confirm(
+"क्या आप यह सामान हटाना चाहते हैं?"
+))
+return;
+
+
+products =
+products.filter(p=>p.id!==id);
+
+saveData();
+
+renderMyProducts();
+
+renderProducts();
+
+}
+
+
+/* =====================================================
+   CHECKOUT OPEN
+===================================================== */
+
+function openCheckout(id){
+
+selectedProduct =
+products.find(p=>p.id===id);
+
+if(!selectedProduct)
+return;
+
+
+document.getElementById(
+"checkoutProduct"
+).innerHTML=`
+
+<h3>
+${escapeHtml(selectedProduct.name)}
+</h3>
+
+<p>
+रेट:
+<strong>
+₹${selectedProduct.price.toFixed(2)}
+/
+${escapeHtml(selectedProduct.unit)}
+</strong>
+</p>
+
+<p>
+उपलब्ध:
+${selectedProduct.qty}
+${escapeHtml(selectedProduct.unit)}
+</p>
+
+`;
+
+
+document.getElementById(
+"orderQty"
+).value=1;
+
+
+document.getElementById(
+"availableCashback"
+).innerText=
+"₹"+cashback.toFixed(2);
+
+
+showSection("checkout");
+
+calculateOrder();
+
+}
+
+
+/* =====================================================
+   CALCULATE ORDER
+===================================================== */
+
+function calculateOrder(){
+
+if(!selectedProduct)
+return;
+
+
+let qty =
+Number(
+document.getElementById("orderQty").value
+) || 1;
+
+
+if(qty<1)
+qty=1;
+
+
+if(qty>selectedProduct.qty){
+
+qty=selectedProduct.qty;
+
+document.getElementById(
+"orderQty"
+).value=qty;
+
+}
+
+
+const itemAmount =
+selectedProduct.price * qty;
+
+
+const commission =
+itemAmount * COMMISSION_RATE;
+
+
+const earnedCashback =
+itemAmount * CASHBACK_RATE;
+
+
+const paymentMethod =
+document.getElementById(
+"paymentMethod"
+).value;
+
+
+let discount=0;
+
+
+if(paymentMethod==="online"){
+
+discount =
+itemAmount * ONLINE_DISCOUNT_RATE;
+
+document.getElementById(
+"paymentMessage"
+).innerText=
+"Online payment पर 2% discount लागू है।";
+
+}else{
+
+document.getElementById(
+"paymentMessage"
+).innerText=
+"Cash payment में पूरी कीमत देनी होगी।";
+
+}
+
+
+let cashbackUsed=0;
+
+
+if(
+document.getElementById(
+"useCashback"
+).checked
+){
+
+cashbackUsed =
+Math.min(
+cashback,
+itemAmount-discount
+);
+
+}
+
+
+let finalAmount =
+itemAmount
+- discount
+- cashbackUsed;
+
+
+if(finalAmount<0)
+finalAmount=0;
+
+
+document.getElementById(
+"itemAmount"
+).innerText=
+"₹"+itemAmount.toFixed(2);
+
+
+document.getElementById(
+"commissionAmount"
+).innerText=
+"₹"+commission.toFixed(2);
+
+
+document.getElementById(
+"cashbackAmount"
+).innerText=
+"₹"+earnedCashback.toFixed(2);
+
+
+document.getElementById(
+"onlineDiscount"
+).innerText=
+"₹"+discount.toFixed(2);
+
+
+document.getElementById(
+"finalAmount"
+).innerText=
+"₹"+finalAmount.toFixed(2);
+
+
+document.getElementById(
+"availableCashback"
+).innerText=
+"₹"+cashback.toFixed(2);
+
+}
+
+
+/* =====================================================
+   PLACE ORDER
+===================================================== */
+
+function placeOrder(){
+
+if(!selectedProduct)
+return;
+
+
+const buyerName =
+document.getElementById(
+"buyerName"
+).value.trim();
+
+const buyerPhone =
+document.getElementById(
+"buyerPhone"
+).value.trim();
+
+const buyerLocation =
+document.getElementById(
+"buyerLocation"
+).value.trim();
+
+
+if(
+!buyerName ||
+!buyerPhone ||
+!buyerLocation
+){
+
+alert(
+"ग्राहक की पूरी जानकारी भरें।"
+);
+
+return;
+
+}
+
+
+let qty =
+Number(
+document.getElementById("orderQty").value
+);
+
+
+if(
+qty<1 ||
+qty>selectedProduct.qty
+){
+
+alert(
+"उपलब्ध मात्रा के अनुसार सही quantity डालें।"
+);
+
+return;
+
+}
+
+
+const itemAmount =
+selectedProduct.price * qty;
+
+
+const commission =
+itemAmount * COMMISSION_RATE;
+
+
+const earnedCashback =
+itemAmount * CASHBACK_RATE;
+
+
+const paymentMethod =
+document.getElementById(
+"paymentMethod"
+).value;
+
+
+let discount=0;
+
+
+if(paymentMethod==="online"){
+
+discount =
+itemAmount * ONLINE_DISCOUNT_RATE;
+
+}
+
+
+let cashbackUsed=0;
+
+
+if(
+document.getElementById(
+"useCashback"
+).checked
+){
+
+cashbackUsed =
+Math.min(
+cashback,
+itemAmount-discount
+);
+
+}
+
+
+cashback -= cashbackUsed;
+
+
+let finalAmount =
+itemAmount
+- discount
+- cashbackUsed;
+
+
+if(finalAmount<0)
+finalAmount=0;
+
+
+/*
+नया Cashback order बनने के बाद
+balance में जुड़ रहा है।
+*/
+
+cashback += earnedCashback;
+
+
+const order={
+
+id:
+"ORD-"+Date.now(),
+
+date:
+new Date().toLocaleString("hi-IN"),
+
+productId:
+selectedProduct.id,
+
+productName:
+selectedProduct.name,
+
+seller:
+selectedProduct.seller,
+
+sellerPhone:
+selectedProduct.phone,
+
+buyer:
+buyerName,
+
+buyerPhone:
+buyerPhone,
+
+buyerLocation:
+buyerLocation,
+
+quantity:
+qty,
+
+unit:
+selectedProduct.unit,
+
+itemAmount:
+itemAmount,
+
+commission:
+commission,
+
+cashbackEarned:
+earnedCashback,
+
+cashbackUsed:
+cashbackUsed,
+
+onlineDiscount:
+discount,
+
+finalAmount:
+finalAmount,
+
+paymentMethod:
+paymentMethod,
+
+paymentStatus:
+paymentMethod==="online"
+?
+"Payment Pending"
+:
+"Cash Payment Pending",
+
+cashbackStatus:
+"Available for next purchase",
+
+orderStatus:
+"Order Placed",
+
+merchantUPI:
+MERCHANT_UPI
+
+};
+
+
+orders.unshift(order);
+
+
+selectedProduct.qty -= qty;
+
+
+cashbackHistory.unshift({
+
+id:order.id,
+
+date:order.date,
+
+type:"earned",
+
+amount:earnedCashback,
+
+message:
+"इस ऑर्डर पर 1% Cashback मि
