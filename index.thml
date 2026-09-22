@@ -1,0 +1,1035 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Kisan Anaj Bazaar</title>
+
+<style>
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+  font-family:Arial,sans-serif;
+}
+
+body{
+  background:#f5f6f7;
+  color:#222;
+}
+
+header{
+  background:#16803a;
+  color:white;
+  position:sticky;
+  top:0;
+  z-index:100;
+  box-shadow:0 2px 8px #0003;
+}
+
+.nav{
+  max-width:1200px;
+  margin:auto;
+  padding:12px;
+  display:flex;
+  align-items:center;
+  gap:10px;
+  flex-wrap:wrap;
+}
+
+.logo{
+  font-size:21px;
+  font-weight:bold;
+  white-space:nowrap;
+}
+
+.search{
+  flex:1;
+  min-width:180px;
+  padding:12px;
+  border:0;
+  border-radius:8px;
+  font-size:15px;
+  outline:none;
+}
+
+button{
+  border:0;
+  border-radius:8px;
+  padding:11px 15px;
+  font-weight:bold;
+  cursor:pointer;
+}
+
+.sell{
+  background:#ffb000;
+  color:#111;
+}
+
+.cart{
+  background:white;
+  color:#16803a;
+}
+
+.hero{
+  background:white;
+  text-align:center;
+  padding:35px 15px;
+}
+
+.hero h1{
+  color:#146b32;
+  font-size:32px;
+  margin-bottom:10px;
+}
+
+.hero p{
+  color:#666;
+  margin-bottom:20px;
+}
+
+.container{
+  max-width:1200px;
+  margin:auto;
+  padding:20px 15px;
+}
+
+.categories{
+  display:flex;
+  gap:10px;
+  overflow-x:auto;
+  padding-bottom:10px;
+}
+
+.category{
+  background:white;
+  border:1px solid #ddd;
+  padding:11px 18px;
+  border-radius:25px;
+  white-space:nowrap;
+  cursor:pointer;
+}
+
+.category.active,
+.category:hover{
+  background:#16803a;
+  color:white;
+}
+
+h2{
+  margin:20px 0 15px;
+}
+
+.products{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(210px,1fr));
+  gap:15px;
+}
+
+.card{
+  background:white;
+  border-radius:12px;
+  overflow:hidden;
+  box-shadow:0 2px 9px #0002;
+}
+
+.card img{
+  width:100%;
+  height:170px;
+  object-fit:cover;
+  background:#ddd;
+}
+
+.card-body{
+  padding:14px;
+}
+
+.card h3{
+  margin-bottom:7px;
+}
+
+.price{
+  color:#16803a;
+  font-size:21px;
+  font-weight:bold;
+  margin:9px 0;
+}
+
+.buy{
+  width:100%;
+  background:#16803a;
+  color:white;
+}
+
+.buy:hover{
+  background:#0d5d29;
+}
+
+.sell-box,
+.cart-box,
+.order-box{
+  display:none;
+  background:white;
+  margin-top:20px;
+  padding:20px;
+  border-radius:12px;
+  box-shadow:0 2px 9px #0002;
+}
+
+.sell-box input,
+.sell-box select{
+  width:100%;
+  padding:13px;
+  margin:7px 0;
+  border:1px solid #ccc;
+  border-radius:8px;
+  font-size:15px;
+}
+
+.submit{
+  width:100%;
+  background:#16803a;
+  color:white;
+  margin-top:8px;
+}
+
+.cart-item{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:12px 0;
+  border-bottom:1px solid #ddd;
+  gap:10px;
+}
+
+.remove{
+  background:#e53935;
+  color:white;
+  padding:7px 10px;
+}
+
+.checkout{
+  width:100%;
+  background:#ffb000;
+  margin-top:15px;
+}
+
+.empty{
+  text-align:center;
+  padding:30px;
+  color:#777;
+}
+
+footer{
+  background:#123d22;
+  color:white;
+  text-align:center;
+  padding:30px 15px;
+  margin-top:35px;
+}
+
+@media(max-width:600px){
+
+  .logo{
+    width:100%;
+    text-align:center;
+  }
+
+  .search{
+    width:100%;
+    order:2;
+  }
+
+  .sell,
+  .cart{
+    flex:1;
+  }
+
+  .hero h1{
+    font-size:25px;
+  }
+
+  .products{
+    grid-template-columns:repeat(2,1fr);
+    gap:10px;
+  }
+
+  .card img{
+    height:130px;
+  }
+
+  .card-body{
+    padding:10px;
+  }
+
+  .card h3{
+    font-size:16px;
+  }
+
+  .price{
+    font-size:18px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+
+<div class="nav">
+
+<div class="logo">
+🌾 Kisan Anaj Bazaar
+</div>
+
+<input
+id="search"
+class="search"
+type="search"
+placeholder="गेहूं, धान, चावल, आलू खोजें..."
+oninput="searchProducts()"
+>
+
+<button class="sell" onclick="toggleSell()">
+➕ बेचें
+</button>
+
+<button class="cart" onclick="toggleCart()">
+🛒 Cart (<span id="cartCount">0</span>)
+</button>
+
+</div>
+
+</header>
+
+
+<section class="hero">
+
+<h1>किसान अनाज बाज़ार</h1>
+
+<p>
+किसान सीधे अपना अनाज बेचें और खरीदार सीधे खरीदें।
+</p>
+
+<button class="sell" onclick="toggleSell()">
+🌾 अपना अनाज बेचें
+</button>
+
+</section>
+
+
+<div class="container">
+
+
+<div class="categories">
+
+<div class="category active"
+onclick="filterCategory('सभी',this)">
+सभी
+</div>
+
+<div class="category"
+onclick="filterCategory('गेहूं',this)">
+🌾 गेहूं
+</div>
+
+<div class="category"
+onclick="filterCategory('धान',this)">
+🌾 धान
+</div>
+
+<div class="category"
+onclick="filterCategory('चावल',this)">
+🍚 चावल
+</div>
+
+<div class="category"
+onclick="filterCategory('मक्का',this)">
+🌽 मक्का
+</div>
+
+<div class="category"
+onclick="filterCategory('आलू',this)">
+🥔 आलू
+</div>
+
+</div>
+
+
+<!-- SELL -->
+
+<div id="sellBox" class="sell-box">
+
+<h2>🌾 अपना सामान बेचें</h2>
+
+<input
+id="productName"
+type="text"
+placeholder="सामान का नाम"
+>
+
+<select id="productCategory">
+
+<option value="गेहूं">गेहूं</option>
+<option value="धान">धान</option>
+<option value="चावल">चावल</option>
+<option value="मक्का">मक्का</option>
+<option value="आलू">आलू</option>
+
+</select>
+
+<input
+id="productPrice"
+type="number"
+placeholder="कीमत ₹ प्रति kg"
+>
+
+<input
+id="productQuantity"
+type="number"
+placeholder="मात्रा kg में"
+>
+
+<input
+id="productSeller"
+type="text"
+placeholder="किसान / Seller का नाम"
+>
+
+<input
+id="productPhone"
+type="tel"
+placeholder="मोबाइल नंबर"
+>
+
+<input
+id="productImage"
+type="url"
+placeholder="फोटो URL (अभी optional)"
+>
+
+<button class="submit" onclick="addProduct()">
+📤 सामान अपलोड करें
+</button>
+
+</div>
+
+
+<!-- CART -->
+
+<div id="cartBox" class="cart-box">
+
+<h2>🛒 आपका Cart</h2>
+
+<div id="cartItems"></div>
+
+<h3 id="cartTotal">
+कुल: ₹0
+</h3>
+
+<button class="checkout" onclick="checkout()">
+💳 Order करें
+</button>
+
+</div>
+
+
+<!-- PRODUCTS -->
+
+<h2>🔥 आज के सामान</h2>
+
+<div id="products" class="products"></div>
+
+
+<!-- ORDER -->
+
+<div id="orderBox" class="order-box">
+
+<h2>📦 आपका Order</h2>
+
+<p id="orderMessage"></p>
+
+</div>
+
+</div>
+
+
+<footer>
+
+<h3>🌾 Kisan Anaj Bazaar</h3>
+
+<p style="margin-top:8px;">
+किसानों और खरीदारों को सीधे जोड़ने वाला ऑनलाइन बाज़ार।
+</p>
+
+<p style="margin-top:15px;">
+© 2026 Kisan Anaj Bazaar
+</p>
+
+</footer>
+
+
+<script>
+
+/* =========================
+   PRODUCTS
+========================= */
+
+let products = [
+
+{
+id:1,
+name:"गेहूं",
+category:"गेहूं",
+price:28,
+quantity:100,
+seller:"किसान",
+phone:"",
+image:"https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?auto=format&fit=crop&w=800&q=80"
+},
+
+{
+id:2,
+name:"धान",
+category:"धान",
+price:32,
+quantity:200,
+seller:"किसान",
+phone:"",
+image:"https://images.unsplash.com/photo-1536304993881-ff6e9eefa2a6?auto=format&fit=crop&w=800&q=80"
+},
+
+{
+id:3,
+name:"आलू",
+category:"आलू",
+price:25,
+quantity:100,
+seller:"किसान",
+phone:"",
+image:"https://images.unsplash.com/photo-1518977676601-b53f82aba655?auto=format&fit=crop&w=800&q=80"
+},
+
+{
+id:4,
+name:"मक्का",
+category:"मक्का",
+price:24,
+quantity:150,
+seller:"किसान",
+phone:"",
+image:"https://images.unsplash.com/photo-1551754655-cd27e38d2076?auto=format&fit=crop&w=800&q=80"
+}
+
+];
+
+
+/* =========================
+   CART
+========================= */
+
+let cart = [];
+
+
+/* =========================
+   DISPLAY PRODUCTS
+========================= */
+
+function displayProducts(list = products){
+
+const box = document.getElementById("products");
+
+box.innerHTML = "";
+
+if(list.length === 0){
+
+box.innerHTML =
+'<div class="empty">😔 कोई सामान नहीं मिला।</div>';
+
+return;
+
+}
+
+list.forEach(product => {
+
+box.innerHTML += `
+
+<div class="card">
+
+<img
+src="${product.image}"
+alt="${product.name}"
+onerror="this.src='https://images.unsplash.com/photo-1518843875459-f738682238a6?auto=format&fit=crop&w=800&q=80'"
+>
+
+<div class="card-body">
+
+<h3>${product.name}</h3>
+
+<p>📦 मात्रा: ${product.quantity} kg</p>
+
+<p>👨‍🌾 Seller: ${product.seller}</p>
+
+<div class="price">
+₹${product.price} / kg
+</div>
+
+<button
+class="buy"
+onclick="addToCart(${product.id})"
+>
+🛒 Cart में डालें
+</button>
+
+</div>
+
+</div>
+
+`;
+
+});
+
+}
+
+
+/* =========================
+   ADD TO CART
+========================= */
+
+function addToCart(id){
+
+const product =
+products.find(p => p.id === id);
+
+if(!product) return;
+
+cart.push(product);
+
+updateCart();
+
+alert("✅ सामान Cart में जोड़ दिया गया।");
+
+}
+
+
+/* =========================
+   UPDATE CART
+========================= */
+
+function updateCart(){
+
+document.getElementById("cartCount").innerText =
+cart.length;
+
+const box =
+document.getElementById("cartItems");
+
+box.innerHTML = "";
+
+if(cart.length === 0){
+
+box.innerHTML =
+'<div class="empty">Cart खाली है।</div>';
+
+document.getElementById("cartTotal").innerText =
+"कुल: ₹0";
+
+return;
+
+}
+
+let total = 0;
+
+cart.forEach((item,index)=>{
+
+total += Number(item.price);
+
+box.innerHTML += `
+
+<div class="cart-item">
+
+<div>
+
+<b>${item.name}</b>
+
+<br>
+
+₹${item.price} / kg
+
+</div>
+
+<button
+class="remove"
+onclick="removeCart(${index})"
+>
+हटाएँ
+</button>
+
+</div>
+
+`;
+
+});
+
+document.getElementById("cartTotal").innerText =
+"कुल: ₹" + total;
+
+}
+
+
+/* =========================
+   REMOVE CART
+========================= */
+
+function removeCart(index){
+
+cart.splice(index,1);
+
+updateCart();
+
+}
+
+
+/* =========================
+   CART OPEN/CLOSE
+========================= */
+
+function toggleCart(){
+
+const box =
+document.getElementById("cartBox");
+
+box.style.display =
+box.style.display === "block"
+? "none"
+: "block";
+
+if(box.style.display === "block"){
+
+box.scrollIntoView({
+behavior:"smooth"
+});
+
+}
+
+}
+
+
+/* =========================
+   SELL BOX
+========================= */
+
+function toggleSell(){
+
+const box =
+document.getElementById("sellBox");
+
+box.style.display =
+box.style.display === "block"
+? "none"
+: "block";
+
+if(box.style.display === "block"){
+
+box.scrollIntoView({
+behavior:"smooth"
+});
+
+}
+
+}
+
+
+/* =========================
+   ADD PRODUCT
+========================= */
+
+function addProduct(){
+
+const name =
+document.getElementById("productName").value.trim();
+
+const category =
+document.getElementById("productCategory").value;
+
+const price =
+document.getElementById("productPrice").value;
+
+const quantity =
+document.getElementById("productQuantity").value;
+
+const seller =
+document.getElementById("productSeller").value.trim();
+
+const phone =
+document.getElementById("productPhone").value.trim();
+
+const image =
+document.getElementById("productImage").value.trim();
+
+
+if(!name){
+
+alert("सामान का नाम डालें।");
+return;
+
+}
+
+if(!price){
+
+alert("कीमत डालें।");
+return;
+
+}
+
+if(!quantity){
+
+alert("मात्रा डालें।");
+return;
+
+}
+
+if(!seller){
+
+alert("Seller का नाम डालें।");
+return;
+
+}
+
+
+const newProduct = {
+
+id:Date.now(),
+
+name:name,
+
+category:category,
+
+price:Number(price),
+
+quantity:Number(quantity),
+
+seller:seller,
+
+phone:phone,
+
+image:image ||
+"https://images.unsplash.com/photo-1518843875459-f738682238a6?auto=format&fit=crop&w=800&q=80"
+
+};
+
+
+products.unshift(newProduct);
+
+
+/* Save in browser */
+
+localStorage.setItem(
+"kisanProducts",
+JSON.stringify(products)
+);
+
+
+displayProducts();
+
+
+document.getElementById("productName").value="";
+document.getElementById("productPrice").value="";
+document.getElementById("productQuantity").value="";
+document.getElementById("productSeller").value="";
+document.getElementById("productPhone").value="";
+document.getElementById("productImage").value="";
+
+
+alert(
+"✅ आपका सामान सफलतापूर्वक अपलोड हो गया।"
+);
+
+
+/* Close box */
+
+document.getElementById("sellBox").style.display =
+"none";
+
+}
+
+
+/* =========================
+   SEARCH
+========================= */
+
+function searchProducts(){
+
+const text =
+document
+.getElementById("search")
+.value
+.toLowerCase()
+.trim();
+
+
+const result =
+products.filter(product =>
+
+product.name.toLowerCase().includes(text) ||
+
+product.category.toLowerCase().includes(text) ||
+
+product.seller.toLowerCase().includes(text)
+
+);
+
+
+displayProducts(result);
+
+}
+
+
+/* =========================
+   CATEGORY
+========================= */
+
+function filterCategory(category,button){
+
+document
+.querySelectorAll(".category")
+.forEach(item=>{
+item.classList.remove("active");
+});
+
+
+button.classList.add("active");
+
+
+if(category === "सभी"){
+
+displayProducts();
+
+return;
+
+}
+
+
+const result =
+products.filter(product =>
+product.category === category
+);
+
+
+displayProducts(result);
+
+}
+
+
+/* =========================
+   CHECKOUT
+========================= */
+
+function checkout(){
+
+if(cart.length === 0){
+
+alert("पहले Cart में सामान डालें।");
+
+return;
+
+}
+
+let total = 0;
+
+cart.forEach(item=>{
+total += Number(item.price);
+});
+
+
+const orderId =
+"KAB" + Date.now();
+
+
+document.getElementById("orderBox").style.display =
+"block";
+
+
+document.getElementById("orderMessage").innerHTML = `
+
+<b>✅ Order तैयार हो गया!</b>
+
+<br><br>
+
+Order ID:
+<b>${orderId}</b>
+
+<br><br>
+
+कुल राशि:
+<b>₹${total}</b>
+
+<br><br>
+
+अभी यह Demo Order है।
+
+<br>
+अगले चरण में इसमें Firebase,
+Customer Address,
+UPI Payment और Order Tracking जोड़ा जाएगा।
+
+`;
+
+
+cart = [];
+
+updateCart();
+
+document
+.getElementById("orderBox")
+.scrollIntoView({
+behavior:"smooth"
+});
+
+}
+
+
+/* =========================
+   LOAD SAVED PRODUCTS
+========================= */
+
+const saved =
+localStorage.getItem("kisanProducts");
+
+
+if(saved){
+
+try{
+
+const savedProducts =
+JSON.parse(saved);
+
+if(Array.isArray(savedProducts)){
+
+products = savedProducts;
+
+}
+
+}catch(error){
+
+console.log("Saved data error");
+
+}
+
+}
+
+
+/* =========================
+   START WEBSITE
+========================= */
+
+displayProducts();
+
+updateCart();
+
+</script>
+
+</body>
+</html>
