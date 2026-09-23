@@ -1,0 +1,1163 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>किसान अनाज बाज़ार</title>
+
+<style>
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:Arial,sans-serif;
+  background:#f3f7f3;
+  color:#222;
+}
+header{
+  background:#16833a;
+  color:white;
+  padding:18px 12px;
+  text-align:center;
+}
+header h1{margin:0;font-size:27px}
+header p{margin:6px 0 0}
+
+nav{
+  background:#fff;
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:center;
+  gap:7px;
+  padding:10px;
+  box-shadow:0 2px 6px #bbb;
+  position:sticky;
+  top:0;
+  z-index:10;
+}
+nav button{
+  border:0;
+  background:#16833a;
+  color:white;
+  padding:9px 13px;
+  border-radius:7px;
+  cursor:pointer;
+}
+
+.container{
+  max-width:1100px;
+  margin:auto;
+  padding:18px;
+}
+
+.page{display:none}
+.page.active{display:block}
+
+.card{
+  background:white;
+  padding:18px;
+  margin:12px 0;
+  border-radius:12px;
+  box-shadow:0 2px 8px #ddd;
+}
+
+input,select,textarea{
+  width:100%;
+  padding:11px;
+  margin:6px 0 12px;
+  border:1px solid #bbb;
+  border-radius:7px;
+  font-size:15px;
+}
+
+textarea{min-height:90px}
+
+.btn{
+  background:#16833a;
+  color:white;
+  border:0;
+  padding:11px 16px;
+  border-radius:7px;
+  cursor:pointer;
+  font-size:15px;
+  margin:4px 2px;
+}
+
+.btn.red{background:#d62828}
+.btn.blue{background:#1976d2}
+.btn.orange{background:#ef8b00}
+
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+  gap:15px;
+}
+
+.product{
+  background:#fff;
+  border-radius:12px;
+  padding:16px;
+  box-shadow:0 2px 8px #ddd;
+}
+
+.product h3{
+  margin-top:0;
+  color:#16833a;
+}
+
+.price{
+  font-size:21px;
+  font-weight:bold;
+  color:#d35400;
+}
+
+.badge{
+  display:inline-block;
+  padding:5px 9px;
+  border-radius:15px;
+  background:#e8f5e9;
+  color:#16833a;
+  font-size:13px;
+}
+
+.notice{
+  background:#fff3cd;
+  border-left:5px solid #ffc107;
+  padding:12px;
+  margin:10px 0;
+}
+
+.success{
+  background:#dff5e4;
+  border-left:5px solid #16833a;
+  padding:12px;
+}
+
+footer{
+  background:#16833a;
+  color:white;
+  text-align:center;
+  padding:20px;
+  margin-top:30px;
+}
+
+.small{
+  font-size:13px;
+  color:#666;
+}
+
+table{
+  width:100%;
+  border-collapse:collapse;
+  background:white;
+}
+th,td{
+  padding:9px;
+  border:1px solid #ddd;
+  text-align:left;
+}
+th{
+  background:#16833a;
+  color:white;
+}
+
+@media(max-width:600px){
+  header h1{font-size:23px}
+  nav button{font-size:13px;padding:8px}
+  .container{padding:10px}
+  table{font-size:12px}
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <h1>🌾 किसान अनाज बाज़ार</h1>
+  <p>किसान बेचें • खरीदार खरीदें</p>
+</header>
+
+<nav>
+  <button onclick="showPage('home')">🏠 Home</button>
+  <button onclick="showPage('products');loadProducts()">🌾 अनाज खरीदें</button>
+  <button onclick="showPage('sell')">📦 अनाज बेचें</button>
+  <button onclick="showPage('booking')">🛒 मेरी Booking</button>
+  <button onclick="showPage('notifications');loadNotifications()">🔔 Notification</button>
+  <button onclick="showPage('login')">👤 Login</button>
+  <button onclick="showPage('admin')">🔐 Admin</button>
+</nav>
+
+<div class="container">
+
+<!-- HOME -->
+<section id="home" class="page active">
+
+  <div class="card">
+    <h2>🌾 किसान अनाज बाज़ार में आपका स्वागत है</h2>
+    <p>
+      किसान अपना अनाज, मात्रा और रेट डालकर बेच सकते हैं।
+      खरीदार उपलब्ध अनाज देखकर Booking कर सकते हैं।
+    </p>
+
+    <button class="btn" onclick="showPage('sell')">
+      📦 अनाज बेचें
+    </button>
+
+    <button class="btn blue" onclick="showPage('products');loadProducts()">
+      🛒 अनाज खरीदें
+    </button>
+  </div>
+
+  <div class="grid">
+
+    <div class="card">
+      <h3>👨‍🌾 किसान</h3>
+      <p>अपना अनाज और रेट Submit करें।</p>
+    </div>
+
+    <div class="card">
+      <h3>🛒 खरीदार</h3>
+      <p>अनाज देखें और Booking करें।</p>
+    </div>
+
+    <div class="card">
+      <h3>🔔 Notification</h3>
+      <p>Booking और Accept/Reject की जानकारी देखें।</p>
+    </div>
+
+  </div>
+
+  <div class="notice">
+    ☎️ Help Line: <b>7042894282</b>
+  </div>
+
+</section>
+
+
+<!-- LOGIN -->
+<section id="login" class="page">
+
+  <div class="card">
+    <h2>👤 Login / Registration</h2>
+
+    <label>नाम</label>
+    <input id="loginName" placeholder="अपना नाम">
+
+    <label>मोबाइल नंबर</label>
+    <input id="loginPhone" type="tel" placeholder="10 digit mobile">
+
+    <label>आप कौन हैं?</label>
+    <select id="loginRole">
+      <option value="farmer">👨‍🌾 किसान</option>
+      <option value="buyer">🛒 खरीदार</option>
+    </select>
+
+    <button class="btn" onclick="loginUser()">
+      Login / Register
+    </button>
+
+    <div id="loginStatus"></div>
+  </div>
+
+</section>
+
+
+<!-- SELL -->
+<section id="sell" class="page">
+
+  <div class="card">
+
+    <h2>📦 किसान अपना अनाज बेचें</h2>
+
+    <div id="sellUserWarning" class="notice">
+      पहले Login / Registration करें।
+    </div>
+
+    <label>किसान का नाम</label>
+    <input id="farmerName" placeholder="किसान का नाम">
+
+    <label>मोबाइल नंबर</label>
+    <input id="farmerPhone" type="tel" placeholder="मोबाइल नंबर">
+
+    <label>अनाज का नाम</label>
+    <input id="grainName" placeholder="जैसे गेहूं, चावल, सरसों">
+
+    <label>Category</label>
+    <select id="category">
+      <option value="गेहूं">गेहूं</option>
+      <option value="चावल">चावल</option>
+      <option value="मक्का">मक्का</option>
+      <option value="सरसों">सरसों</option>
+      <option value="चना">चना</option>
+      <option value="दाल">दाल</option>
+      <option value="अन्य">अन्य</option>
+    </select>
+
+    <label>मात्रा</label>
+    <input id="quantity" type="number" placeholder="जैसे 100">
+
+    <label>Unit</label>
+    <select id="unit">
+      <option value="क्विंटल">क्विंटल</option>
+      <option value="किलो">किलो</option>
+      <option value="टन">टन</option>
+    </select>
+
+    <label>रेट / कीमत</label>
+    <input id="price" type="number" placeholder="₹ प्रति Unit">
+
+    <label>स्थान</label>
+    <input id="location" placeholder="गांव / शहर / जिला">
+
+    <label>UPI ID</label>
+    <input id="upi" placeholder="जैसे name@upi">
+
+    <label>अनाज की जानकारी</label>
+    <textarea id="description"
+      placeholder="अनाज की क्वालिटी आदि लिखें"></textarea>
+
+    <button class="btn" onclick="submitSell()">
+      ✅ अनाज Submit करें
+    </button>
+
+    <div id="sellResult"></div>
+
+  </div>
+
+</section>
+
+
+<!-- PRODUCTS -->
+<section id="products" class="page">
+
+  <div class="card">
+    <h2>🛒 उपलब्ध अनाज</h2>
+
+    <input
+      id="searchBox"
+      placeholder="🔎 अनाज / स्थान खोजें..."
+      oninput="filterProducts()">
+
+    <div id="productList" class="grid">
+      Loading...
+    </div>
+  </div>
+
+</section>
+
+
+<!-- BOOKING -->
+<section id="booking" class="page">
+
+  <div class="card">
+    <h2>🛒 मेरी Booking</h2>
+    <div id="bookingList">
+      पहले Login करें।
+    </div>
+  </div>
+
+</section>
+
+
+<!-- NOTIFICATIONS -->
+<section id="notifications" class="page">
+
+  <div class="card">
+    <h2>🔔 Notifications</h2>
+
+    <div id="notificationList">
+      Loading...
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- ADMIN -->
+<section id="admin" class="page">
+
+  <div class="card">
+
+    <h2>🔐 Admin Panel</h2>
+
+    <input
+      id="adminPassword"
+      type="password"
+      placeholder="Admin Password">
+
+    <button class="btn" onclick="openAdmin()">
+      Admin Login
+    </button>
+
+    <div id="adminPanel"></div>
+
+  </div>
+
+</section>
+
+</div>
+
+
+<footer>
+  <b>🌾 किसान अनाज बाज़ार</b>
+  <br>
+  Help Line: 7042894282
+</footer>
+
+
+<!-- FIREBASE -->
+<script type="module">
+
+import { initializeApp }
+from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
+
+import {
+  getFirestore,
+  collection,
+  addDoc,
+  getDocs,
+  doc,
+  updateDoc,
+  query,
+  where,
+  orderBy,
+  serverTimestamp
+}
+from "https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
+
+
+const firebaseConfig = {
+  apiKey: "AIzaSyDxjigog6ctxY25UFGrH7M3pYx1IN2RWSw",
+  authDomain: "kissan-bajar.firebaseapp.com",
+  databaseURL: "https://kissan-bajar-default-rtdb.firebaseio.com",
+  projectId: "kissan-bajar",
+  storageBucket: "kissan-bajar.firebasestorage.app",
+  messagingSenderId: "629043004551",
+  appId: "1:629043004551:web:f484c026c838399cff6422",
+  measurementId: "G-TE6ZLGS1KF"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+
+/* ---------------- USER ---------------- */
+
+window.loginUser = async function(){
+
+  const name =
+    document.getElementById("loginName").value.trim();
+
+  const phone =
+    document.getElementById("loginPhone").value.trim();
+
+  const role =
+    document.getElementById("loginRole").value;
+
+  if(!name || !phone){
+    alert("नाम और मोबाइल नंबर डालें");
+    return;
+  }
+
+  const user = {
+    name:name,
+    phone:phone,
+    role:role
+  };
+
+  localStorage.setItem("kisanUser",JSON.stringify(user));
+
+  try{
+
+    await addDoc(collection(db,"users"),{
+      ...user,
+      createdAt:serverTimestamp()
+    });
+
+  }catch(error){
+    console.log(error);
+  }
+
+  document.getElementById("loginStatus").innerHTML =
+    `<div class="success">
+      ✅ Login हो गया<br>
+      नाम: <b>${name}</b><br>
+      मोबाइल: <b>${phone}</b>
+    </div>`;
+
+  fillUserData();
+};
+
+
+/* ---------------- USER DATA ---------------- */
+
+function getUser(){
+
+  try{
+    return JSON.parse(localStorage.getItem("kisanUser"));
+  }catch(e){
+    return null;
+  }
+
+}
+
+
+function fillUserData(){
+
+  const user = getUser();
+
+  if(!user)return;
+
+  if(document.getElementById("farmerName"))
+    document.getElementById("farmerName").value=user.name;
+
+  if(document.getElementById("farmerPhone"))
+    document.getElementById("farmerPhone").value=user.phone;
+
+  document.getElementById("sellUserWarning").innerHTML =
+    `✅ Login है: <b>${user.name}</b> (${user.role})`;
+
+}
+
+
+fillUserData();
+
+
+/* ---------------- PAGE ---------------- */
+
+window.showPage=function(page){
+
+  document
+    .querySelectorAll(".page")
+    .forEach(p=>p.classList.remove("active"));
+
+  document
+    .getElementById(page)
+    .classList.add("active");
+
+  if(page==="booking")
+    loadBookings();
+
+  if(page==="notifications")
+    loadNotifications();
+
+};
+
+
+/* ---------------- SELL ---------------- */
+
+window.submitSell = async function(){
+
+  const user=getUser();
+
+  if(!user){
+    alert("पहले Login करें");
+    showPage("login");
+    return;
+  }
+
+  const farmerName =
+    document.getElementById("farmerName").value.trim();
+
+  const farmerPhone =
+    document.getElementById("farmerPhone").value.trim();
+
+  const grainName =
+    document.getElementById("grainName").value.trim();
+
+  const category =
+    document.getElementById("category").value;
+
+  const quantity =
+    Number(document.getElementById("quantity").value);
+
+  const unit =
+    document.getElementById("unit").value;
+
+  const price =
+    Number(document.getElementById("price").value);
+
+  const location =
+    document.getElementById("location").value.trim();
+
+  const upi =
+    document.getElementById("upi").value.trim();
+
+  const description =
+    document.getElementById("description").value.trim();
+
+
+  if(
+    !farmerName ||
+    !farmerPhone ||
+    !grainName ||
+    !quantity ||
+    !price ||
+    !location ||
+    !upi
+  ){
+
+    alert("सभी जरूरी जानकारी भरें");
+    return;
+
+  }
+
+
+  try{
+
+    await addDoc(collection(db,"sellRequests"),{
+
+      farmerName,
+      farmerPhone,
+      farmerId:user.phone,
+
+      grainName,
+      category,
+
+      quantity,
+      unit,
+      price,
+
+      location,
+      upi,
+      description,
+
+      status:"available",
+
+      createdAt:serverTimestamp()
+
+    });
+
+
+    document.getElementById("sellResult").innerHTML =
+      `<div class="success">
+        ✅ आपका अनाज सफलतापूर्वक Submit हो गया।<br>
+        अब खरीदार इसे "अनाज खरीदें" में देख सकते हैं।
+      </div>`;
+
+    document.getElementById("grainName").value="";
+    document.getElementById("quantity").value="";
+    document.getElementById("price").value="";
+    document.getElementById("location").value="";
+    document.getElementById("upi").value="";
+    document.getElementById("description").value="";
+
+  }catch(error){
+
+    alert("डेटा सेव नहीं हुआ: "+error.message);
+
+  }
+
+};
+
+
+/* ---------------- PRODUCTS ---------------- */
+
+let allProducts=[];
+
+window.loadProducts = async function(){
+
+  const box=document.getElementById("productList");
+
+  box.innerHTML="⏳ अनाज लोड हो रहा है...";
+
+  try{
+
+    const snap=await getDocs(
+      collection(db,"sellRequests")
+    );
+
+    allProducts=[];
+
+    snap.forEach(d=>{
+      allProducts.push({
+        id:d.id,
+        ...d.data()
+      });
+    });
+
+    allProducts.sort((a,b)=>{
+
+      const aTime=a.createdAt?.seconds || 0;
+      const bTime=b.createdAt?.seconds || 0;
+
+      return bTime-aTime;
+
+    });
+
+    renderProducts(allProducts);
+
+  }catch(error){
+
+    box.innerHTML=
+      `<div class="notice">
+        ❌ अनाज लोड नहीं हुआ: ${error.message}
+      </div>`;
+
+  }
+
+};
+
+
+function renderProducts(products){
+
+  const box=document.getElementById("productList");
+
+  if(products.length===0){
+
+    box.innerHTML=
+      `<div class="notice">
+        अभी कोई अनाज उपलब्ध नहीं है।
+      </div>`;
+
+    return;
+
+  }
+
+
+  box.innerHTML=products.map(p=>{
+
+    const total=
+      Number(p.quantity || 0) *
+      Number(p.price || 0);
+
+    return `
+
+      <div class="product">
+
+        <span class="badge">
+          ${p.category || "अनाज"}
+        </span>
+
+        <h3>🌾 ${escapeHtml(p.grainName || "")}</h3>
+
+        <p>
+          👨‍🌾 किसान:
+          <b>${escapeHtml(p.farmerName || "")}</b>
+        </p>
+
+        <p>
+          📍 ${escapeHtml(p.location || "")}
+        </p>
+
+        <p>
+          📦 मात्रा:
+          <b>${p.quantity} ${escapeHtml(p.unit || "")}</b>
+        </p>
+
+        <p class="price">
+          ₹${p.price} / ${escapeHtml(p.unit || "")}
+        </p>
+
+        <p>
+          💰 कुल अनुमानित:
+          <b>₹${total.toLocaleString("en-IN")}</b>
+        </p>
+
+        <p>
+          📝 ${escapeHtml(p.description || "कोई विवरण नहीं")}
+        </p>
+
+        <button class="btn"
+          onclick="bookProduct('${p.id}')">
+          🛒 Booking करें
+        </button>
+
+      </div>
+
+    `;
+
+  }).join("");
+
+}
+
+
+/* ---------------- SEARCH ---------------- */
+
+window.filterProducts=function(){
+
+  const text=
+    document.getElementById("searchBox")
+    .value
+    .toLowerCase();
+
+  const filtered=allProducts.filter(p=>
+    String(p.grainName||"")
+      .toLowerCase()
+      .includes(text)
+    ||
+    String(p.location||"")
+      .toLowerCase()
+      .includes(text)
+    ||
+    String(p.category||"")
+      .toLowerCase()
+      .includes(text)
+  );
+
+  renderProducts(filtered);
+
+};
+
+
+/* ---------------- BOOK PRODUCT ---------------- */
+
+window.bookProduct=async function(productId){
+
+  const user=getUser();
+
+  if(!user){
+
+    alert("पहले Buyer Login करें");
+
+    showPage("login");
+
+    return;
+
+  }
+
+
+  if(user.role!=="buyer"){
+
+    alert("Booking करने के लिए Buyer Login करें।");
+
+    return;
+
+  }
+
+
+  const product=
+    allProducts.find(p=>p.id===productId);
+
+  if(!product){
+
+    alert("अनाज नहीं मिला");
+
+    return;
+
+  }
+
+
+  const qtyText=
+    prompt(
+      `कितनी मात्रा खरीदनी है?\nउपलब्ध: ${product.quantity} ${product.unit}`,
+      product.quantity
+    );
+
+  if(qtyText===null)return;
+
+  const qty=Number(qtyText);
+
+  if(
+    !qty ||
+    qty<=0 ||
+    qty>Number(product.quantity)
+  ){
+
+    alert("सही मात्रा डालें");
+
+    return;
+
+  }
+
+
+  const total=
+    qty*Number(product.price);
+
+
+  try{
+
+    const bookingRef=
+      await addDoc(
+        collection(db,"bookings"),
+        {
+
+          productId:product.id,
+
+          grainName:product.grainName,
+
+          farmerName:product.farmerName,
+          farmerPhone:product.farmerPhone,
+          farmerId:product.farmerId,
+
+          buyerName:user.name,
+          buyerPhone:user.phone,
+          buyerId:user.phone,
+
+          quantity:qty,
+          unit:product.unit,
+
+          price:product.price,
+          total:total,
+
+          upi:product.upi,
+
+          status:"pending",
+
+          createdAt:serverTimestamp()
+
+        }
+      );
+
+
+    await addDoc(
+      collection(db,"notifications"),
+      {
+
+        receiverPhone:product.farmerPhone,
+
+        type:"new_booking",
+
+        message:
+          `नया Booking आया है। ${user.name} ने ${product.grainName} की ${qty} ${product.unit} Booking की है।`,
+
+        bookingId:bookingRef.id,
+
+        read:false,
+
+        createdAt:serverTimestamp()
+
+      }
+    );
+
+
+    await addDoc(
+      collection(db,"notifications"),
+      {
+
+        receiverPhone:user.phone,
+
+        type:"booking_created",
+
+        message:
+          `${product.grainName} की आपकी Booking किसान को भेज दी गई है।`,
+
+        bookingId:bookingRef.id,
+
+        read:false,
+
+        createdAt:serverTimestamp()
+
+      }
+    );
+
+
+    alert(
+      `✅ Booking हो गई!\nकुल राशि: ₹${total.toLocaleString("en-IN")}`
+    );
+
+
+  }catch(error){
+
+    alert("Booking नहीं हुई: "+error.message);
+
+  }
+
+};
+
+
+/* ---------------- BOOKINGS ---------------- */
+
+window.loadBookings=async function(){
+
+  const user=getUser();
+
+  const box=document.getElementById("bookingList");
+
+  if(!user){
+
+    box.innerHTML="पहले Login करें।";
+
+    return;
+
+  }
+
+
+  box.innerHTML="⏳ Loading...";
+
+
+  try{
+
+    const snap=
+      await getDocs(
+        collection(db,"bookings")
+      );
+
+
+    const data=[];
+
+    snap.forEach(d=>{
+
+      const b=d.data();
+
+      if(
+        b.buyerId===user.phone ||
+        b.farmerId===user.phone
+      ){
+
+        data.push({
+          id:d.id,
+          ...b
+        });
+
+      }
+
+    });
+
+
+    data.sort((a,b)=>
+      (b.createdAt?.seconds||0) -
+      (a.createdAt?.seconds||0)
+    );
+
+
+    if(data.length===0){
+
+      box.innerHTML=
+        `<div class="notice">
+          अभी कोई Booking नहीं है।
+        </div>`;
+
+      return;
+
+    }
+
+
+    box.innerHTML=data.map(b=>{
+
+      let action="";
+
+      if(
+        user.role==="farmer" &&
+        b.farmerId===user.phone &&
+        b.status==="pending"
+      ){
+
+        action=`
+
+          <button class="btn"
+            onclick="changeBookingStatus('${b.id}','accepted','${b.buyerPhone}')">
+            ✅ Accept
+          </button>
+
+          <button class="btn red"
+            onclick="changeBookingStatus('${b.id}','rejected','${b.buyerPhone}')">
+            ❌ Reject
+          </button>
+
+        `;
+
+      }
+
+
+      let pay="";
+
+      if(
+        user.role==="buyer" &&
+        b.buyerId===user.phone &&
+        b.status==="accepted"
+      ){
+
+        pay=`
+
+          <button class="btn blue"
+            onclick="payUPI('${escapeHtml(b.upi||"")}','${escapeHtml(b.farmerName||"")}','${b.total}')">
+            💳 UPI Payment
+          </button>
+
+        `;
+
+      }
+
+
+      return `
+
+        <div class="card">
+
+          <h3>🌾 ${escapeHtml(b.grainName||"")}</h3>
+
+          <p>
+            👨‍🌾 किसान:
+            ${escapeHtml(b.farmerName||"")}
+          </p>
+
+          <p>
+            🛒 खरीदार:
+            ${escapeHtml(b.buyerName||"")}
+          </p>
+
+          <p>
+            📦 मात्रा:
+            ${b.quantity} ${escapeHtml(b.unit||"")}
+          </p>
+
+          <p>
+            💰 राशि:
+            <b>₹${Number(b.total||0).toLocaleString("en-IN")}</b>
+          </p>
+
+          <p>
+            Status:
+            <span class="badge">
+              ${escapeHtml(b.status||"")}
+            </span>
+          </p>
+
+          ${action}
+          ${pay}
+
+        </div>
+
+      `;
+
+    }).join("");
+
+
+  }catch(error){
+
+    box.innerHTML=
+      `<div class="notice">
+        ❌ ${error.message}
+      </div>`;
+
+  }
+
+};
+
+
+/* ---------------- ACCEPT / REJECT ---------------- */
+
+window.changeBookingStatus=
+async function(bookingId,status,buyerPhone){
+
+  try{
+
+    await updateDoc(
+      doc(db,"bookings",bookingId),
+      {
+        status:status
+      }
+    );
+
+
+    await addDoc(
+      collection(db,"notifications"),
+      {
+
+        receiverPhone:buyerPhone,
+
+        type:"booking_status",
+
+        message:
+          status==="accepted"
+          ? "किसान ने आपकी Booking Accept कर दी है। अब आप Payment कर सकते हैं।"
+          : "किसान ने आपकी Booking Reject कर दी है।",
+
+        bookingId:bookingId,
+
+        read:false,
+
+        createdAt:serverTimestamp()
+
+      }
+    );
