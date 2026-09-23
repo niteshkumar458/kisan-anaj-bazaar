@@ -1,0 +1,1296 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>किसान अनाज बाज़ार</title>
+
+<style>
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:Arial,sans-serif;
+  background:#f4f7f3;
+  color:#222
+}
+header{
+  background:#16833a;
+  color:#fff;
+  padding:18px 10px;
+  text-align:center
+}
+header h1{margin:0 0 6px;font-size:28px}
+nav{
+  background:#075c27;
+  padding:10px;
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:center;
+  gap:6px
+}
+nav button{
+  border:0;
+  padding:10px 12px;
+  border-radius:7px;
+  background:#fff;
+  color:#075c27;
+  font-weight:bold;
+  cursor:pointer
+}
+.page{
+  display:none;
+  max-width:1100px;
+  margin:auto;
+  padding:15px
+}
+.page.active{display:block}
+.card{
+  background:#fff;
+  padding:18px;
+  margin:15px 0;
+  border-radius:13px;
+  box-shadow:0 2px 10px #0001
+}
+input,select,textarea{
+  width:100%;
+  padding:12px;
+  margin:6px 0 12px;
+  border:1px solid #ccc;
+  border-radius:8px;
+  font-size:16px
+}
+textarea{min-height:100px}
+label{
+  display:block;
+  font-weight:bold;
+  margin-top:7px
+}
+.btn{
+  border:0;
+  padding:11px 16px;
+  border-radius:8px;
+  background:#16833a;
+  color:white;
+  font-weight:bold;
+  cursor:pointer;
+  margin:3px
+}
+.red{background:#c62828}
+.blue{background:#1976d2}
+.orange{background:#e68900}
+.gray{background:#555}
+.whatsapp{background:#128c7e}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(270px,1fr));
+  gap:15px
+}
+.product{
+  background:#fff;
+  border-radius:12px;
+  padding:15px;
+  box-shadow:0 2px 10px #0001
+}
+.product img{
+  width:100%;
+  height:210px;
+  object-fit:cover;
+  border-radius:9px
+}
+.price{
+  color:#16833a;
+  font-size:23px;
+  font-weight:bold
+}
+.notice,.success,.error,.info{
+  padding:12px;
+  border-radius:8px;
+  margin:10px 0
+}
+.notice{background:#fff3cd}
+.success{background:#dff5e4;color:#146c2e}
+.error{background:#ffe0e0;color:#a00}
+.info{background:#e3f2fd;color:#075c27}
+.hidden{display:none!important}
+.badge{
+  display:inline-block;
+  padding:5px 9px;
+  border-radius:20px;
+  background:#e8f5e9;
+  color:#16833a;
+  font-size:13px
+}
+.tableWrap{overflow-x:auto}
+table{
+  width:100%;
+  border-collapse:collapse;
+  background:white
+}
+th,td{
+  border:1px solid #ddd;
+  padding:8px;
+  text-align:left;
+  vertical-align:top
+}
+th{background:#e8f5e9}
+footer{
+  background:#075c27;
+  color:white;
+  text-align:center;
+  padding:20px;
+  margin-top:30px
+}
+.small{font-size:13px;color:#666}
+.approved{border-left:5px solid #16833a}
+.pending{border-left:5px solid #e68900}
+.rejected{border-left:5px solid #c62828}
+hr{border:0;border-top:1px solid #ddd;margin:25px 0}
+
+@media(max-width:600px){
+  header h1{font-size:24px}
+  nav button{font-size:12px;padding:8px}
+  .page{padding:8px}
+  .card{padding:14px}
+  th,td{font-size:12px}
+}
+</style>
+</head>
+
+<body>
+
+<header>
+<h1>🌾 किसान अनाज बाज़ार</h1>
+<div>किसान और खरीदार को जोड़ने वाला ऑनलाइन बाज़ार</div>
+</header>
+
+<nav>
+<button onclick="showPage('home')">🏠 होम</button>
+<button onclick="showPage('login')">👤 Login</button>
+<button onclick="showPage('sell')">🌾 अनाज बेचें</button>
+<button onclick="showPage('products')">🛒 अनाज खरीदें</button>
+<button onclick="showPage('bookings')">📦 Booking</button>
+<button onclick="showPage('notifications')">🔔 Notification</button>
+<button onclick="showPage('admin')">🔐 Admin</button>
+</nav>
+
+
+<!-- HOME -->
+
+<section id="home" class="page active">
+
+<div class="card">
+<h2>🌾 किसान अनाज बाज़ार में आपका स्वागत है</h2>
+
+<p>
+किसान अपना अनाज, मात्रा, भाव और फोटो डालकर Sell Request भेज सकता है।
+Admin के Approve करने के बाद अनाज खरीदार को दिखाई देगा।
+</p>
+
+<div class="grid">
+
+<div>
+<h3>👨‍🌾 किसान</h3>
+<p>अनाज की जानकारी और फोटो डालकर बेचें।</p>
+</div>
+
+<div>
+<h3>🛒 खरीदार</h3>
+<p>Approved अनाज देखकर Booking करें।</p>
+</div>
+
+<div>
+<h3>📱 OTP Login</h3>
+<p>मोबाइल पर असली OTP लेकर Login करें।</p>
+</div>
+
+</div>
+</div>
+
+<div class="card">
+<h3>📞 Help Line</h3>
+
+<p style="font-size:25px;font-weight:bold">
+7042894282
+</p>
+
+<a href="tel:7042894282" class="btn">
+📞 Call
+</a>
+
+<a href="https://wa.me/917042894282"
+target="_blank"
+class="btn whatsapp">
+💬 WhatsApp
+</a>
+</div>
+
+</section>
+
+
+<!-- LOGIN -->
+
+<section id="login" class="page">
+
+<div class="card">
+
+<h2>👤 Mobile OTP Login / Registration</h2>
+
+<div class="notice">
+पहली बार अपना Role और Profile भरें।
+मोबाइल नंबर पर असली OTP आएगा।
+OTP Verify होने के बाद Login होगा।
+अगली बार उसी मोबाइल नंबर से OTP Login करने पर Profile अपने-आप लोड होगी।
+</div>
+
+<label>आप कौन हैं?</label>
+
+<select id="userRole">
+<option value="farmer">👨‍🌾 किसान</option>
+<option value="buyer">🛒 ग्राहक / खरीदार</option>
+</select>
+
+<label>नाम</label>
+<input id="loginName" placeholder="अपना नाम">
+
+<label>मोबाइल नंबर</label>
+<input
+id="loginMobile"
+type="tel"
+maxlength="10"
+inputmode="numeric"
+placeholder="10 अंकों का मोबाइल नंबर">
+
+<label>Email</label>
+<input
+id="loginEmail"
+type="email"
+placeholder="Email (वैकल्पिक)">
+
+<label>UPI ID</label>
+<input
+id="loginUPI"
+placeholder="जैसे name@upi">
+
+<div id="recaptcha-container"></div>
+
+<button class="btn" id="sendOtpBtn" onclick="sendOTP()">
+📱 OTP भेजें
+</button>
+
+<div id="otpBox" class="hidden">
+
+<label>OTP डालें</label>
+
+<input
+id="otpCode"
+type="tel"
+maxlength="6"
+inputmode="numeric"
+placeholder="6 अंकों का OTP">
+
+<button class="btn" id="verifyOtpBtn" onclick="verifyOTP()">
+🔐 OTP Verify करके Login करें
+</button>
+
+<button class="btn orange" onclick="sendOTP()">
+🔄 OTP दोबारा भेजें
+</button>
+
+</div>
+
+<button class="btn blue" onclick="updateProfile()">
+💾 Profile Update
+</button>
+
+<button class="btn gray" onclick="logoutUser()">
+🚪 Logout
+</button>
+
+<div id="loginMsg"></div>
+
+<div id="currentUserBox"></div>
+
+</div>
+
+</section>
+
+
+<!-- SELL -->
+
+<section id="sell" class="page">
+
+<div class="card">
+
+<h2>🌾 किसान अपना अनाज बेचें</h2>
+
+<div id="sellLoginInfo" class="notice">
+Login status जाँच रहा है...
+</div>
+
+<label>किसान का नाम</label>
+<input id="farmerName" readonly>
+
+<label>मोबाइल नंबर</label>
+<input id="farmerMobile" readonly>
+
+<label>अनाज / फसल</label>
+
+<select id="grain">
+<option value="">-- अनाज चुनें --</option>
+<option>गेहूं</option>
+<option>धान</option>
+<option>चावल</option>
+<option>मक्का</option>
+<option>बाजरा</option>
+<option>ज्वार</option>
+<option>चना</option>
+<option>सरसों</option>
+<option>सोयाबीन</option>
+<option>अरहर</option>
+<option>मूंग</option>
+<option>उड़द</option>
+<option>मसूर</option>
+<option>मटर</option>
+<option>अन्य</option>
+</select>
+
+<label>Category</label>
+<input id="category" placeholder="Category">
+
+<label>मात्रा</label>
+<input
+id="quantity"
+type="number"
+min="0.01"
+step="0.01"
+placeholder="Quantity">
+
+<label>Unit</label>
+
+<select id="unit">
+<option>क्विंटल</option>
+<option>किलो</option>
+<option>टन</option>
+</select>
+
+<label>कुल बिक्री कीमत ₹</label>
+
+<input
+id="price"
+type="number"
+min="1"
+step="0.01"
+placeholder="कुल कीमत">
+
+<label>गांव / शहर / जिला</label>
+
+<input
+id="location"
+placeholder="Location">
+
+<label>अनाज की जानकारी</label>
+
+<textarea
+id="description"
+placeholder="अनाज की गुणवत्ता आदि">
+</textarea>
+
+<label>📸 अनाज की फोटो</label>
+
+<input
+id="productPhoto"
+type="file"
+accept="image/*"
+capture="environment">
+
+<label>💳 किसान की UPI ID</label>
+<input id="farmerUPI" readonly>
+
+<button
+id="sellSubmitBtn"
+class="btn"
+onclick="submitSellRequest()">
+📤 Sell Request Submit करें
+</button>
+
+<div id="sellMsg"></div>
+
+</div>
+
+</section>
+
+
+<!-- PRODUCTS -->
+
+<section id="products" class="page">
+
+<div class="card">
+
+<h2>🛒 उपलब्ध अनाज</h2>
+
+<input
+id="searchProduct"
+placeholder="🔎 अनाज खोजें..."
+oninput="filterProducts()">
+
+<button class="btn" onclick="loadProducts()">
+🔄 Refresh
+</button>
+
+<div id="productMsg"></div>
+
+</div>
+
+<div id="productList" class="grid"></div>
+
+</section>
+
+
+<!-- BOOKINGS -->
+
+<section id="bookings" class="page">
+
+<div class="card">
+
+<h2>📦 मेरी Booking</h2>
+
+<button class="btn" onclick="loadBookings()">
+🔄 Refresh
+</button>
+
+<div id="bookingMsg"></div>
+
+</div>
+
+<div id="bookingList"></div>
+
+</section>
+
+
+<!-- NOTIFICATIONS -->
+
+<section id="notifications" class="page">
+
+<div class="card">
+
+<h2>🔔 Notifications</h2>
+
+<button class="btn" onclick="loadNotifications()">
+🔄 Refresh
+</button>
+
+<div id="notificationList"></div>
+
+</div>
+
+</section>
+
+
+<!-- ADMIN -->
+
+<section id="admin" class="page">
+
+<div class="card">
+
+<h2>🔐 Admin Panel</h2>
+
+<div class="notice">
+Admin में जाने के लिए पहले अपने मोबाइल नंबर से OTP Login करें।
+फिर नीचे Admin Password डालें।
+आपके Firebase Firestore में <b>admins</b> collection में अपने UID का document
+और <b>active: true</b> होना चाहिए।
+</div>
+
+<input
+id="adminPassword"
+type="password"
+placeholder="Admin Password">
+
+<button class="btn" onclick="adminLogin()">
+🔐 Admin Login
+</button>
+
+<button class="btn gray" onclick="adminLogout()">
+Logout
+</button>
+
+<div id="adminMsg"></div>
+
+<div id="adminPanel" class="hidden">
+
+<hr>
+
+<h3>🌾 Sell Requests</h3>
+
+<button class="btn" onclick="loadAdminSellRequests()">
+🔄 Refresh
+</button>
+
+<div id="adminSellRequests"></div>
+
+<hr>
+
+<h3>📦 Bookings</h3>
+
+<button class="btn" onclick="loadAdminBookings()">
+🔄 Refresh
+</button>
+
+<div id="adminBookings"></div>
+
+<hr>
+
+<h3>👥 Users</h3>
+
+<button class="btn" onclick="loadAdminUsers()">
+🔄 Refresh
+</button>
+
+<div id="adminUsers"></div>
+
+</div>
+
+</div>
+
+</section>
+
+
+<footer>
+<p>🌾 Kisan Anaj Bazaar</p>
+<p>📞 Helpline: 7042894282</p>
+</footer>
+
+
+<script>
+function showPage(id){
+
+document.querySelectorAll(".page")
+.forEach(p=>p.classList.remove("active"));
+
+const page=document.getElementById(id);
+
+if(page){
+page.classList.add("active");
+}
+
+window.scrollTo(0,0);
+
+if(id==="products") loadProducts();
+if(id==="bookings") loadBookings();
+if(id==="notifications") loadNotifications();
+if(id==="sell") prepareSellPage();
+if(id==="login") showCurrentUser();
+}
+
+function escapeHTML(value){
+
+if(value===undefined || value===null)
+return "";
+
+return String(value)
+.replace(/&/g,"&amp;")
+.replace(/</g,"&lt;")
+.replace(/>/g,"&gt;")
+.replace(/"/g,"&quot;")
+.replace(/'/g,"&#039;");
+}
+
+function money(value){
+
+return "₹"+Number(value||0).toLocaleString(
+"en-IN",
+{maximumFractionDigits:2}
+);
+}
+
+function message(id,html){
+
+const e=document.getElementById(id);
+
+if(e)
+e.innerHTML=html;
+}
+</script>
+
+
+<script type="module">
+
+import {
+initializeApp
+}
+from
+"https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
+
+import {
+getAuth,
+RecaptchaVerifier,
+signInWithPhoneNumber,
+onAuthStateChanged,
+signOut
+}
+from
+"https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js";
+
+import {
+getFirestore,
+collection,
+doc,
+getDoc,
+getDocs,
+setDoc,
+addDoc,
+updateDoc,
+query,
+where,
+serverTimestamp
+}
+from
+"https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
+
+import {
+getStorage,
+ref,
+uploadBytes,
+getDownloadURL
+}
+from
+"https://www.gstatic.com/firebasejs/11.10.0/firebase-storage.js";
+
+
+/* ================= FIREBASE ================= */
+
+const firebaseConfig={
+
+apiKey:
+"AIzaSyDxjigog6ctxY25UFGrH7M3pYx1IN2RWSw",
+
+authDomain:
+"kissan-bajar.firebaseapp.com",
+
+databaseURL:
+"https://kissan-bajar-default-rtdb.firebaseio.com",
+
+projectId:
+"kissan-bajar",
+
+storageBucket:
+"kissan-bajar.firebasestorage.app",
+
+messagingSenderId:
+"629043004551",
+
+appId:
+"1:629043004551:web:f484c026c838399cff6422",
+
+measurementId:
+"G-TE6ZLGS1KF"
+
+};
+
+const app=initializeApp(firebaseConfig);
+const auth=getAuth(app);
+const db=getFirestore(app);
+const storage=getStorage(app);
+
+
+/* ================= SETTINGS ================= */
+
+const ADMIN_PASSWORD="123456";
+
+
+/* ================= VARIABLES ================= */
+
+let confirmationResult=null;
+let recaptchaVerifier=null;
+let currentUser=null;
+let currentProfile=null;
+let allProducts=[];
+let adminLoggedIn=false;
+
+
+/* ================= PROFILE DATA ================= */
+
+function getLoginData(){
+
+return {
+
+role:document.getElementById("userRole").value,
+
+name:document.getElementById("loginName").value.trim(),
+
+mobile:document.getElementById("loginMobile").value.trim(),
+
+email:document.getElementById("loginEmail").value.trim(),
+
+upi:document.getElementById("loginUPI").value.trim()
+
+};
+
+}
+
+
+/* ================= RECAPTCHA ================= */
+
+function setupRecaptcha(){
+
+if(recaptchaVerifier)
+return;
+
+recaptchaVerifier=
+new RecaptchaVerifier(
+auth,
+"recaptcha-container",
+{
+size:"normal",
+callback:function(){
+console.log("reCAPTCHA verified");
+},
+"expired-callback":function(){
+message(
+"loginMsg",
+'<div class="error">reCAPTCHA expire हो गया। OTP फिर से भेजें।</div>'
+);
+}
+);
+
+}
+
+
+/* ================= SEND OTP ================= */
+
+window.sendOTP=async function(){
+
+const mobile=
+document.getElementById("loginMobile")
+.value.trim();
+
+if(!/^[0-9]{10}$/.test(mobile)){
+
+message(
+"loginMsg",
+'<div class="error">❌ सही 10 अंकों का मोबाइल नंबर डालें।</div>'
+);
+
+return;
+}
+
+const sendBtn=document.getElementById("sendOtpBtn");
+
+if(sendBtn)
+sendBtn.disabled=true;
+
+try{
+
+setupRecaptcha();
+
+message(
+"loginMsg",
+'<div class="notice">⏳ reCAPTCHA और OTP भेजने की प्रक्रिया चल रही है...</div>'
+);
+
+confirmationResult=
+await signInWithPhoneNumber(
+auth,
+"+91"+mobile,
+recaptchaVerifier
+);
+
+document
+.getElementById("otpBox")
+.classList.remove("hidden");
+
+message(
+"loginMsg",
+'<div class="success">✅ असली OTP आपके मोबाइल नंबर पर भेज दिया गया है।</div>'
+);
+
+document.getElementById("otpCode").focus();
+
+}catch(error){
+
+console.error("OTP ERROR:",error);
+
+let msg=error.message||"OTP भेजने में समस्या हुई।";
+
+if(error.code==="auth/invalid-phone-number"){
+msg="मोबाइल नंबर गलत है।";
+}
+else if(error.code==="auth/too-many-requests"){
+msg="बहुत अधिक OTP प्रयास हो चुके हैं। थोड़ी देर बाद फिर कोशिश करें।";
+}
+else if(error.code==="auth/quota-exceeded"){
+msg="Firebase SMS quota समाप्त हो गया है।";
+}
+else if(error.code==="auth/captcha-check-failed"){
+msg="reCAPTCHA verification असफल हुआ। पेज Refresh करके फिर कोशिश करें।";
+}
+else if(error.code==="auth/operation-not-allowed"){
+msg="Firebase में Phone Authentication Enable नहीं है।";
+}
+else if(error.code==="auth/unauthorized-domain"){
+msg="यह वेबसाइट Firebase Authorized Domains में नहीं है।";
+}
+
+message(
+"loginMsg",
+'<div class="error">❌ OTP नहीं भेजा गया।<br>'+
+escapeHTML(msg)+
+'</div>'
+);
+
+if(recaptchaVerifier){
+
+try{
+recaptchaVerifier.clear();
+}catch(e){}
+
+recaptchaVerifier=null;
+}
+
+}finally{
+
+if(sendBtn)
+sendBtn.disabled=false;
+
+}
+
+};
+
+
+/* ================= VERIFY OTP ================= */
+
+window.verifyOTP=async function(){
+
+const otp=
+document.getElementById("otpCode")
+.value.trim();
+
+if(!confirmationResult){
+
+message(
+"loginMsg",
+'<div class="error">❌ पहले OTP भेजें।</div>'
+);
+
+return;
+}
+
+if(!/^[0-9]{6}$/.test(otp)){
+
+message(
+"loginMsg",
+'<div class="error">❌ 6 अंकों का OTP डालें।</div>'
+);
+
+return;
+}
+
+const verifyBtn=document.getElementById("verifyOtpBtn");
+
+if(verifyBtn)
+verifyBtn.disabled=true;
+
+try{
+
+message(
+"loginMsg",
+'<div class="notice">⏳ OTP Verify हो रहा है...</div>'
+);
+
+const result=
+await confirmationResult.confirm(otp);
+
+currentUser=result.user;
+
+/*
+पहले पुरानी Profile ढूँढेंगे।
+अगर Profile नहीं है तो पहली बार Profile बनाएंगे।
+*/
+
+const profileExists=await loadExistingProfile();
+
+if(!profileExists){
+
+const data=getLoginData();
+
+if(!data.name){
+
+message(
+"loginMsg",
+'<div class="notice">⚠️ OTP सही है। अब पहली बार अपना नाम भरकर Profile Update करें।</div>'
+);
+
+showCurrentUser();
+
+return;
+}
+
+await saveNewProfile(data);
+
+}
+
+await loadExistingProfile();
+
+document
+.getElementById("otpBox")
+.classList.add("hidden");
+
+message(
+"loginMsg",
+'<div class="success">✅ OTP सही है। Login सफल हो गया।</div>'
+);
+
+showCurrentUser();
+prepareSellPage();
+
+}catch(error){
+
+console.error("VERIFY ERROR:",error);
+
+let msg=error.message||"OTP Verify नहीं हुआ।";
+
+if(error.code==="auth/invalid-verification-code"){
+msg="OTP गलत है। सही OTP डालें।";
+}
+else if(error.code==="auth/code-expired"){
+msg="OTP expire हो गया है। नया OTP भेजें।";
+}
+
+message(
+"loginMsg",
+'<div class="error">❌ '+escapeHTML(msg)+'</div>'
+);
+
+}finally{
+
+if(verifyBtn)
+verifyBtn.disabled=false;
+
+}
+
+};
+
+
+/* ================= LOAD OLD PROFILE ================= */
+
+async function loadExistingProfile(){
+
+if(!currentUser)
+return false;
+
+const userRef=
+doc(db,"users",currentUser.uid);
+
+const old=
+await getDoc(userRef);
+
+if(!old.exists()){
+
+currentProfile=null;
+return false;
+}
+
+currentProfile=old.data();
+
+document.getElementById("userRole").value=
+currentProfile.role||"farmer";
+
+document.getElementById("loginName").value=
+currentProfile.name||"";
+
+document.getElementById("loginMobile").value=
+currentProfile.mobile||
+(currentUser.phoneNumber||"").replace("+91","");
+
+document.getElementById("loginEmail").value=
+currentProfile.email||"";
+
+document.getElementById("loginUPI").value=
+currentProfile.upi||"";
+
+return true;
+}
+
+
+/* ================= SAVE NEW PROFILE ================= */
+
+async function saveNewProfile(data){
+
+if(!currentUser)
+throw new Error("Login User नहीं मिला।");
+
+if(!data.name)
+throw new Error("पहली बार Login करते समय नाम डालना जरूरी है।");
+
+const mobile=
+data.mobile||
+(currentUser.phoneNumber||"").replace("+91","");
+
+currentProfile={
+
+uid:currentUser.uid,
+
+role:data.role,
+
+name:data.name,
+
+mobile:mobile,
+
+email:data.email,
+
+upi:data.upi,
+
+createdAt:serverTimestamp(),
+
+updatedAt:serverTimestamp()
+
+};
+
+await setDoc(
+doc(db,"users",currentUser.uid),
+currentProfile
+);
+
+}
+
+
+/* ================= AUTH STATE ================= */
+
+onAuthStateChanged(
+auth,
+async user=>{
+
+currentUser=user;
+
+if(user){
+
+try{
+
+/*
+Auth होने के बाद केवल पुरानी Profile load करें।
+नई Profile verifyOTP() में बनेगी।
+*/
+
+await loadExistingProfile();
+
+showCurrentUser();
+prepareSellPage();
+
+}catch(error){
+
+console.error(error);
+
+message(
+"loginMsg",
+'<div class="error">Profile Load Error:<br>'+
+escapeHTML(error.message)+
+'</div>'
+);
+
+}
+
+}else{
+
+currentUser=null;
+currentProfile=null;
+
+showCurrentUser();
+prepareSellPage();
+
+}
+
+}
+);
+
+
+/* ================= PROFILE UPDATE ================= */
+
+window.updateProfile=async function(){
+
+if(!currentUser){
+
+alert("पहले OTP Login करें।");
+showPage("login");
+return;
+
+}
+
+const data=getLoginData();
+
+if(!data.name){
+
+alert("नाम डालें।");
+return;
+
+}
+
+try{
+
+const mobile=
+data.mobile||
+(currentUser.phoneNumber||"").replace("+91","");
+
+const updated={
+
+uid:currentUser.uid,
+
+role:data.role,
+
+name:data.name,
+
+mobile:mobile,
+
+email:data.email,
+
+upi:data.upi,
+
+updatedAt:serverTimestamp()
+
+};
+
+await setDoc(
+doc(db,"users",currentUser.uid),
+updated,
+{merge:true}
+);
+
+await loadExistingProfile();
+
+showCurrentUser();
+prepareSellPage();
+
+message(
+"loginMsg",
+'<div class="success">✅ Profile Update हो गई।</div>'
+);
+
+}catch(error){
+
+message(
+"loginMsg",
+'<div class="error">❌ Profile Update Error:<br>'+
+escapeHTML(error.message)+
+'</div>'
+);
+
+}
+
+};
+
+
+/* ================= SHOW USER ================= */
+
+window.showCurrentUser=function(){
+
+const box=
+document.getElementById("currentUserBox");
+
+if(!box)
+return;
+
+if(!currentUser){
+
+box.innerHTML=
+'<div class="notice">🔒 अभी Login नहीं है।</div>';
+
+return;
+}
+
+const p=currentProfile||{};
+
+box.innerHTML=
+
+'<div class="success">'+
+
+'<b>🔐 Firebase Login Active</b><br><br>'+
+
+'👤 नाम: '+
+escapeHTML(p.name||"")+
+'<br>'+
+
+'📱 मोबाइल: '+
+escapeHTML(
+p.mobile||
+(currentUser.phoneNumber||"")
+)+
+'<br>'+
+
+'👥 Role: '+
+escapeHTML(p.role||"")+
+'<br>'+
+
+'💳 UPI: '+
+escapeHTML(p.upi||"—")+
+'<br>'+
+
+'📧 Email: '+
+escapeHTML(p.email||"—")+
+
+'</div>';
+
+};
+
+
+/* ================= LOGOUT ================= */
+
+window.logoutUser=async function(){
+
+try{
+
+await signOut(auth);
+
+confirmationResult=null;
+
+if(recaptchaVerifier){
+
+try{
+recaptchaVerifier.clear();
+}catch(e){}
+
+recaptchaVerifier=null;
+}
+
+document.getElementById("otpBox")
+.classList.add("hidden");
+
+message(
+"loginMsg",
+'<div class="success">✅ Logout हो गया।</div>'
+);
+
+}catch(error){
+
+message(
+"loginMsg",
+'<div class="error">'+
+escapeHTML(error.message)+
+'</div>'
+);
+
+}
+
+};
+
+
+/* ================= SELL PAGE ================= */
+
+window.prepareSellPage=function(){
+
+const info=
+document.getElementById("sellLoginInfo");
+
+if(!info)
+return;
+
+if(!currentUser){
+
+info.className="error";
+
+info.innerHTML=
+"🔒 पहले Mobile OTP Login करें।";
+
+return;
+}
+
+if(!currentProfil
