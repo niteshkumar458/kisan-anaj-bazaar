@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>किसान अनाज बाज़ार</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,sans-serif;background:#f4f7f3;color:#222}
+header{background:#16833a;color:white;padding:18px;text-align:center}
+header h1{margin:0;font-size:25px}
+nav{display:flex;gap:6px;justify-content:center;flex-wrap:wrap;background:white;padding:10px}
+nav button{border:0;background:#16833a;color:white;padding:10px 14px;border-radius:8px}
+main{max-width:700px;margin:auto;padding:15px}
+.card{background:white;padding:18px;margin:12px 0;border-radius:12px;box-shadow:0 2px 8px #ccc}
+input,textarea,select{width:100%;padding:12px;margin:7px 0 12px;border:1px solid #ccc;border-radius:8px;font-size:16px}
+.btn{width:100%;padding:13px;background:#16833a;color:white;border:0;border-radius:8px;font-size:17px}
+.item{border-left:5px solid #16833a;padding:12px;margin:10px 0;background:#f8fff8}
+.price{font-size:20px;font-weight:bold;color:#16833a}
+.small{color:#666;font-size:14px}
+.hidden{display:none}
+</style>
+</head>
+
+<body>
+
+<header>
+<h1>🌾 किसान अनाज बाज़ार</h1>
+<p>किसान अपना अनाज बेचें</p>
+</header>
+
+<nav>
+<button onclick="show('home')">होम</button>
+<button onclick="show('sell')">अनाज बेचें</button>
+<button onclick="show('list')">बिक्री लिस्ट</button>
+<button onclick="show('account')">मेरा अकाउंट</button>
+</nav>
+
+<main>
+
+<section id="home" class="card">
+<h2>स्वागत है किसान भाई 🙏</h2>
+<p>यहाँ किसान अपना अनाज, मात्रा और रेट डालकर बिक्री के लिए लिस्ट कर सकता है।</p>
+<button class="btn" onclick="show('sell')">🌾 अनाज बेचें</button>
+</section>
+
+<section id="sell" class="card hidden">
+<h2>🌾 अपना अनाज बेचें</h2>
+
+<label>किसान का नाम</label>
+<input id="name" placeholder="अपना नाम">
+
+<label>मोबाइल नंबर</label>
+<input id="mobile" type="tel" placeholder="मोबाइल नंबर">
+
+<label>अनाज</label>
+<select id="grain">
+<option>गेहूं</option>
+<option>धान</option>
+<option>मक्का</option>
+<option>बाजरा</option>
+<option>चना</option>
+<option>सरसों</option>
+<option>अन्य</option>
+</select>
+
+<label>मात्रा (क्विंटल)</label>
+<input id="qty" type="number" placeholder="जैसे 50">
+
+<label>रेट (₹ प्रति क्विंटल)</label>
+<input id="rate" type="number" placeholder="जैसे 2500">
+
+<label>स्थान</label>
+<input id="location" placeholder="गाँव / शहर">
+
+<label>UPI ID</label>
+<input id="upi" placeholder="example@upi">
+
+<label>बैंक अकाउंट नंबर (वैकल्पिक)</label>
+<input id="account" placeholder="अकाउंट नंबर">
+
+<label>अतिरिक्त जानकारी</label>
+<textarea id="note" placeholder="अनाज की जानकारी"></textarea>
+
+<button class="btn" onclick="sell()">बिक्री के लिए सबमिट करें</button>
+</section>
+
+<section id="list" class="card hidden">
+<h2>🌾 बिक्री के लिए अनाज</h2>
+<div id="items"></div>
+</section>
+
+<section id="account" class="card hidden">
+<h2>👤 मेरा अकाउंट</h2>
+<p>आपकी बिक्री की जानकारी इस फोन में सेव रहेगी।</p>
+<div id="myAccount"></div>
+</section>
+
+</main>
+
+<script>
+function show(id){
+document.querySelectorAll('main section').forEach(x=>x.classList.add('hidden'));
+document.getElementById(id).classList.remove('hidden');
+if(id==='list') load();
+if(id==='account') account();
+}
+
+function sell(){
+let data={
+name:document.getElementById('name').value,
+mobile:document.getElementById('mobile').value,
+grain:document.getElementById('grain').value,
+qty:document.getElementById('qty').value,
+rate:document.getElementById('rate').value,
+location:document.getElementById('location').value,
+upi:document.getElementById('upi').value,
+account:document.getElementById('account').value,
+note:document.getElementById('note').value
+};
+
+if(!data.name||!data.mobile||!data.qty||!data.rate){
+alert('नाम, मोबाइल, मात्रा और रेट भरना जरूरी है।');
+return;
+}
+
+let all=JSON.parse(localStorage.getItem('sales')||'[]');
+data.id=Date.now();
+data.status='Pending';
+all.push(data);
+localStorage.setItem('sales',JSON.stringify(all));
+
+alert('आपका अनाज बिक्री के लिए जमा हो गया है।');
+document.querySelectorAll('#sell input,#sell textarea').forEach(x=>x.value='');
+show('list');
+}
+
+function load(){
+let all=JSON.parse(localStorage.getItem('sales')||'[]');
+let box=document.getElementById('items');
+
+if(!all.length){
+box.innerHTML='<p>अभी कोई अनाज बिक्री के लिए नहीं है।</p>';
+return;
+}
+
+box.innerHTML=all.map(x=>`
+<div class="item">
+<h3>🌾 ${x.grain}</h3>
+<div class="price">₹${x.rate} / क्विंटल</div>
+<p>मात्रा: <b>${x.qty} क्विंटल</b></p>
+<p>स्थान: ${x.location||'नहीं दिया'}</p>
+<p>किसान: ${x.name}</p>
+<p class="small">स्थिति: ${x.status}</p>
+${x.upi?`<button class="btn" onclick="pay('${x.upi}',${x.rate})">💳 एडवांस पेमेंट</button>`:''}
+</div>
+`).join('');
+}
+
+function pay(upi,amount){
+let url='upi://pay?pa='+encodeURIComponent(upi)+'&pn=Kisan%20Anaj%20Bazaar&am='+amount+'&cu=INR';
+window.location.href=url;
+}
+
+function account(){
+let all=JSON.parse(localStorage.getItem('sales')||'[]');
+let box=document.getElementById('myAccount');
+
+if(!all.length){
+box.innerHTML='<p>अभी कोई बिक्री दर्ज नहीं है।</p>';
+return;
+}
+
+box.innerHTML=all.map(x=>`
+<div class="item">
+<b>${x.name}</b><br>
+${x.grain} - ${x.qty} क्विंटल<br>
+₹${x.rate} प्रति क्विंटल<br>
+स्थिति: ${x.status}
+</div>
+`).join('');
+}
+
+load();
+</script>
+
+</body>
