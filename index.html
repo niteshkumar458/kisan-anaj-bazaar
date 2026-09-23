@@ -1,0 +1,1193 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>किसान अनाज बाज़ार</title>
+
+<style>
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:Arial,sans-serif;
+  background:#f4f7f3;
+  color:#222
+}
+header{
+  background:#16833a;
+  color:white;
+  padding:18px;
+  text-align:center
+}
+header h1{margin:0 0 6px}
+nav{
+  display:flex;
+  flex-wrap:wrap;
+  gap:7px;
+  justify-content:center;
+  background:#106b30;
+  padding:10px
+}
+nav button{
+  border:0;
+  background:white;
+  color:#106b30;
+  padding:10px 13px;
+  border-radius:7px;
+  cursor:pointer;
+  font-weight:bold
+}
+.container{
+  max-width:1000px;
+  margin:auto;
+  padding:15px
+}
+.page{display:none}
+.page.active{display:block}
+.card{
+  background:white;
+  padding:18px;
+  margin:15px 0;
+  border-radius:12px;
+  box-shadow:0 2px 8px #0001
+}
+input,select,textarea{
+  width:100%;
+  padding:12px;
+  margin:6px 0 12px;
+  border:1px solid #ccc;
+  border-radius:7px;
+  font-size:15px
+}
+button.primary{
+  background:#16833a;
+  color:white;
+  border:0;
+  padding:12px 18px;
+  border-radius:7px;
+  cursor:pointer;
+  font-weight:bold
+}
+button.danger{
+  background:#c62828;
+  color:white;
+  border:0;
+  padding:9px 13px;
+  border-radius:7px;
+  cursor:pointer
+}
+button.warning{
+  background:#f39c12;
+  color:white;
+  border:0;
+  padding:9px 13px;
+  border-radius:7px;
+  cursor:pointer
+}
+button.blue{
+  background:#1976d2;
+  color:white;
+  border:0;
+  padding:9px 13px;
+  border-radius:7px;
+  cursor:pointer
+}
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+  gap:15px
+}
+.product{
+  overflow:hidden
+}
+.product img{
+  width:100%;
+  height:210px;
+  object-fit:cover;
+  border-radius:9px;
+  background:#eee
+}
+.price{
+  color:#16833a;
+  font-size:20px;
+  font-weight:bold
+}
+.small{
+  color:#666;
+  font-size:13px
+}
+.status{
+  display:inline-block;
+  padding:5px 9px;
+  border-radius:20px;
+  background:#eee;
+  margin:4px 0
+}
+.success{background:#d8f5df;color:#126b2c}
+.pending{background:#fff1c9;color:#805c00}
+.rejected{background:#ffdada;color:#9b111e}
+.notice{
+  padding:12px;
+  background:#fff8d7;
+  border-left:4px solid #e0a800;
+  margin:10px 0
+}
+footer{
+  margin-top:30px;
+  padding:20px;
+  text-align:center;
+  background:#106b30;
+  color:white
+}
+#loading{
+  display:none;
+  padding:10px;
+  text-align:center;
+  background:#fff3cd
+}
+.preview{
+  width:160px;
+  height:120px;
+  object-fit:cover;
+  border-radius:8px;
+  display:none;
+  margin:8px 0
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <h1>🌾 किसान अनाज बाज़ार</h1>
+  <div>किसान और खरीदार को जोड़ने वाला ऑनलाइन बाज़ार</div>
+</header>
+
+<nav>
+  <button onclick="showPage('home')">🏠 होम</button>
+  <button onclick="showPage('sell')">🌾 अनाज बेचें</button>
+  <button onclick="showPage('products')">🛒 अनाज खरीदें</button>
+  <button onclick="showPage('bookings')">📦 मेरी बुकिंग</button>
+  <button onclick="showPage('notifications')">🔔 सूचना</button>
+  <button onclick="showPage('login')">👤 लॉगिन</button>
+  <button onclick="showPage('admin')">🔐 Admin</button>
+</nav>
+
+<div id="loading">⏳ कृपया प्रतीक्षा करें...</div>
+
+<div class="container">
+
+<!-- HOME -->
+<section id="home" class="page active">
+  <div class="card">
+    <h2>🌾 किसान अनाज बाज़ार में आपका स्वागत है</h2>
+    <p>
+      किसान अपना अनाज फोटो, मात्रा और रेट के साथ बेचने के लिए डाल सकता है।
+      खरीदार उपलब्ध अनाज देखकर बुकिंग कर सकता है।
+    </p>
+
+    <button class="primary" onclick="showPage('sell')">
+      🌾 अपना अनाज बेचें
+    </button>
+
+    <button class="blue" onclick="showPage('products')">
+      🛒 अनाज देखें
+    </button>
+  </div>
+
+  <div class="grid">
+    <div class="card">
+      <h3>👨‍🌾 किसान</h3>
+      <p>अपना अनाज फोटो और रेट के साथ लिस्ट करें।</p>
+    </div>
+
+    <div class="card">
+      <h3>🛒 खरीदार</h3>
+      <p>उपलब्ध अनाज देखें और बुकिंग करें।</p>
+    </div>
+
+    <div class="card">
+      <h3>💳 UPI Payment</h3>
+      <p>किसान अपनी UPI ID दे सकता है।</p>
+    </div>
+
+    <div class="card">
+      <h3>🔔 सूचना</h3>
+      <p>बुकिंग होने पर सिस्टम में सूचना सेव होगी।</p>
+    </div>
+  </div>
+</section>
+
+
+<!-- LOGIN -->
+<section id="login" class="page">
+  <div class="card">
+    <h2>👤 किसान / ग्राहक लॉगिन</h2>
+
+    <input id="loginMobile" placeholder="मोबाइल नंबर">
+
+    <input id="loginName" placeholder="नाम">
+
+    <select id="loginRole">
+      <option value="farmer">👨‍🌾 किसान</option>
+      <option value="buyer">🛒 खरीदार</option>
+    </select>
+
+    <button class="primary" onclick="loginUser()">
+      लॉगिन / रजिस्टर
+    </button>
+
+    <p id="loginStatus"></p>
+  </div>
+</section>
+
+
+<!-- SELL -->
+<section id="sell" class="page">
+
+  <div class="card">
+
+    <h2>🌾 अपना अनाज बेचें</h2>
+
+    <div class="notice">
+      फोटो, अनाज की जानकारी और अपना UPI ID भरकर Submit करें।
+    </div>
+
+    <input id="farmerName" placeholder="किसान का नाम">
+
+    <input id="farmerMobile"
+           placeholder="मोबाइल नंबर">
+
+    <input id="grainName"
+           placeholder="अनाज का नाम जैसे गेहूँ, धान, मक्का">
+
+    <select id="category">
+      <option value="">अनाज की श्रेणी चुनें</option>
+      <option>गेहूँ</option>
+      <option>धान</option>
+      <option>मक्का</option>
+      <option>बाजरा</option>
+      <option>ज्वार</option>
+      <option>चना</option>
+      <option>सरसों</option>
+      <option>दाल</option>
+      <option>अन्य</option>
+    </select>
+
+    <input id="quantity"
+           type="number"
+           placeholder="मात्रा">
+
+    <select id="unit">
+      <option value="क्विंटल">क्विंटल</option>
+      <option value="किलो">किलो</option>
+      <option value="टन">टन</option>
+    </select>
+
+    <input id="price"
+           type="number"
+           placeholder="रेट ₹">
+
+    <input id="location"
+           placeholder="गाँव / शहर / मंडी">
+
+    <textarea id="description"
+              placeholder="अनाज की जानकारी"></textarea>
+
+    <label><b>📷 अनाज की फोटो</b></label>
+
+    <input
+      id="grainPhoto"
+      type="file"
+      accept="image/*"
+      capture="environment"
+      onchange="previewPhoto(event)"
+    >
+
+    <img id="photoPreview"
+         class="preview">
+
+    <input id="upiId"
+           placeholder="किसान की UPI ID जैसे name@upi">
+
+    <button class="primary"
+            onclick="submitSellRequest()">
+      📤 अनाज Submit करें
+    </button>
+
+    <p id="sellStatus"></p>
+
+  </div>
+</section>
+
+
+<!-- PRODUCTS -->
+<section id="products" class="page">
+
+  <div class="card">
+    <h2>🛒 उपलब्ध अनाज</h2>
+
+    <input
+      id="searchBox"
+      placeholder="🔎 अनाज खोजें..."
+      oninput="filterProducts()"
+    >
+  </div>
+
+  <div id="productList" class="grid">
+    <div class="card">⏳ अनाज लोड हो रहा है...</div>
+  </div>
+
+</section>
+
+
+<!-- BOOKINGS -->
+<section id="bookings" class="page">
+
+  <div class="card">
+    <h2>📦 मेरी बुकिंग</h2>
+
+    <input id="bookingMobile"
+           placeholder="अपना मोबाइल नंबर">
+
+    <button class="primary"
+            onclick="loadMyBookings()">
+      बुकिंग देखें
+    </button>
+  </div>
+
+  <div id="bookingList"></div>
+
+</section>
+
+
+<!-- NOTIFICATIONS -->
+<section id="notifications" class="page">
+
+  <div class="card">
+    <h2>🔔 मेरी सूचनाएँ</h2>
+
+    <input id="notificationMobile"
+           placeholder="मोबाइल नंबर">
+
+    <button class="primary"
+            onclick="loadNotifications()">
+      सूचना देखें
+    </button>
+  </div>
+
+  <div id="notificationList"></div>
+
+</section>
+
+
+<!-- ADMIN -->
+<section id="admin" class="page">
+
+  <div class="card">
+
+    <h2>🔐 Admin Panel</h2>
+
+    <input
+      id="adminPassword"
+      type="password"
+      placeholder="Admin Password"
+    >
+
+    <button class="primary"
+            onclick="adminLogin()">
+      Admin Login
+    </button>
+
+    <p id="adminStatus"></p>
+
+  </div>
+
+  <div id="adminPanel" style="display:none">
+
+    <div class="card">
+      <h2>🌾 Sell Requests</h2>
+      <button class="primary"
+              onclick="loadAdminRequests()">
+        🔄 Refresh
+      </button>
+      <div id="adminRequests"></div>
+    </div>
+
+    <div class="card">
+      <h2>📦 Bookings</h2>
+      <button class="primary"
+              onclick="loadAdminBookings()">
+        🔄 Refresh
+      </button>
+      <div id="adminBookings"></div>
+    </div>
+
+  </div>
+
+</section>
+
+</div>
+
+
+<footer>
+  🌾 किसान अनाज बाज़ार<br>
+  📞 हेल्पलाइन: <b>7042894282</b>
+</footer>
+
+
+<!-- BASIC PAGE SYSTEM -->
+<script>
+function showPage(id){
+
+  document.querySelectorAll('.page')
+    .forEach(function(page){
+      page.classList.remove('active');
+    });
+
+  var page=document.getElementById(id);
+
+  if(page){
+    page.classList.add('active');
+    window.scrollTo(0,0);
+  }
+
+  if(id==="products" && window.loadProducts){
+    window.loadProducts();
+  }
+}
+
+function previewPhoto(event){
+
+  const file=event.target.files[0];
+
+  const preview=document.getElementById("photoPreview");
+
+  if(file){
+
+    preview.src=URL.createObjectURL(file);
+    preview.style.display="block";
+
+  }else{
+
+    preview.style.display="none";
+
+  }
+}
+</script>
+
+
+<!-- FIREBASE -->
+<script type="module">
+
+import { initializeApp }
+from "https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
+
+import {
+  getFirestore,
+  collection,
+  addDoc,
+  getDocs,
+  query,
+  where,
+  updateDoc,
+  doc,
+  orderBy,
+  serverTimestamp
+}
+from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
+
+import {
+  getStorage,
+  ref,
+  uploadBytes,
+  getDownloadURL
+}
+from "https://www.gstatic.com/firebasejs/11.10.0/firebase-storage.js";
+
+
+/* =========================
+   FIREBASE CONFIG
+========================= */
+
+const firebaseConfig = {
+
+  apiKey:
+  "AIzaSyDxjigog6ctxY25UFGrH7M3pYx1IN2RWSw",
+
+  authDomain:
+  "kissan-bajar.firebaseapp.com",
+
+  databaseURL:
+  "https://kissan-bajar-default-rtdb.firebaseio.com",
+
+  projectId:
+  "kissan-bajar",
+
+  storageBucket:
+  "kissan-bajar.firebasestorage.app",
+
+  messagingSenderId:
+  "629043004551",
+
+  appId:
+  "1:629043004551:web:f484c026c838399cff6422",
+
+  measurementId:
+  "G-TE6ZLGS1KF"
+
+};
+
+
+const app=initializeApp(firebaseConfig);
+
+const db=getFirestore(app);
+
+const storage=getStorage(app);
+
+
+/* =========================
+   GLOBAL DATA
+========================= */
+
+let allProducts=[];
+
+let currentUser=null;
+
+
+/* =========================
+   LOGIN
+========================= */
+
+window.loginUser=async function(){
+
+  const name=document
+    .getElementById("loginName")
+    .value.trim();
+
+  const mobile=document
+    .getElementById("loginMobile")
+    .value.trim();
+
+  const role=document
+    .getElementById("loginRole")
+    .value;
+
+  if(!name || !mobile){
+
+    alert("नाम और मोबाइल नंबर भरें");
+
+    return;
+  }
+
+  try{
+
+    await addDoc(
+      collection(db,"users"),
+      {
+        name:name,
+        mobile:mobile,
+        role:role,
+        createdAt:serverTimestamp()
+      }
+    );
+
+    currentUser={
+      name:name,
+      mobile:mobile,
+      role:role
+    };
+
+    localStorage.setItem(
+      "kab_user",
+      JSON.stringify(currentUser)
+    );
+
+    document.getElementById("loginStatus")
+      .innerHTML=
+      "✅ लॉगिन सफल।";
+
+    document.getElementById("farmerName").value=name;
+    document.getElementById("farmerMobile").value=mobile;
+
+    alert("लॉगिन सफल");
+
+  }catch(error){
+
+    console.error(error);
+
+    alert("Login error: "+error.message);
+
+  }
+
+};
+
+
+/* =========================
+   SELL REQUEST
+========================= */
+
+window.submitSellRequest=async function(){
+
+  const name=document
+    .getElementById("farmerName")
+    .value.trim();
+
+  const mobile=document
+    .getElementById("farmerMobile")
+    .value.trim();
+
+  const grain=document
+    .getElementById("grainName")
+    .value.trim();
+
+  const category=document
+    .getElementById("category")
+    .value;
+
+  const quantity=document
+    .getElementById("quantity")
+    .value;
+
+  const unit=document
+    .getElementById("unit")
+    .value;
+
+  const price=document
+    .getElementById("price")
+    .value;
+
+  const location=document
+    .getElementById("location")
+    .value.trim();
+
+  const description=document
+    .getElementById("description")
+    .value.trim();
+
+  const upi=document
+    .getElementById("upiId")
+    .value.trim();
+
+  const photoFile=document
+    .getElementById("grainPhoto")
+    .files[0];
+
+  if(
+    !name ||
+    !mobile ||
+    !grain ||
+    !quantity ||
+    !price ||
+    !location ||
+    !upi
+  ){
+
+    alert(
+      "कृपया नाम, मोबाइल, अनाज, मात्रा, रेट, जगह और UPI ID भरें।"
+    );
+
+    return;
+  }
+
+
+  const loading=document.getElementById("loading");
+
+  const status=document.getElementById("sellStatus");
+
+  loading.style.display="block";
+
+  status.innerHTML="⏳ जानकारी सेव हो रही है...";
+
+
+  try{
+
+    let photoURL="";
+
+
+    /* =========================
+       PHOTO UPLOAD
+    ========================= */
+
+    if(photoFile){
+
+      status.innerHTML=
+        "📷 फोटो Firebase Storage में Upload हो रही है...";
+
+      const safeName=
+        photoFile.name
+        .replace(/[^a-zA-Z0-9.-]/g,"_");
+
+      const fileName=
+        "grainPhotos/"
+        +Date.now()
+        +"_"+safeName;
+
+      const storageRef=
+        ref(storage,fileName);
+
+      await uploadBytes(
+        storageRef,
+        photoFile
+      );
+
+      photoURL=
+        await getDownloadURL(storageRef);
+    }
+
+
+    /* =========================
+       FIRESTORE
+    ========================= */
+
+    status.innerHTML=
+      "💾 अनाज की जानकारी सेव हो रही है...";
+
+
+    const docRef=await addDoc(
+      collection(db,"sellRequests"),
+      {
+
+        farmerName:name,
+
+        farmerMobile:mobile,
+
+        grain:grain,
+
+        category:category,
+
+        quantity:Number(quantity),
+
+        unit:unit,
+
+        price:Number(price),
+
+        location:location,
+
+        description:description,
+
+        upiId:upi,
+
+        photoURL:photoURL,
+
+        status:"available",
+
+        createdAt:serverTimestamp()
+
+      }
+    );
+
+
+    /* =========================
+       FARMER NOTIFICATION
+    ========================= */
+
+    await addDoc(
+      collection(db,"notifications"),
+      {
+
+        mobile:mobile,
+
+        title:"अनाज सफलतापूर्वक Submit हुआ",
+
+        message:
+        grain+
+        " की आपकी बिक्री लिस्टिंग सफलतापूर्वक जमा हो गई है।",
+
+        type:"sell",
+
+        read:false,
+
+        createdAt:serverTimestamp()
+
+      }
+    );
+
+
+    loading.style.display="none";
+
+
+    status.innerHTML=
+      "✅ आपका अनाज सफलतापूर्वक Submit हो गया!";
+
+
+    alert(
+      "✅ अनाज Submit हो गया।"
+    );
+
+
+    /* FORM RESET */
+
+    document.getElementById("grainName").value="";
+    document.getElementById("quantity").value="";
+    document.getElementById("price").value="";
+    document.getElementById("location").value="";
+    document.getElementById("description").value="";
+    document.getElementById("upiId").value="";
+    document.getElementById("grainPhoto").value="";
+
+    document.getElementById("photoPreview")
+      .style.display="none";
+
+
+  }catch(error){
+
+    loading.style.display="none";
+
+    console.error(error);
+
+    status.innerHTML=
+      "❌ Error: "+error.message;
+
+    alert(
+      "Submit नहीं हुआ।\n\n"+
+      error.message+
+      "\n\nअगर फोटो लगाई है तो Firebase Storage चालू है या नहीं जांचें।"
+    );
+
+  }
+
+};
+
+
+/* =========================
+   LOAD PRODUCTS
+========================= */
+
+window.loadProducts=async function(){
+
+  const list=
+    document.getElementById("productList");
+
+  list.innerHTML=
+    "<div class='card'>⏳ Loading...</div>";
+
+  try{
+
+    const snap=
+      await getDocs(
+        collection(db,"sellRequests")
+      );
+
+    allProducts=[];
+
+    snap.forEach(function(item){
+
+      allProducts.push({
+        id:item.id,
+        ...item.data()
+      });
+
+    });
+
+    allProducts=
+      allProducts.filter(
+        x=>x.status==="available"
+      );
+
+    renderProducts(allProducts);
+
+  }catch(error){
+
+    console.error(error);
+
+    list.innerHTML=
+      "<div class='card'>❌ "+error.message+"</div>";
+
+  }
+
+};
+
+
+/* =========================
+   RENDER PRODUCTS
+========================= */
+
+function renderProducts(products){
+
+  const list=
+    document.getElementById("productList");
+
+  if(!products.length){
+
+    list.innerHTML=
+      "<div class='card'>अभी कोई अनाज उपलब्ध नहीं है।</div>";
+
+    return;
+  }
+
+
+  list.innerHTML="";
+
+
+  products.forEach(function(p){
+
+    const card=
+      document.createElement("div");
+
+    card.className=
+      "card product";
+
+
+    let photoHTML="";
+
+    if(p.photoURL){
+
+      photoHTML=
+      `
+      <img
+        src="${p.photoURL}"
+        alt="अनाज की फोटो"
+      >
+      `;
+
+    }else{
+
+      photoHTML=
+      `
+      <div style="
+        height:210px;
+        background:#eee;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        border-radius:9px;
+        font-size:55px">
+        🌾
+      </div>
+      `;
+
+    }
+
+
+    card.innerHTML=
+    `
+
+      ${photoHTML}
+
+      <h3>🌾 ${escapeHTML(p.grain || "")}</h3>
+
+      <div class="price">
+        ₹${p.price || 0} / ${escapeHTML(p.unit || "")}
+      </div>
+
+      <p>
+        📦 मात्रा:
+        ${p.quantity || ""} ${escapeHTML(p.unit || "")}
+      </p>
+
+      <p>
+        📍 ${escapeHTML(p.location || "")}
+      </p>
+
+      <p>
+        👨‍🌾 ${escapeHTML(p.farmerName || "")}
+      </p>
+
+      <p class="small">
+        ${escapeHTML(p.description || "")}
+      </p>
+
+      <button
+        class="primary"
+        onclick="bookProduct('${p.id}')">
+        🛒 बुक करें
+      </button>
+
+    `;
+
+
+    list.appendChild(card);
+
+  });
+
+}
+
+
+/* =========================
+   SEARCH
+========================= */
+
+window.filterProducts=function(){
+
+  const text=
+    document.getElementById("searchBox")
+    .value
+    .toLowerCase();
+
+  const filtered=
+    allProducts.filter(function(p){
+
+      return (
+        String(p.grain || "")
+        .toLowerCase()
+        .includes(text)
+        ||
+        String(p.category || "")
+        .toLowerCase()
+        .includes(text)
+        ||
+        String(p.location || "")
+        .toLowerCase()
+        .includes(text)
+      );
+
+    });
+
+  renderProducts(filtered);
+
+};
+
+
+/* =========================
+   BOOK PRODUCT
+========================= */
+
+window.bookProduct=async function(id){
+
+  const buyerName=
+    prompt("खरीदार का नाम:");
+
+  if(!buyerName)return;
+
+
+  const buyerMobile=
+    prompt("खरीदार का मोबाइल नंबर:");
+
+  if(!buyerMobile)return;
+
+
+  try{
+
+    const product=
+      allProducts.find(
+        p=>p.id===id
+      );
+
+    if(!product){
+
+      alert("अनाज नहीं मिला");
+
+      return;
+    }
+
+
+    const booking=await addDoc(
+      collection(db,"bookings"),
+      {
+
+        productId:id,
+
+        grain:product.grain,
+
+        farmerName:product.farmerName,
+
+        farmerMobile:product.farmerMobile,
+
+        buyerName:buyerName,
+
+        buyerMobile:buyerMobile,
+
+        quantity:product.quantity,
+
+        unit:product.unit,
+
+        price:product.price,
+
+        upiId:product.upiId,
+
+        status:"pending",
+
+        createdAt:serverTimestamp()
+
+      }
+    );
+
+
+    /* किसान को notification */
+
+    await addDoc(
+      collection(db,"notifications"),
+      {
+
+        mobile:product.farmerMobile,
+
+        title:"🛒 नई बुकिंग",
+
+        message:
+        buyerName+
+        " ने आपके "+
+        product.grain+
+        " की बुकिंग की है।",
+
+        bookingId:booking.id,
+
+        type:"booking",
+
+        read:false,
+
+        createdAt:serverTimestamp()
+
+      }
+    );
+
+
+    alert(
+      "✅ बुकिंग सफल!\nकिसान को सूचना भेज दी गई है।"
+    );
+
+
+  }catch(error){
+
+    console.error(error);
+
+    alert(
+      "Booking error: "+
+      error.message
+    );
+
+  }
+
+};
+
+
+/* =========================
+   MY BOOKINGS
+========================= */
+
+window.loadMyBookings=async function(){
+
+  const mobile=
+    document.getElementById("bookingMobile")
+    .value.trim();
+
+  if(!mobile){
+
+    alert("मोबाइल नंबर डालें");
+
+    return;
+  }
+
+
+  const box=
+    document.getElementById("bookingList");
+
+  box.innerHTML=
+    "<div class='card'>⏳ Loading...</div>";
+
+
+  try{
+
+    const snap=
+      await getDocs(
+        query(
+          collection(db,"bookings"),
+          where("buyerMobile","==",mobile)
+        )
+      );
+
+
+    box.innerHTML="";
+
+
+    if
