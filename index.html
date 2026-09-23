@@ -1,0 +1,1329 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Kisan Anaj Bazaar</title>
+
+<style>
+*{box-sizing:border-box}
+
+body{
+  margin:0;
+  font-family:Arial,sans-serif;
+  background:#f4f7f3;
+  color:#222;
+}
+
+header{
+  background:#16833a;
+  color:white;
+  padding:18px 12px;
+  text-align:center;
+}
+
+header h1{
+  margin:0 0 8px;
+  font-size:30px;
+}
+
+nav{
+  background:#075c27;
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:center;
+  gap:7px;
+  padding:10px;
+}
+
+nav button{
+  border:0;
+  background:white;
+  color:#075c27;
+  padding:10px 13px;
+  border-radius:7px;
+  cursor:pointer;
+  font-weight:bold;
+}
+
+.page{
+  display:none;
+  max-width:1100px;
+  margin:auto;
+  padding:20px;
+}
+
+.page.active{
+  display:block;
+}
+
+.card{
+  background:white;
+  padding:20px;
+  margin:15px 0;
+  border-radius:14px;
+  box-shadow:0 2px 10px #0001;
+}
+
+input,select,textarea{
+  width:100%;
+  padding:13px;
+  margin:7px 0 14px;
+  border:1px solid #ccc;
+  border-radius:8px;
+  font-size:16px;
+}
+
+textarea{
+  min-height:100px;
+}
+
+label{
+  display:block;
+  font-weight:bold;
+  margin-top:8px;
+}
+
+.btn{
+  background:#16833a;
+  color:white;
+  border:0;
+  padding:12px 18px;
+  border-radius:8px;
+  cursor:pointer;
+  font-weight:bold;
+  margin:4px 2px;
+}
+
+.btn.red{background:#c62828}
+.btn.blue{background:#1976d2}
+.btn.orange{background:#e68900}
+.btn.gray{background:#555}
+.btn.whatsapp{background:#128c7e}
+
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+  gap:15px;
+}
+
+.product img{
+  width:100%;
+  height:210px;
+  object-fit:cover;
+  border-radius:9px;
+}
+
+.price{
+  color:#16833a;
+  font-size:24px;
+  font-weight:bold;
+}
+
+.badge{
+  display:inline-block;
+  padding:5px 9px;
+  border-radius:20px;
+  background:#e8f5e9;
+  color:#16833a;
+  font-size:13px;
+}
+
+.notice{
+  padding:13px;
+  background:#fff3cd;
+  border-radius:8px;
+  margin:10px 0;
+}
+
+.success{
+  padding:13px;
+  background:#dff5e4;
+  border-radius:8px;
+  color:#146c2e;
+  margin-top:10px;
+}
+
+.error{
+  padding:13px;
+  background:#ffe0e0;
+  border-radius:8px;
+  color:#a00;
+  margin-top:10px;
+}
+
+.info{
+  padding:13px;
+  background:#e3f2fd;
+  border-radius:8px;
+  color:#075c27;
+  margin-top:10px;
+}
+
+.hidden{
+  display:none!important;
+}
+
+.small{
+  font-size:13px;
+  color:#666;
+}
+
+.status{
+  display:inline-block;
+  padding:5px 10px;
+  border-radius:20px;
+  background:#eee;
+  font-size:13px;
+  font-weight:bold;
+}
+
+.paymentBox{
+  background:#f1f8e9;
+  padding:15px;
+  border-radius:10px;
+  margin-top:15px;
+}
+
+.tableWrap{
+  overflow-x:auto;
+}
+
+table{
+  width:100%;
+  border-collapse:collapse;
+  background:white;
+  margin-top:12px;
+}
+
+th,td{
+  padding:9px;
+  border:1px solid #ddd;
+  text-align:left;
+  vertical-align:top;
+}
+
+th{
+  background:#e8f5e9;
+}
+
+footer{
+  background:#075c27;
+  color:white;
+  text-align:center;
+  padding:22px;
+  margin-top:30px;
+}
+
+#recaptcha-container{
+  margin:15px 0;
+}
+
+@media(max-width:600px){
+  header h1{font-size:25px}
+  nav button{
+    font-size:12px;
+    padding:9px 10px;
+  }
+  .page{padding:10px}
+  .card{padding:15px}
+  th,td{font-size:13px}
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <h1>🌾 किसान अनाज बाज़ार</h1>
+  <div>किसान और खरीदार को जोड़ने वाला ऑनलाइन बाज़ार</div>
+</header>
+
+<nav>
+  <button onclick="showPage('home')">🏠 होम</button>
+  <button onclick="showPage('login')">👤 Login</button>
+  <button onclick="showPage('sell')">🌾 अनाज बेचें</button>
+  <button onclick="showPage('products')">🛒 अनाज खरीदें</button>
+  <button onclick="showPage('bookings')">📦 मेरी Booking</button>
+  <button onclick="showPage('notifications')">🔔 Notification</button>
+  <button onclick="showPage('admin')">🔐 Admin</button>
+</nav>
+
+
+<!-- HOME -->
+
+<section id="home" class="page active">
+
+  <div class="card">
+    <h2>🌾 किसान अनाज बाज़ार में आपका स्वागत है</h2>
+
+    <p>
+      किसान अपना अनाज, मात्रा, भाव और फोटो डालकर बेच सकता है।
+      खरीदार उपलब्ध अनाज देखकर Booking कर सकता है।
+    </p>
+
+    <div class="grid">
+
+      <div>
+        <h3>👨‍🌾 किसान</h3>
+        <p>अपना अनाज और भाव डालकर बेचें।</p>
+      </div>
+
+      <div>
+        <h3>🛒 खरीदार</h3>
+        <p>अनाज देखकर Booking करें।</p>
+      </div>
+
+      <div>
+        <h3>💰 Commission</h3>
+        <p>Buyer Commission ₹100</p>
+        <p>Farmer Commission ₹50</p>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>📞 Help Line</h3>
+
+    <p style="font-size:25px;font-weight:bold">
+      7042894282
+    </p>
+
+    <a href="tel:7042894282" class="btn">
+      📞 Call
+    </a>
+
+    <a
+      href="https://wa.me/917042894282"
+      target="_blank"
+      class="btn whatsapp">
+      💬 WhatsApp
+    </a>
+  </div>
+
+</section>
+
+
+<!-- LOGIN -->
+
+<section id="login" class="page">
+
+  <div class="card">
+
+    <h2>👤 Mobile OTP Login / Registration</h2>
+
+    <div class="notice">
+      🔐 इस Login में आपके मोबाइल नंबर पर Firebase OTP आएगा।
+      सही OTP डालने के बाद ही Login होगा।
+    </div>
+
+    <label>आप कौन हैं?</label>
+
+    <select id="userRole">
+      <option value="farmer">👨‍🌾 किसान</option>
+      <option value="buyer">🛒 ग्राहक / खरीदार</option>
+    </select>
+
+    <label>नाम</label>
+
+    <input
+      id="loginName"
+      placeholder="अपना नाम">
+
+    <label>मोबाइल नंबर</label>
+
+    <input
+      id="loginMobile"
+      type="tel"
+      maxlength="10"
+      placeholder="10 अंकों का मोबाइल नंबर">
+
+    <label>Email</label>
+
+    <input
+      id="loginEmail"
+      type="email"
+      placeholder="Email (वैकल्पिक)">
+
+    <label>UPI ID</label>
+
+    <input
+      id="loginUPI"
+      placeholder="जैसे name@upi">
+
+    <label>Bank Account Number</label>
+
+    <input
+      id="loginBank"
+      placeholder="Bank Account Number">
+
+    <label>IFSC Code</label>
+
+    <input
+      id="loginIFSC"
+      placeholder="IFSC Code">
+
+    <button
+      class="btn"
+      onclick="sendOTP()">
+      📱 OTP भेजें
+    </button>
+
+    <div id="recaptcha-container"></div>
+
+    <div id="otpBox" class="hidden">
+
+      <label>OTP डालें</label>
+
+      <input
+        id="otpCode"
+        type="number"
+        maxlength="6"
+        placeholder="6 अंकों का OTP">
+
+      <button
+        class="btn"
+        onclick="verifyOTP()">
+        🔐 OTP Verify करके Login करें
+      </button>
+
+    </div>
+
+    <button
+      class="btn gray"
+      onclick="logoutUser()">
+      🚪 Logout
+    </button>
+
+    <div id="loginMsg"></div>
+
+    <div id="currentUserBox"></div>
+
+  </div>
+
+</section>
+
+
+<!-- SELL -->
+
+<section id="sell" class="page">
+
+  <div class="card">
+
+    <h2>🌾 किसान अपना अनाज बेचें</h2>
+
+    <div class="notice">
+      पहले किसान का Firebase Login होना जरूरी है।
+    </div>
+
+    <label>किसान का नाम</label>
+
+    <input id="farmerName" placeholder="किसान का नाम">
+
+    <label>मोबाइल नंबर</label>
+
+    <input id="farmerMobile" placeholder="मोबाइल नंबर">
+
+    <label>अनाज / फसल</label>
+
+    <select id="grain">
+
+      <option value="">-- अनाज चुनें --</option>
+      <option>गेहूं</option>
+      <option>धान</option>
+      <option>चावल</option>
+      <option>मक्का</option>
+      <option>बाजरा</option>
+      <option>ज्वार</option>
+      <option>चना</option>
+      <option>सरसों</option>
+      <option>सोयाबीन</option>
+      <option>अरहर</option>
+      <option>मूंग</option>
+      <option>उड़द</option>
+      <option>मसूर</option>
+      <option>मटर</option>
+      <option>अन्य</option>
+
+    </select>
+
+    <label>Category</label>
+
+    <input
+      id="category"
+      placeholder="Category">
+
+    <label>मात्रा</label>
+
+    <input
+      id="quantity"
+      type="number"
+      min="1"
+      placeholder="Quantity">
+
+    <label>Unit</label>
+
+    <select id="unit">
+      <option>क्विंटल</option>
+      <option>किलो</option>
+      <option>टन</option>
+    </select>
+
+    <label>कुल बिक्री कीमत ₹</label>
+
+    <input
+      id="price"
+      type="number"
+      min="1"
+      placeholder="कुल बिक्री कीमत">
+
+    <label>गांव / शहर / जिला</label>
+
+    <input
+      id="location"
+      placeholder="Location">
+
+    <label>अनाज की जानकारी</label>
+
+    <textarea
+      id="description"
+      placeholder="अनाज की गुणवत्ता आदि"></textarea>
+
+    <label>📸 अनाज की फोटो</label>
+
+    <input
+      id="productPhoto"
+      type="file"
+      accept="image/*"
+      capture="environment">
+
+    <label>💳 किसान की UPI ID</label>
+
+    <input
+      id="farmerUPI"
+      placeholder="जैसे farmer@upi">
+
+    <label>🏦 Bank Account Number</label>
+
+    <input
+      id="farmerBank"
+      placeholder="Bank Account Number">
+
+    <label>🏦 IFSC Code</label>
+
+    <input
+      id="farmerIFSC"
+      placeholder="IFSC Code">
+
+    <button
+      class="btn"
+      onclick="submitSellRequest()">
+      📤 Sell Request Submit करें
+    </button>
+
+    <div id="sellMsg"></div>
+
+  </div>
+
+</section>
+
+
+<!-- PRODUCTS -->
+
+<section id="products" class="page">
+
+  <div class="card">
+
+    <h2>🛒 उपलब्ध अनाज</h2>
+
+    <input
+      id="searchProduct"
+      placeholder="🔎 अनाज खोजें..."
+      oninput="filterProducts()">
+
+    <button
+      class="btn"
+      onclick="loadProducts()">
+      🔄 Refresh
+    </button>
+
+  </div>
+
+  <div id="productList" class="grid"></div>
+
+</section>
+
+
+<!-- BOOKINGS -->
+
+<section id="bookings" class="page">
+
+  <div class="card">
+
+    <h2>📦 मेरी Booking</h2>
+
+    <button
+      class="btn"
+      onclick="loadBookings()">
+      🔄 Refresh
+    </button>
+
+  </div>
+
+  <div id="bookingList"></div>
+
+</section>
+
+
+<!-- NOTIFICATIONS -->
+
+<section id="notifications" class="page">
+
+  <div class="card">
+
+    <h2>🔔 Notifications</h2>
+
+    <button
+      class="btn"
+      onclick="loadNotifications()">
+      🔄 Refresh
+    </button>
+
+  </div>
+
+  <div id="notificationList"></div>
+
+</section>
+
+
+<!-- ADMIN -->
+
+<section id="admin" class="page">
+
+  <div class="card">
+
+    <h2>🔐 Admin Panel</h2>
+
+    <input
+      id="adminPassword"
+      type="password"
+      placeholder="Admin Password">
+
+    <button
+      class="btn"
+      onclick="adminLogin()">
+      🔐 Admin Login
+    </button>
+
+    <div id="adminMsg"></div>
+
+    <div
+      id="adminPanel"
+      class="hidden">
+
+      <hr>
+
+      <h3>🌾 Sell Requests</h3>
+
+      <button
+        class="btn"
+        onclick="loadAdminSellRequests()">
+        🔄 Refresh
+      </button>
+
+      <div id="adminSellRequests"></div>
+
+      <hr>
+
+      <h3>📦 Bookings</h3>
+
+      <button
+        class="btn"
+        onclick="loadAdminBookings()">
+        🔄 Refresh
+      </button>
+
+      <div id="adminBookings"></div>
+
+      <hr>
+
+      <h3>👥 Users</h3>
+
+      <button
+        class="btn"
+        onclick="loadAdminUsers()">
+        🔄 Refresh
+      </button>
+
+      <div id="adminUsers"></div>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<footer>
+
+  <p>🌾 Kisan Anaj Bazaar</p>
+
+  <p>📞 Helpline: 7042894282</p>
+
+</footer>
+
+
+<script>
+
+function showPage(id){
+
+  document
+    .querySelectorAll(".page")
+    .forEach(p=>{
+      p.classList.remove("active");
+    });
+
+  const page=document.getElementById(id);
+
+  if(page){
+    page.classList.add("active");
+  }
+
+  window.scrollTo(0,0);
+
+  if(id==="products"){
+    if(window.loadProducts) window.loadProducts();
+  }
+
+  if(id==="bookings"){
+    if(window.loadBookings) window.loadBookings();
+  }
+
+  if(id==="notifications"){
+    if(window.loadNotifications) window.loadNotifications();
+  }
+
+  if(id==="sell"){
+    if(window.prepareSellPage) window.prepareSellPage();
+  }
+
+  if(id==="login"){
+    if(window.showCurrentUser) window.showCurrentUser();
+  }
+}
+
+
+function escapeHTML(value){
+
+  if(value===undefined || value===null){
+    return "";
+  }
+
+  return String(value)
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;")
+    .replace(/'/g,"&#039;");
+}
+
+</script>
+
+
+<script type="module">
+
+import {
+  initializeApp
+}
+from "https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
+
+import {
+  getAuth,
+  RecaptchaVerifier,
+  signInWithPhoneNumber,
+  onAuthStateChanged,
+  signOut
+}
+from "https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js";
+
+import {
+  getFirestore,
+  collection,
+  addDoc,
+  getDocs,
+  doc,
+  getDoc,
+  setDoc,
+  updateDoc,
+  serverTimestamp
+}
+from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
+
+import {
+  getStorage,
+  ref,
+  uploadBytes,
+  getDownloadURL
+}
+from "https://www.gstatic.com/firebasejs/11.10.0/firebase-storage.js";
+
+
+/* ================= FIREBASE ================= */
+
+const firebaseConfig={
+
+  apiKey:
+    "AIzaSyDxjigog6ctxY25UFGrH7M3pYx1IN2RWSw",
+
+  authDomain:
+    "kissan-bajar.firebaseapp.com",
+
+  databaseURL:
+    "https://kissan-bajar-default-rtdb.firebaseio.com",
+
+  projectId:
+    "kissan-bajar",
+
+  storageBucket:
+    "kissan-bajar.firebasestorage.app",
+
+  messagingSenderId:
+    "629043004551",
+
+  appId:
+    "1:629043004551:web:f484c026c838399cff6422",
+
+  measurementId:
+    "G-TE6ZLGS1KF"
+};
+
+
+const app=initializeApp(firebaseConfig);
+
+const auth=getAuth(app);
+
+const db=getFirestore(app);
+
+const storage=getStorage(app);
+
+
+/* ================= SETTINGS ================= */
+
+const BUYER_COMMISSION=100;
+
+const FARMER_COMMISSION=50;
+
+const COMMISSION_UPI="niteshai64910@nyes";
+
+const ADMIN_PASSWORD="123456";
+
+
+/* ================= VARIABLES ================= */
+
+let confirmationResult=null;
+
+let recaptchaVerifier=null;
+
+let currentUser=null;
+
+let currentProfile=null;
+
+let allProducts=[];
+
+
+/* ================= RECAPTCHA ================= */
+
+function setupRecaptcha(){
+
+  try{
+
+    if(recaptchaVerifier){
+      return;
+    }
+
+    recaptchaVerifier=
+      new RecaptchaVerifier(
+        auth,
+        "recaptcha-container",
+        {
+          size:"normal"
+        }
+      );
+
+  }catch(error){
+
+    console.error(
+      "reCAPTCHA:",
+      error
+    );
+
+  }
+}
+
+
+/* ================= SEND OTP ================= */
+
+window.sendOTP=async function(){
+
+  const mobile=
+    document
+      .getElementById("loginMobile")
+      .value
+      .trim();
+
+  if(!/^[0-9]{10}$/.test(mobile)){
+
+    document.getElementById("loginMsg").innerHTML=
+      '<div class="error">सही 10 अंकों का मोबाइल नंबर डालें।</div>';
+
+    return;
+  }
+
+
+  const phoneNumber="+91"+mobile;
+
+
+  try{
+
+    setupRecaptcha();
+
+
+    document.getElementById("loginMsg").innerHTML=
+      '<div class="notice">⏳ OTP भेजा जा रहा है...</div>';
+
+
+    confirmationResult=
+      await signInWithPhoneNumber(
+        auth,
+        phoneNumber,
+        recaptchaVerifier
+      );
+
+
+    document
+      .getElementById("otpBox")
+      .classList.remove("hidden");
+
+
+    document.getElementById("loginMsg").innerHTML=
+      '<div class="success">✅ OTP आपके मोबाइल नंबर पर भेज दिया गया है।</div>';
+
+
+  }catch(error){
+
+    console.error(error);
+
+    document.getElementById("loginMsg").innerHTML=
+      '<div class="error">❌ OTP नहीं भेजा गया।<br>'+
+      escapeHTML(error.message)+
+      '</div>';
+
+
+    if(recaptchaVerifier){
+
+      try{
+        recaptchaVerifier.clear();
+      }catch(e){}
+
+      recaptchaVerifier=null;
+
+    }
+
+  }
+
+};
+
+
+/* ================= VERIFY OTP ================= */
+
+window.verifyOTP=async function(){
+
+  const otp=
+    document
+      .getElementById("otpCode")
+      .value
+      .trim();
+
+
+  if(!confirmationResult){
+
+    document.getElementById("loginMsg").innerHTML=
+      '<div class="error">पहले OTP भेजें।</div>';
+
+    return;
+  }
+
+
+  if(!/^[0-9]{6}$/.test(otp)){
+
+    document.getElementById("loginMsg").innerHTML=
+      '<div class="error">6 अंकों का OTP डालें।</div>';
+
+    return;
+  }
+
+
+  try{
+
+    document.getElementById("loginMsg").innerHTML=
+      '<div class="notice">⏳ OTP Verify हो रहा है...</div>';
+
+
+    const result=
+      await confirmationResult.confirm(otp);
+
+
+    currentUser=result.user;
+
+
+    await saveOrLoadProfile();
+
+
+    document.getElementById("loginMsg").innerHTML=
+      '<div class="success">✅ OTP सही है। Firebase Login सफल हुआ।</div>';
+
+
+    document
+      .getElementById("otpBox")
+      .classList.add("hidden");
+
+
+    showCurrentUser();
+
+
+    alert("✅ Login सफल हुआ।");
+
+
+  }catch(error){
+
+    console.error(error);
+
+    document.getElementById("loginMsg").innerHTML=
+      '<div class="error">❌ OTP गलत है या expire हो गया।<br>'+
+      escapeHTML(error.message)+
+      '</div>';
+
+  }
+
+};
+
+
+/* ================= AUTH STATE ================= */
+
+onAuthStateChanged(
+  auth,
+  async function(user){
+
+    currentUser=user;
+
+
+    if(user){
+
+      await saveOrLoadProfile();
+
+      showCurrentUser();
+
+      prepareSellPage();
+
+    }else{
+
+      currentUser=null;
+
+      currentProfile=null;
+
+      showCurrentUser();
+
+    }
+
+  }
+);
+
+
+/* ================= PROFILE ================= */
+
+async function saveOrLoadProfile(){
+
+  if(!currentUser){
+    return;
+  }
+
+
+  const uid=currentUser.uid;
+
+
+  const userRef=
+    doc(
+      db,
+      "users",
+      uid
+    );
+
+
+  try{
+
+    const old=
+      await getDoc(userRef);
+
+
+    if(old.exists()){
+
+      currentProfile=old.data();
+
+      return;
+
+    }
+
+
+    const role=
+      document
+        .getElementById("userRole")
+        .value;
+
+
+    const name=
+      document
+        .getElementById("loginName")
+        .value
+        .trim();
+
+
+    const mobile=
+      document
+        .getElementById("loginMobile")
+        .value
+        .trim();
+
+
+    const email=
+      document
+        .getElementById("loginEmail")
+        .value
+        .trim();
+
+
+    const upi=
+      document
+        .getElementById("loginUPI")
+        .value
+        .trim();
+
+
+    const bank=
+      document
+        .getElementById("loginBank")
+        .value
+        .trim();
+
+
+    const ifsc=
+      document
+        .getElementById("loginIFSC")
+        .value
+        .trim();
+
+
+    currentProfile={
+
+      uid:uid,
+
+      role:role,
+
+      name:name,
+
+      mobile:mobile,
+
+      email:email,
+
+      upi:upi,
+
+      bank:bank,
+
+      ifsc:ifsc,
+
+      createdAt:
+        serverTimestamp()
+
+    };
+
+
+    await setDoc(
+      userRef,
+      currentProfile
+    );
+
+
+  }catch(error){
+
+    console.error(
+      "Profile:",
+      error
+    );
+
+  }
+
+}
+
+
+/* ================= SHOW CURRENT USER ================= */
+
+window.showCurrentUser=function(){
+
+  const box=
+    document.getElementById(
+      "currentUserBox"
+    );
+
+
+  if(!box){
+    return;
+  }
+
+
+  if(!currentUser){
+
+    box.innerHTML=
+      '<div class="notice">🔒 अभी Login नहीं है।</div>';
+
+    return;
+
+  }
+
+
+  const profile=
+    currentProfile||{};
+
+
+  box.innerHTML=
+
+    '<div class="success">'+
+
+    '<b>🔐 Firebase Login Active</b><br><br>'+
+
+    'नाम: '+
+    escapeHTML(profile.name||"")+
+    '<br>'+
+
+    'मोबाइल: '+
+    escapeHTML(
+      profile.mobile||
+      currentUser.phoneNumber||
+      ""
+    )+
+    '<br>'+
+
+    'Role: '+
+    escapeHTML(profile.role||"")+
+    '<br>'+
+
+    'UID: '+
+    escapeHTML(currentUser.uid)+
+
+    '</div>';
+
+};
+
+
+/* ================= LOGOUT ================= */
+
+window.logoutUser=async function(){
+
+  try{
+
+    await signOut(auth);
+
+    currentUser=null;
+
+    currentProfile=null;
+
+    document.getElementById("loginMsg").innerHTML=
+      '<div class="success">✅ Firebase Logout हो गया।</div>';
+
+    showCurrentUser();
+
+  }catch(error){
+
+    document.getElementById("loginMsg").innerHTML=
+      '<div class="error">'+
+      escapeHTML(error.message)+
+      '</div>';
+
+  }
+
+};
+
+
+/* ================= PREPARE SELL ================= */
+
+window.prepareSellPage=function(){
+
+  if(!currentUser){
+    return;
+  }
+
+
+  if(!currentProfile){
+    return;
+  }
+
+
+  if(currentProfile.role!=="farmer"){
+
+    return;
+
+  }
+
+
+  document.getElementById(
+    "farmerName"
+  ).value=
+    currentProfile.name||"";
+
+
+  document.getElementById(
+    "farmerMobile"
+  ).value=
+    currentProfile.mobile||
+    currentUser.phoneNumber||
+    "";
+
+
+  document.getElementById(
+    "farmerUPI"
+  ).value=
+    currentProfile.upi||"";
+
+
+  document.getElementById(
+    "farmerBank"
+  ).value=
+    currentProfile.bank||"";
+
+
+  document.getElementById(
+    "farmerIFSC"
+  ).value=
+    currentProfile.ifsc||"";
+
+};
+
+
+/* ================= SELL ================= */
+
+window.submitSellRequest=async function(){
+
+  if(!currentUser){
+
+    alert(
+      "🔒 पहले Firebase Mobile OTP Login करें।"
+    );
+
+    showPage("login");
+
+    return;
+
+  }
+
+
+  if(!currentProfile ||
+     curr
