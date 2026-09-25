@@ -451,7 +451,7 @@ window.sendOTP=async function(){
     if(error&&error.code==="auth/too-many-requests")msg="बहुत बार OTP माँगा गया है। कुछ समय बाद फिर कोशिश करें।";
     else if(error&&error.code==="auth/operation-not-allowed")msg="Firebase Console में Phone Authentication चालू नहीं है।";
     else if(error&&error.code==="auth/unauthorized-domain")msg="यह GitHub Pages domain Firebase Authorized Domains में नहीं जोड़ा गया है।";
-    else if(error&&error.code==="auth/invalid-app-credential")msg="reCAPTCHA/Authorized Domain की Firebase setting में समस्या है।";
+    else if(error&&error.code==="auth/invalid-app-credential")msg="reCAPTCHA/Authorized ;
     else if(error&&error.code==="auth/billing-not-enabled")msg="Firebase Phone SMS के लिए Cloud Billing account जोड़ना जरूरी है।";
     message("loginMsg","❌ OTP नहीं भेजा गया: "+msg,"error");
     try{if(recaptchaVerifier)recaptchaVerifier.clear();}catch(e){}
@@ -466,8 +466,7 @@ window.resendOTP=async function(){
   try{
     const p=getPhoneAndProfile();
     if(!firebaseReady || !auth) return message("loginMsg","❌ Firebase तैयार नहीं है।","error");
-    if(recaptchaVerifier){try{recaptchaVerifier.clear();}catch(e){} recaptchaVerifier=null;}
-    message("loginMsg","⏳ नया OTP भेजा जा रहा है...","success");
+  
     const verifier=await setupRecaptcha();
     confirmationResult=await auth.signInWithPhoneNumber("+91"+p.phone,verifier);
     message("loginMsg","✅ नया OTP भेज दिया गया है।","success");
