@@ -1,0 +1,300 @@
+<!doctype html>
+<html lang="hi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>किसान अनाज बाज़ार</title>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:Arial,"Noto Sans Devanagari",sans-serif;background:#f3f7f3;color:#222}
+header{background:#16833a;color:#fff;padding:15px;text-align:center;position:sticky;top:0;z-index:20}
+header h1{margin:0;font-size:23px}header p{margin:4px 0 0;font-size:12px}
+nav{display:flex;gap:6px;overflow:auto;background:#fff;padding:8px;position:sticky;top:69px;z-index:19;box-shadow:0 2px 8px #0002}
+nav button{white-space:nowrap;border:0;border-radius:8px;padding:9px 11px;background:#e7f4ea;color:#126c30;font-weight:bold;cursor:pointer}
+.wrap{max-width:950px;margin:auto;padding:14px}.page{display:none}.page.on{display:block}
+.card{background:#fff;padding:16px;border-radius:14px;margin-bottom:14px;box-shadow:0 2px 10px #0001}
+h2{color:#16833a;margin-top:0}input,select,textarea{width:100%;padding:11px;margin:5px 0 11px;border:1px solid #ccc;border-radius:8px;font-size:15px}
+textarea{min-height:85px}button.main{width:100%;border:0;border-radius:9px;padding:12px;background:#16833a;color:#fff;font-weight:bold;font-size:15px;margin:4px 0;cursor:pointer}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}.msg{padding:10px;border-radius:8px;margin:8px 0;background:#eef7ef}.err{background:#ffe5e5;color:#900}.ok{background:#e1f5e5;color:#176b2e}
+.hide{display:none!important}.item{border:1px solid #ddd;border-radius:12px;padding:12px;margin:10px 0;background:#fff}.item img{width:100%;max-height:250px;object-fit:cover;border-radius:8px}
+.price{font-size:20px;font-weight:bold;color:#16833a}.small{font-size:12px;color:#666}.pill{display:inline-block;padding:4px 8px;border-radius:20px;background:#e8f5eb;color:#176b2e;font-size:12px;margin:2px}
+.danger{background:#c62828!important}.orange{background:#ed8b00!important}.blue{background:#1769aa!important}
+.top{display:flex;justify-content:space-between;gap:8px;align-items:center}.top button{width:auto;padding:8px 12px}
+#captcha{min-height:78px;margin:8px 0}@media(max-width:600px){.row{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header><h1>🌾 किसान अनाज बाज़ार</h1><p>किसान बेचें • खरीदार खरीदें • ऑर्डर की सूचना</p></header>
+
+<nav id="nav">
+<button data-page="home">होम</button>
+<button data-page="sell">अनाज बेचें</button>
+<button data-page="buy">अनाज खरीदें</button>
+<button data-page="orders">मेरे ऑर्डर</button>
+<button data-page="profile">प्रोफाइल</button>
+<button data-page="login" id="loginNav">लॉगिन</button>
+<button data-page="admin">Admin</button>
+<button id="logoutNav" class="hide">लॉगआउट</button>
+</nav>
+
+<main class="wrap">
+<section id="home" class="page on">
+<div class="card"><h2>🌾 स्वागत है</h2>
+<p>किसान अपना अनाज बिक्री के लिए भेजें। Admin की मंजूरी के बाद खरीदार Approved अनाज देख और बुक कर सकते हैं।</p>
+<button class="main" data-page="buy">🌾 अनाज देखें</button>
+<button class="main blue" data-page="sell">📤 अपना अनाज बेचें</button>
+</div>
+<div id="homeUser" class="msg">लॉगिन करके खरीद या बिक्री शुरू करें।</div>
+</section>
+
+<section id="login" class="page"><div class="card">
+<h2>🔐 लॉगिन / रजिस्ट्रेशन</h2><div id="authMsg" class="msg">Firebase तैयार हो रहा है...</div>
+<div class="row"><div><label>नाम</label><input id="name" placeholder="पूरा नाम"></div>
+<div><label>भूमिका</label><select id="role"><option value="farmer">किसान / विक्रेता</option><option value="buyer">खरीदार</option></select></div></div>
+<label>ईमेल</label><input id="email" type="email" placeholder="name@example.com">
+<label>पासवर्ड</label><input id="pass" type="password" placeholder="कम से कम 6 अक्षर">
+<button class="main" id="emailLogin">ईमेल से लॉगिन</button><button class="main blue" id="emailSignup">नया अकाउंट बनाएं</button>
+<hr><label>फोन नंबर से OTP</label><input id="phone" inputmode="numeric" maxlength="10" placeholder="10 अंकों का मोबाइल नंबर">
+<div id="captcha"></div><button class="main orange" id="sendOtp">📱 OTP भेजें</button>
+<div class="row"><input id="otp" inputmode="numeric" maxlength="6" placeholder="OTP"><button class="main" id="verifyOtp">OTP सत्यापित</button></div>
+</div></section>
+
+<section id="sell" class="page"><div class="card"><h2>📤 अनाज बेचें</h2><div id="sellMsg" class="msg">पहले लॉगिन करें।</div>
+<div id="sellForm" class="hide">
+<label>अनाज</label><input id="grain" placeholder="गेहूं, धान, मक्का आदि">
+<div class="row"><div><label>मात्रा</label><input id="qty" type="number" min="1"></div><div><label>इकाई</label><select id="unit"><option>क्विंटल</option><option>किलो</option><option>टन</option><option>बैग</option></select></div></div>
+<div class="row"><div><label>रेट ₹</label><input id="rate" type="number" min="0"></div><div><label>UPI ID</label><input id="upi" placeholder="name@upi"></div></div>
+<label>स्थान</label><input id="location" placeholder="गांव / मंडी / जिला"><label>विवरण</label><textarea id="desc"></textarea>
+<label>फोटो</label><input id="photo" type="file" accept="image/*" capture="environment"><img id="preview" class="hide" style="max-width:100%;max-height:200px;border-radius:8px">
+<button class="main" id="listGrainBtn">✅ बिक्री के लिए अपलोड करें</button>
+</div></div></section>
+
+<section id="buy" class="page"><div class="card"><div class="top"><h2>🛒 Approved अनाज</h2><button id="refreshListings">↻ Refresh</button></div>
+<div id="buyLock" class="msg"></div><input id="search" placeholder="अनाज/स्थान खोजें"><div id="listings"><div class="msg">लॉगिन करें।</div></div>
+</div></section>
+
+<section id="orders" class="page"><div class="card"><h2>📦 मेरे ऑर्डर</h2><div id="ordersList"><div class="msg">लॉगिन करें।</div></div></div></section>
+<section id="profile" class="page"><div class="card"><h2>👤 प्रोफाइल</h2><div id="profileBox" class="msg">लॉगिन करें।</div></div></section>
+
+<section id="admin" class="page"><div class="card"><h2>🛡️ Admin Panel</h2>
+<input id="adminPass" type="password" placeholder="Admin password"><button class="main" id="adminLoginBtn">Admin खोलें</button><div id="adminBox"></div>
+</div></section>
+</main>
+
+<script src="https://www.gstatic.com/firebasejs/11.0.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/11.0.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/11.0.2/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/11.0.2/firebase-storage-compat.js"></script>
+
+<script>
+'use strict';
+const firebaseConfig={
+apiKey:"AIzaSyDxjigog6ctxY25UFGrH7M3pYx1IN2RWSw",
+authDomain:"kissan-bajar.firebaseapp.com",
+databaseURL:"https://kissan-bajar-default-rtdb.firebaseio.com",
+projectId:"kissan-bajar",
+storageBucket:"kissan-bajar.firebasestorage.app",
+messagingSenderId:"629043004551",
+appId:"1:629043004551:web:f484c026c838399cff6422",
+measurementId:"G-TE6ZLGS1KF"
+};
+let auth=null,db=null,storage=null,user=null,confirmation=null,recaptcha=null,listings=[],adminUnlocked=false;
+const $=id=>document.getElementById(id);
+
+function msg(id,text,err=false){const e=$(id);if(!e)return;e.textContent=text;e.className='msg '+(err?'err':'ok');}
+function firebaseError(e){
+const c=e&&e.code||'';
+const m={
+'auth/invalid-credential':'ईमेल/पासवर्ड गलत है।','auth/wrong-password':'पासवर्ड गलत है।','auth/user-not-found':'अकाउंट नहीं मिला।',
+'auth/email-already-in-use':'यह ईमेल पहले से उपयोग में है।','auth/weak-password':'पासवर्ड कम से कम 6 अक्षर का रखें।',
+'auth/invalid-email':'ईमेल गलत है।','auth/invalid-phone-number':'मोबाइल नंबर गलत है।',
+'auth/too-many-requests':'बहुत प्रयास हो गए। थोड़ी देर बाद प्रयास करें।','auth/quota-exceeded':'OTP/SMS quota पूरी हो गई है।',
+'auth/operation-not-allowed':'Firebase में यह login method चालू नहीं है।','auth/unauthorized-domain':'यह वेबसाइट Authorized Domains में नहीं है।',
+'auth/captcha-check-failed':'reCAPTCHA verification असफल हुई।',
+'auth/api-key-not-valid-please-pass-a-valid-api-key':'Firebase API key मान्य नहीं है।',
+'permission-denied':'Firestore Rules ने अनुमति नहीं दी।','storage/unauthorized':'Storage Rules ने फोटो upload रोक दिया।'
+};return m[c]||e.message||'अज्ञात Firebase error';
+}
+
+/* Navigation is independent from Firebase. इसलिए Firebase में error हो तब भी pages खुलेंगे. */
+function page(id){
+document.querySelectorAll('.page').forEach(p=>p.classList.remove('on'));
+const protectedPages=['sell','buy','orders','profile'];
+if(protectedPages.includes(id)&&!user){$('login').classList.add('on');msg('authMsg','🔒 पहले लॉगिन करें।',true);window.scrollTo(0,0);return;}
+$(id)?$(id).classList.add('on'):$('home').classList.add('on');
+window.scrollTo(0,0);
+if(id==='sell')syncSell();
+if(id==='buy')loadListings();
+if(id==='orders')loadOrders();
+if(id==='profile')loadProfile();
+}
+document.querySelectorAll('[data-page]').forEach(b=>b.addEventListener('click',()=>page(b.dataset.page)));
+$('logoutNav').addEventListener('click',logout);
+$('emailLogin').addEventListener('click',()=>emailAuth('login'));
+$('emailSignup').addEventListener('click',()=>emailAuth('signup'));
+$('sendOtp').addEventListener('click',sendOTP);
+$('verifyOtp').addEventListener('click',verifyOTP);
+$('listGrainBtn').addEventListener('click',listGrain);
+$('refreshListings').addEventListener('click',loadListings);
+$('search').addEventListener('input',renderListings);
+$('adminLoginBtn').addEventListener('click',adminLogin);
+
+function firebaseStart(){
+try{
+if(!window.firebase)throw new Error('Firebase library लोड नहीं हुई।');
+if(!firebase.apps.length)firebase.initializeApp(firebaseConfig);
+auth=firebase.auth();db=firebase.firestore();storage=firebase.storage();auth.languageCode='hi';
+auth.onAuthStateChanged(async u=>{user=u||null;updateUI();if(user){try{await ensureUser();}catch(e){console.error(e);}}});
+msg('authMsg','🟢 Firebase तैयार है।');
+}catch(e){console.error(e);msg('authMsg','❌ Firebase शुरू नहीं हुआ: '+firebaseError(e),true);}
+}
+async function ensureUser(){
+if(!user||!db)return;const ref=db.collection('users').doc(user.uid),s=await ref.get();
+await ref.set({uid:user.uid,name:$('name').value.trim()||user.displayName||'',email:user.email||'',phone:user.phoneNumber||'',role:$('role').value,updatedAt:firebase.firestore.FieldValue.serverTimestamp()},{merge:true});
+}
+async function emailAuth(mode){
+try{
+if(!auth)throw new Error('Firebase अभी तैयार नहीं है।');
+const email=$('email').value.trim(),pass=$('pass').value;if(!email||pass.length<6)throw new Error('ईमेल और 6 अक्षर का पासवर्ड भरें।');
+if(mode==='signup'){const c=await auth.createUserWithEmailAndPassword(email,pass);if($('name').value.trim())await c.user.updateProfile({displayName:$('name').value.trim()});await ensureUser();}
+else await auth.signInWithEmailAndPassword(email,pass);
+page('home');msg('authMsg','✅ लॉगिन सफल।');
+}catch(e){msg('authMsg','❌ '+firebaseError(e),true);}
+}
+async function makeCaptcha(){
+if(!auth)throw new Error('Firebase अभी तैयार नहीं है।');
+
+if(recaptcha){
+  try{
+    await recaptcha.render();
+    return recaptcha;
+  }catch(e){
+    try{recaptcha.clear();}catch(x){}
+    recaptcha=null;
+  }
+}
+
+$('captcha').innerHTML='';
+recaptcha=new firebase.auth.RecaptchaVerifier('captcha',{
+  size:'normal',
+  callback:function(){
+    msg('authMsg','✅ सुरक्षा जाँच पूरी। अब OTP भेजें।');
+  },
+  'expired-callback':function(){
+    try{recaptcha.clear();}catch(x){}
+    recaptcha=null;
+    msg('authMsg','⚠️ reCAPTCHA समाप्त हो गया। फिर से OTP भेजें।',true);
+  },
+  'error-callback':function(){
+    try{recaptcha.clear();}catch(x){}
+    recaptcha=null;
+    msg('authMsg','❌ reCAPTCHA में समस्या हुई। फिर से प्रयास करें।',true);
+  }
+});
+
+await recaptcha.render();
+return recaptcha;
+}
+
+async function sendOTP(){
+try{
+  if(!auth)throw new Error('Firebase अभी तैयार नहीं है।');
+
+  const p=$('phone').value.replace(/\D/g,'');
+  if(p.length!==10)throw new Error('10 अंकों का मोबाइल नंबर डालें।');
+
+  $('sendOtp').disabled=true;
+  msg('authMsg','⏳ reCAPTCHA/OTP तैयार हो रहा है...');
+
+  const verifier=await makeCaptcha();
+  confirmation=await auth.signInWithPhoneNumber('+91'+p,verifier);
+
+  msg('authMsg','📩 OTP भेज दिया गया। मोबाइल में आया 6 अंकों का OTP डालें।');
+}catch(e){
+  try{if(recaptcha)recaptcha.clear();}catch(x){}
+  recaptcha=null;
+  confirmation=null;
+  msg('authMsg','❌ OTP नहीं भेजा गया: '+firebaseError(e),true);
+}finally{
+  $('sendOtp').disabled=false;
+}
+}
+
+async function verifyOTP(){
+try{
+  if(!confirmation)throw new Error('पहले OTP भेजें।');
+
+  const code=$('otp').value.trim();
+  if(!/^\d{6}$/.test(code))throw new Error('6 अंकों का OTP डालें।');
+
+  const result=await confirmation.confirm(code);
+  user=result.user;
+
+  await ensureUser();
+
+  msg('authMsg','✅ OTP से लॉगिन सफल।');
+  page('home');
+}catch(e){
+  msg('authMsg','❌ OTP सत्यापन असफल: '+firebaseError(e),true);
+}
+}
+async function logout(){try{if(auth)await auth.signOut();}catch(e){}user=null;page('home');updateUI();}
+function updateUI(){
+const on=!!user;$('loginNav').classList.toggle('hide',on);$('logoutNav').classList.toggle('hide',!on);
+$('homeUser').textContent=on?'🟢 लॉगिन: '+(user.displayName||user.email||user.phoneNumber||'यूज़र'):'लॉगिन करके खरीद या बिक्री शुरू करें।';syncSell();
+}
+function syncSell(){const on=!!user;$('sellForm').classList.toggle('hide',!on);$('sellMsg').textContent=on?'आप लॉगिन हैं। अनाज की जानकारी भरें।':'पहले लॉगिन करें।';}
+$('photo').addEventListener('change',e=>{const f=e.target.files[0];if(f){$('preview').src=URL.createObjectURL(f);$('preview').classList.remove('hide');}});
+
+async function listGrain(){
+try{
+if(!user){page('login');return;}if(!db)throw new Error('Firestore तैयार नहीं है।');
+const grain=$('grain').value.trim(),qty=Number($('qty').value),rate=Number($('rate').value);if(!grain||qty<=0||rate<0)throw new Error('अनाज, मात्रा और रेट सही भरें।');
+let photoURL='';const f=$('photo').files[0];
+if(f){if(f.size>5*1024*1024)throw new Error('फोटो 5MB से छोटी रखें।');const safe=f.name.replace(/[^a-zA-Z0-9._-]/g,'_');const ref=storage.ref('grainPhotos/'+user.uid+'/'+Date.now()+'_'+safe);await ref.put(f);photoURL=await ref.getDownloadURL();}
+await db.collection('listings').add({sellerId:user.uid,sellerName:user.displayName||user.email||user.phoneNumber||'किसान',grain,qty,unit:$('unit').value,rate,upi:$('upi').value.trim(),location:$('location').value.trim(),description:$('desc').value.trim(),photoURL,status:'pending',createdAt:firebase.firestore.FieldValue.serverTimestamp()});
+msg('sellMsg','✅ बिक्री request भेज दी गई। Admin की मंजूरी के बाद खरीदार को दिखाई देगी।');
+}catch(e){msg('sellMsg','❌ '+firebaseError(e),true);}
+}
+async function loadListings(){
+if(!user){$('listings').innerHTML='<div class="msg err">🔒 पहले लॉगिन करें।</div>';return;}
+if(!db)return;$('listings').innerHTML='<div class="msg">⏳ Approved अनाज लोड हो रहा है...</div>';
+try{const s=await db.collection('listings').where('status','==','approved').get();listings=[];s.forEach(d=>listings.push({id:d.id,...d.data()}));renderListings();}
+catch(e){$('listings').innerHTML='<div class="msg err">❌ '+firebaseError(e)+'</div>';}}
+function esc(v){return String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));}
+function renderListings(){
+const q=$('search').value.trim().toLowerCase();const a=listings.filter(x=>(x.grain||'').toLowerCase().includes(q)||(x.location||'').toLowerCase().includes(q));
+if(!a.length){$('listings').innerHTML='<div class="msg">अभी कोई Approved अनाज उपलब्ध नहीं है।</div>';return;}
+$('listings').innerHTML=a.map(x=>`<div class="item">${x.photoURL?`<img src="${esc(x.photoURL)}">`:''}<span class="pill">Approved</span><h3>${esc(x.grain)}</h3><div>मात्रा: ${esc(x.qty)} ${esc(x.unit)}</div><div class="price">₹${esc(x.rate)}</div><div>📍 ${esc(x.location)}</div><div class="small">${esc(x.description)}</div><button class="main blue bookBtn" data-id="${esc(x.id)}">📦 बुक करें</button></div>`).join('');
+document.querySelectorAll('.bookBtn').forEach(b=>b.addEventListener('click',()=>bookListing(b.dataset.id)));
+}
+async function bookListing(id){
+try{if(!user){page('login');return;}const x=listings.find(v=>v.id===id);if(!x)throw new Error('अनाज नहीं मिला।');
+await db.collection('orders').add({listingId:id,buyerId:user.uid,buyerName:user.displayName||user.email||user.phoneNumber||'खरीदार',sellerId:x.sellerId,sellerName:x.sellerName||'किसान',grain:x.grain,qty:x.qty,unit:x.unit,rate:x.rate,status:'Booked',createdAt:firebase.firestore.FieldValue.serverTimestamp()});
+await db.collection('notifications').add({userId:x.sellerId,title:'नई Booking',message:'आपके अनाज की नई booking हुई है।',read:false,createdAt:firebase.firestore.FieldValue.serverTimestamp()});
+alert('✅ Booking हो गई। किसान को सूचना भेज दी गई है।');}
+catch(e){alert('❌ '+firebaseError(e));}}
+async function loadOrders(){
+if(!user){$('ordersList').innerHTML='<div class="msg">🔒 लॉगिन करें।</div>';return;}if(!db)return;
+try{const a=await db.collection('orders').where('buyerId','==',user.uid).get(),b=await db.collection('orders').where('sellerId','==',user.uid).get(),m={};a.forEach(d=>m[d.id]={id:d.id,...d.data()});b.forEach(d=>m[d.id]={id:d.id,...d.data()});const ar=Object.values(m);
+$('ordersList').innerHTML=ar.length?ar.map(o=>`<div class="item"><span class="pill">${esc(o.status||'Booked')}</span><h3>${esc(o.grain)}</h3>मात्रा: ${esc(o.qty)} ${esc(o.unit)}<br>रेट: ₹${esc(o.rate)}<br>किसान: ${esc(o.sellerName)}</div>`).join(''):'<div class="msg">अभी कोई ऑर्डर नहीं है।</div>';
+}catch(e){$('ordersList').innerHTML='<div class="msg err">❌ '+firebaseError(e)+'</div>';}}
+async function loadProfile(){
+if(!user){$('profileBox').innerHTML='🔒 लॉगिन करें।';return;}let d={};try{const s=await db.collection('users').doc(user.uid).get();if(s.exists)d=s.data();}catch(e){}
+$('profileBox').innerHTML=`<div class="item"><b>नाम:</b> ${esc(d.name||user.displayName||'')}<br><b>ईमेल:</b> ${esc(user.email||'')}<br><b>मोबाइल:</b> ${esc(user.phoneNumber||d.phone||'')}<br><b>भूमिका:</b> ${esc(d.role||'')}</div>`;
+}
+async function adminLogin(){
+if($('adminPass').value!=='910990'){msg('adminBox','❌ Admin password गलत है।',true);return;}
+adminUnlocked=true;msg('adminBox','🟢 Admin खुल गया।');loadAdmin();
+}
+async function loadAdmin(){
+if(!adminUnlocked||!db)return;const box=$('adminBox');box.innerHTML='<div class="msg">लोड हो रहा है...</div>';
+try{const s=await db.collection('listings').get();let a=[];s.forEach(d=>a.push({id:d.id,...d.data()}));
+box.innerHTML=a.length?a.map(x=>`<div class="item"><span class="pill">${esc(x.status||'pending')}</span><h3>${esc(x.grain)}</h3>किसान: ${esc(x.sellerName)}<br>मात्रा: ${esc(x.qty)} ${esc(x.unit)}<br>रेट: ₹${esc(x.rate)}<br>स्थान: ${esc(x.location)}<div class="row"><button class="main approve" data-id="${x.id}">✅ Approve</button><button class="main danger reject" data-id="${x.id}">❌ Reject</button></div></div>`).join(''):'<div class="msg">कोई request नहीं है।';
+document.querySelectorAll('.approve').forEach(b=>b.onclick=()=>setStatus(b.dataset.id,'approved'));document.querySelectorAll('.reject').forEach(b=>b.onclick=()=>setStatus(b.dataset.id,'rejected'));
+}catch(e){box.innerHTML='<div class="msg err">❌ '+firebaseError(e)+'</div>';}}
+async function setStatus(id,status){try{await db.collection('listings').doc(id).update({status});loadAdmin();}catch(e){alert('❌ '+firebaseError(e));}}
+
+firebaseStart();
+</script>
+</body>
+</html>
