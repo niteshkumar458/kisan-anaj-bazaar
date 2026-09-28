@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+y <!DOCTYPE html>
 <html lang="hi">
 <head>
 <meta charset="UTF-8">
@@ -1848,5 +1848,696 @@ return;
 }
 
 
-const product =
-productsCache
+const product = .find(
+  p => p.id === id
+);
+
+
+if(!product){
+
+alert("यह अनाज उपलब्ध नहीं है।");
+return;
+
+}
+
+
+try{
+
+await db
+.collection("bookings")
+.add({
+
+listingId:id,
+
+buyerId:
+currentUser.uid,
+
+buyerName:
+currentProfile?.name || "",
+
+buyerPhone:
+currentProfile?.mobile || "",
+
+buyerEmail:
+currentUser.email || "",
+
+farmerId:
+product.farmerId,
+
+farmerName:
+product.farmerName || "",
+
+farmerPhone:
+product.farmerPhone || "",
+
+grain:
+product.grain || "",
+
+quantity:
+product.quantity || 0,
+
+unit:
+product.unit || "",
+
+price:
+product.price || 0,
+
+location:
+product.location || "",
+
+status:
+"requested",
+
+createdAt:
+firebase.firestore.FieldValue.serverTimestamp()
+
+});
+
+
+alert(
+"✅ Booking सफल हो गई।"
+);
+
+showPage("orders");
+
+}
+
+catch(error){
+
+console.error(error);
+
+alert(
+firebaseError(error)
+);
+
+}
+
+}
+
+
+/* ================= ORDERS ================= */
+
+async function loadOrders(){
+
+const box =
+$("ordersList");
+
+
+if(!currentUser){
+
+box.innerHTML =
+"Login करें।";
+
+return;
+
+}
+
+
+try{
+
+const snap =
+await db
+.collection("bookings")
+.where(
+"buyerId",
+"==",
+currentUser.uid
+)
+.get();
+
+
+if(snap.empty){
+
+box.innerHTML =
+"अभी कोई Booking नहीं है।";
+
+return;
+
+}
+
+
+let html = "";
+
+
+snap.forEach(function(doc){
+
+const b =
+doc.data();
+
+
+html += `
+
+<div class="card">
+
+<h3>
+🌾 ${escapeHtml(b.grain || "")}
+</h3>
+
+<p>
+मात्रा:
+${escapeHtml(String(b.quantity || ""))}
+${escapeHtml(b.unit || "")}
+</p>
+
+<p>
+कीमत:
+₹${escapeHtml(String(b.price || 0))}
+</p>
+
+<p>
+स्थान:
+${escapeHtml(b.location || "")}
+</p>
+
+<p>
+किसान:
+${escapeHtml(b.farmerName || "")}
+</p>
+
+<p>
+किसान मोबाइल:
+${escapeHtml(b.farmerPhone || "")}
+</p>
+
+<p>
+Status:
+<span class="badge">
+${escapeHtml(b.status || "requested")}
+</span>
+</p>
+
+</div>
+
+`;
+
+});
+
+
+box.innerHTML =
+html;
+
+}
+
+catch(error){
+
+console.error(error);
+
+box.innerHTML =
+'<div class="msg error">'+
+escapeHtml(firebaseError(error))+
+'</div>';
+
+}
+
+}
+
+
+/* ================= ADMIN LOGIN ================= */
+
+async function adminLogin(){
+
+const password =
+$("adminPassword").value;
+
+
+if(password !== "910990"){
+
+setMessage(
+"adminMsg",
+"❌ गलत Admin Password।",
+"error"
+);
+
+return;
+
+}
+
+
+$("adminPanel")
+.classList.remove("hidden");
+
+
+setMessage(
+"adminMsg",
+"✅ Admin Panel खुल गया।",
+"success"
+);
+
+
+await loadAdminData();
+
+}
+
+
+/* ================= ADMIN DATA ================= */
+
+async function loadAdminData(){
+
+await loadAdminListings();
+
+await loadAdminBookings();
+
+await loadAdminUsers();
+
+}
+
+
+/* ================= ADMIN LISTINGS ================= */
+
+async function loadAdminListings(){
+
+const box =
+$("adminListings");
+
+
+try{
+
+const snap =
+await db
+.collection("listings")
+.get();
+
+
+if(snap.empty){
+
+box.innerHTML =
+"कोई Listing नहीं है।";
+
+return;
+
+}
+
+
+let html = "";
+
+
+snap.forEach(function(doc){
+
+const p =
+doc.data();
+
+
+html += `
+
+<div class="card">
+
+${
+p.photoURL
+?
+'<img class="product-img" src="'+
+escapeHtml(p.photoURL)+
+'">'
+:
+""
+}
+
+<h3>
+🌾 ${escapeHtml(p.grain || "")}
+</h3>
+
+<p>
+किसान:
+${escapeHtml(p.farmerName || "")}
+</p>
+
+<p>
+मोबाइल:
+${escapeHtml(p.farmerPhone || "")}
+</p>
+
+<p>
+Email:
+${escapeHtml(p.farmerEmail || "")}
+</p>
+
+<p>
+मात्रा:
+${escapeHtml(String(p.quantity || ""))}
+${escapeHtml(p.unit || "")}
+</p>
+
+<p>
+कीमत:
+₹${escapeHtml(String(p.price || 0))}
+</p>
+
+<p>
+स्थान:
+${escapeHtml(p.location || "")}
+</p>
+
+<p>
+UPI:
+${escapeHtml(p.upi || "")}
+</p>
+
+<p>
+Status:
+<span class="badge">
+${escapeHtml(p.status || "pending")}
+</span>
+</p>
+
+<button
+type="button"
+class="btn primary"
+onclick="changeListingStatus('${doc.id}','approved')">
+
+✅ Approve
+
+</button>
+
+<button
+type="button"
+class="btn danger"
+onclick="changeListingStatus('${doc.id}','rejected')">
+
+❌ Reject
+
+</button>
+
+</div>
+
+`;
+
+});
+
+
+box.innerHTML =
+html;
+
+}
+
+catch(error){
+
+console.error(error);
+
+box.innerHTML =
+'<div class="msg error">'+
+escapeHtml(firebaseError(error))+
+'</div>';
+
+}
+
+}
+
+
+/* ================= CHANGE LISTING STATUS ================= */
+
+async function changeListingStatus(id,status){
+
+try{
+
+await db
+.collection("listings")
+.doc(id)
+.update({
+
+status:status
+
+});
+
+
+await loadAdminListings();
+
+alert(
+status === "approved"
+?
+"✅ Listing Approved"
+:
+"❌ Listing Rejected"
+);
+
+}
+
+catch(error){
+
+console.error(error);
+
+alert(
+firebaseError(error)
+);
+
+}
+
+}
+
+
+/* ================= ADMIN BOOKINGS ================= */
+
+async function loadAdminBookings(){
+
+const box =
+$("adminBookings");
+
+
+try{
+
+const snap =
+await db
+.collection("bookings")
+.get();
+
+
+if(snap.empty){
+
+box.innerHTML =
+"अभी कोई Booking नहीं है।";
+
+return;
+
+}
+
+
+let html = "";
+
+
+snap.forEach(function(doc){
+
+const b =
+doc.data();
+
+
+html += `
+
+<div class="card">
+
+<h3>
+📦 ${escapeHtml(b.grain || "")}
+</h3>
+
+<p>
+Buyer:
+${escapeHtml(b.buyerName || "")}
+</p>
+
+<p>
+Buyer Mobile:
+${escapeHtml(b.buyerPhone || "")}
+</p>
+
+<p>
+Buyer Email:
+${escapeHtml(b.buyerEmail || "")}
+</p>
+
+<p>
+Farmer:
+${escapeHtml(b.farmerName || "")}
+</p>
+
+<p>
+Farmer Mobile:
+${escapeHtml(b.farmerPhone || "")}
+</p>
+
+<p>
+मात्रा:
+${escapeHtml(String(b.quantity || ""))}
+${escapeHtml(b.unit || "")}
+</p>
+
+<p>
+कीमत:
+₹${escapeHtml(String(b.price || 0))}
+</p>
+
+<p>
+Status:
+<span class="badge">
+${escapeHtml(b.status || "requested")}
+</span>
+</p>
+
+</div>
+
+`;
+
+});
+
+
+box.innerHTML =
+html;
+
+}
+
+catch(error){
+
+console.error(error);
+
+box.innerHTML =
+'<div class="msg error">'+
+escapeHtml(firebaseError(error))+
+'</div>';
+
+}
+
+}
+
+
+/* ================= ADMIN USERS ================= */
+
+async function loadAdminUsers(){
+
+const box =
+$("adminUsers");
+
+
+try{
+
+const snap =
+await db
+.collection("users")
+.get();
+
+
+if(snap.empty){
+
+box.innerHTML =
+"अभी कोई User नहीं है।";
+
+return;
+
+}
+
+
+let html = "";
+
+
+snap.forEach(function(doc){
+
+const u =
+doc.data();
+
+
+html += `
+
+<div class="card">
+
+<h3>
+👤 ${escapeHtml(u.name || "")}
+</h3>
+
+<p>
+Role:
+${escapeHtml(u.role || "")}
+</p>
+
+<p>
+Mobile:
+${escapeHtml(u.mobile || "")}
+</p>
+
+<p>
+Email:
+${escapeHtml(u.email || "")}
+</p>
+
+<p>
+UPI:
+${escapeHtml(u.upi || "")}
+</p>
+
+</div>
+
+`;
+
+});
+
+
+box.innerHTML =
+html;
+
+}
+
+catch(error){
+
+console.error(error);
+
+box.innerHTML =
+'<div class="msg error">'+
+escapeHtml(firebaseError(error))+
+'</div>';
+
+}
+
+}
+
+
+/* ================= FIREBASE ERROR ================= */
+
+function firebaseError(error){
+
+const code =
+error?.code || "";
+
+
+const messages = {
+
+"auth/email-already-in-use":
+"यह Email पहले से Registered है।",
+
+"auth/invalid-email":
+"Email सही नहीं है।",
+
+"auth/weak-password":
+"Password कम से कम 6 अक्षर का रखें।",
+
+"auth/invalid-credential":
+"Email या Password गलत है।",
+
+"auth/user-not-found":
+"यह Email Registered नहीं है।",
+
+"auth/wrong-password":
+"Password गलत है।",
+
+"auth/network-request-failed":
+"Internet connection check करें।",
+
+"permission-denied":
+"Firebase Firestore Rules अनुमति नहीं दे रहे हैं।",
+
+"storage/unauthorized":
+"Firebase Storage Rules upload की अनुमति नहीं दे रहे हैं।"
+
+};
+
+
+return messages[code] ||
+error?.message ||
+"कुछ समस्या हुई।";
+
+}
+
+
+/* ================= FINISH ================= */
+
+console.log(
+"🌾 किसान अनाज बाज़ार successfully loaded"
+);
+
+</script>
+
+</body>
+</html>
