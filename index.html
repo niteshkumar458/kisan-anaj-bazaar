@@ -1,0 +1,1986 @@
+<!doctype html>
+<html lang="hi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>किसान अनाज बाज़ार</title>
+
+<style>
+*{box-sizing:border-box}
+body{
+ margin:0;
+ font-family:Arial,"Noto Sans Devanagari",sans-serif;
+ background:#f3f7f3;
+ color:#222
+}
+header{
+ background:#16833a;
+ color:#fff;
+ padding:15px;
+ text-align:center;
+ position:sticky;
+ top:0;
+ z-index:20
+}
+header h1{margin:0;font-size:23px}
+header p{margin:4px 0 0;font-size:12px}
+
+nav{
+ display:flex;
+ gap:6px;
+ overflow:auto;
+ background:#fff;
+ padding:8px;
+ position:sticky;
+ top:69px;
+ z-index:19;
+ box-shadow:0 2px 8px #0002
+}
+nav button{
+ white-space:nowrap;
+ border:0;
+ border-radius:8px;
+ padding:9px 11px;
+ background:#e7f4ea;
+ color:#126c30;
+ font-weight:bold;
+ cursor:pointer
+}
+
+.wrap{
+ max-width:950px;
+ margin:auto;
+ padding:14px
+}
+
+.page{display:none}
+.page.on{display:block}
+
+.card{
+ background:#fff;
+ padding:16px;
+ border-radius:14px;
+ margin-bottom:14px;
+ box-shadow:0 2px 10px #0001
+}
+
+h2{
+ color:#16833a;
+ margin-top:0
+}
+
+input,select,textarea{
+ width:100%;
+ padding:11px;
+ margin:5px 0 11px;
+ border:1px solid #ccc;
+ border-radius:8px;
+ font-size:15px
+}
+
+textarea{min-height:85px}
+
+button.main{
+ width:100%;
+ border:0;
+ border-radius:9px;
+ padding:12px;
+ background:#16833a;
+ color:#fff;
+ font-weight:bold;
+ font-size:15px;
+ margin:4px 0;
+ cursor:pointer
+}
+
+button:disabled{
+ opacity:.6;
+ cursor:not-allowed
+}
+
+.row{
+ display:grid;
+ grid-template-columns:1fr 1fr;
+ gap:10px
+}
+
+.msg{
+ padding:10px;
+ border-radius:8px;
+ margin:8px 0;
+ background:#eef7ef
+}
+
+.err{
+ background:#ffe5e5;
+ color:#900
+}
+
+.ok{
+ background:#e1f5e5;
+ color:#176b2e
+}
+
+.hide{
+ display:none!important
+}
+
+.item{
+ border:1px solid #ddd;
+ border-radius:12px;
+ padding:12px;
+ margin:10px 0;
+ background:#fff
+}
+
+.item img{
+ width:100%;
+ max-height:250px;
+ object-fit:cover;
+ border-radius:8px
+}
+
+.price{
+ font-size:20px;
+ font-weight:bold;
+ color:#16833a
+}
+
+.small{
+ font-size:12px;
+ color:#666
+}
+
+.pill{
+ display:inline-block;
+ padding:4px 8px;
+ border-radius:20px;
+ background:#e8f5eb;
+ color:#176b2e;
+ font-size:12px;
+ margin:2px
+}
+
+.danger{
+ background:#c62828!important
+}
+
+.blue{
+ background:#1769aa!important
+}
+
+.orange{
+ background:#ed8b00!important
+}
+
+.top{
+ display:flex;
+ justify-content:space-between;
+ gap:8px;
+ align-items:center
+}
+
+.top button{
+ width:auto;
+ padding:8px 12px
+}
+
+hr{
+ border:0;
+ border-top:1px solid #ddd;
+ margin:18px 0
+}
+
+.adminTitle{
+ margin-top:0;
+ border-bottom:1px solid #ddd;
+ padding-bottom:8px
+}
+
+@media(max-width:600px){
+ .row{
+  grid-template-columns:1fr
+ }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+<h1>🌾 किसान अनाज बाज़ार</h1>
+<p>किसान बेचें • खरीदार खरीदें • Admin की मंजूरी के बाद बिक्री</p>
+</header>
+
+<nav id="nav">
+
+<button data-page="home">
+होम
+</button>
+
+<button data-page="sell">
+अनाज बेचें
+</button>
+
+<button data-page="buy">
+अनाज खरीदें
+</button>
+
+<button data-page="orders">
+मेरे ऑर्डर
+</button>
+
+<button data-page="profile">
+प्रोफाइल
+</button>
+
+<button data-page="login" id="loginNav">
+लॉगिन
+</button>
+
+<button data-page="admin">
+Admin
+</button>
+
+<button id="logoutNav" class="hide">
+लॉगआउट
+</button>
+
+</nav>
+
+
+<main class="wrap">
+
+
+<!-- ================= HOME ================= -->
+
+<section id="home" class="page on">
+
+<div class="card">
+
+<h2>🌾 स्वागत है</h2>
+
+<p>
+किसान अपना अनाज बिक्री के लिए भेजें।
+Admin की मंजूरी के बाद ही Approved अनाज खरीदार को दिखाई देगा।
+</p>
+
+<button class="main" data-page="buy">
+🌾 Approved अनाज देखें
+</button>
+
+<button class="main blue" data-page="sell">
+📤 अपना अनाज बेचें
+</button>
+
+</div>
+
+
+<div id="homeUser" class="msg">
+लॉगिन करके खरीद या बिक्री शुरू करें।
+</div>
+
+
+<div class="card">
+
+<h2>📞 सहायता</h2>
+
+<p>
+किसी समस्या के लिए सहायता हेतु संपर्क करें:
+</p>
+
+<p style="font-size:22px;font-weight:bold;color:#16833a">
+7042894282
+</p>
+
+<a href="tel:7042894282">
+<button class="main blue">
+📞 हेल्पलाइन पर कॉल करें
+</button>
+</a>
+
+<div class="small">
+यह नंबर केवल सहायता के लिए है।
+Login या OTP के लिए नहीं।
+</div>
+
+</div>
+
+</section>
+
+
+<!-- ================= LOGIN ================= -->
+
+<section id="login" class="page">
+
+<div class="card">
+
+<h2>🔐 Email Login / Registration</h2>
+
+<div id="authMsg" class="msg">
+Firebase तैयार हो रहा है...
+</div>
+
+
+<div class="row">
+
+<div>
+
+<label>नाम</label>
+
+<input
+id="name"
+placeholder="पूरा नाम">
+
+</div>
+
+
+<div>
+
+<label>भूमिका</label>
+
+<select id="role">
+
+<option value="farmer">
+किसान / विक्रेता
+</option>
+
+<option value="buyer">
+खरीदार
+</option>
+
+</select>
+
+</div>
+
+</div>
+
+
+<label>
+ईमेल
+</label>
+
+<input
+id="email"
+type="email"
+placeholder="name@example.com">
+
+
+<label>
+पासवर्ड
+</label>
+
+<input
+id="pass"
+type="password"
+placeholder="कम से कम 6 अक्षर">
+
+
+<label>
+संपर्क मोबाइल नंबर
+</label>
+
+<input
+id="contactPhone"
+inputmode="numeric"
+maxlength="10"
+placeholder="10 अंकों का मोबाइल नंबर">
+
+
+<div class="small">
+
+मोबाइल नंबर केवल संपर्क के लिए है।<br>
+OTP या मोबाइल verification नहीं होगा।<br>
+यह नंबर Firebase में सेव होगा और Admin इसे देख सकता है।
+
+</div>
+
+
+<button
+class="main"
+id="emailLogin">
+
+🔐 ईमेल से लॉगिन
+
+</button>
+
+
+<button
+class="main blue"
+id="emailSignup">
+
+📝 नया अकाउंट बनाएं
+
+</button>
+
+</div>
+
+</section>
+
+
+<!-- ================= SELL ================= -->
+
+<section id="sell" class="page">
+
+<div class="card">
+
+<h2>
+📤 अनाज बेचें
+</h2>
+
+<div id="sellMsg" class="msg">
+पहले लॉगिन करें।
+</div>
+
+
+<div id="sellForm" class="hide">
+
+<label>
+अनाज
+</label>
+
+<input
+id="grain"
+placeholder="गेहूं, धान, मक्का आदि">
+
+
+<div class="row">
+
+<div>
+
+<label>
+मात्रा
+</label>
+
+<input
+id="qty"
+type="number"
+min="1">
+
+</div>
+
+
+<div>
+
+<label>
+इकाई
+</label>
+
+<select id="unit">
+
+<option>
+क्विंटल
+</option>
+
+<option>
+किलो
+</option>
+
+<option>
+टन
+</option>
+
+<option>
+बैग
+</option>
+
+</select>
+
+</div>
+
+</div>
+
+
+<div class="row">
+
+<div>
+
+<label>
+रेट ₹
+</label>
+
+<input
+id="rate"
+type="number"
+min="0">
+
+</div>
+
+
+<div>
+
+<label>
+UPI ID
+</label>
+
+<input
+id="upi"
+placeholder="name@upi">
+
+</div>
+
+</div>
+
+
+<label>
+स्थान
+</label>
+
+<input
+id="location"
+placeholder="गांव / मंडी / जिला">
+
+
+<label>
+विवरण
+</label>
+
+<textarea
+id="desc"
+placeholder="अनाज की गुणवत्ता या अन्य जानकारी">
+</textarea>
+
+
+<label>
+अनाज की फोटो
+</label>
+
+<input
+id="photo"
+type="file"
+accept="image/*"
+capture="environment">
+
+
+<img
+id="preview"
+class="hide"
+style="max-width:100%;max-height:200px;border-radius:8px">
+
+
+<button
+class="main"
+id="listGrainBtn">
+
+✅ बिक्री के लिए अपलोड करें
+
+</button>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- ================= BUY ================= -->
+
+<section id="buy" class="page">
+
+<div class="card">
+
+<div class="top">
+
+<h2>
+🛒 Approved अनाज
+</h2>
+
+<button id="refreshListings">
+↻ Refresh
+</button>
+
+</div>
+
+
+<div id="buyLock" class="msg"></div>
+
+
+<input
+id="search"
+placeholder="अनाज / स्थान खोजें">
+
+
+<div id="listings">
+
+<div class="msg">
+लॉगिन करें।
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- ================= ORDERS ================= -->
+
+<section id="orders" class="page">
+
+<div class="card">
+
+<h2>
+📦 मेरे ऑर्डर
+</h2>
+
+<div id="ordersList">
+
+<div class="msg">
+लॉगिन करें।
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- ================= PROFILE ================= -->
+
+<section id="profile" class="page">
+
+<div class="card">
+
+<h2>
+👤 प्रोफाइल
+</h2>
+
+<div id="profileBox" class="msg">
+लॉगिन करें।
+</div>
+
+</div>
+
+</section>
+
+
+<!-- ================= ADMIN ================= -->
+
+<section id="admin" class="page">
+
+<div class="card">
+
+<h2>
+🛡️ Admin Panel
+</h2>
+
+<p>
+Admin password डालकर सभी users,
+किसान listings और orders की history देख सकते हैं।
+</p>
+
+
+<input
+id="adminPass"
+type="password"
+placeholder="Admin password">
+
+
+<button
+class="main"
+id="adminLoginBtn">
+
+🔓 Admin खोलें
+
+</button>
+
+
+<div id="adminBox"></div>
+
+</div>
+
+</section>
+
+
+</main>
+
+
+<!-- ================= FIREBASE ================= -->
+
+<script src="https://www.gstatic.com/firebasejs/11.0.2/firebase-app-compat.js"></script>
+
+<script src="https://www.gstatic.com/firebasejs/11.0.2/firebase-auth-compat.js"></script>
+
+<script src="https://www.gstatic.com/firebasejs/11.0.2/firebase-firestore-compat.js"></script>
+
+<script src="https://www.gstatic.com/firebasejs/11.0.2/firebase-storage-compat.js"></script>
+
+
+<script>
+
+'use strict';
+
+
+/* ================= FIREBASE CONFIG ================= */
+
+const firebaseConfig = {
+
+apiKey:
+"AIzaSyDxjigog6ctxY25UFGrH7M3pYx1IN2RWSw",
+
+authDomain:
+"kissan-bajar.firebaseapp.com",
+
+databaseURL:
+"https://kissan-bajar-default-rtdb.firebaseio.com",
+
+projectId:
+"kissan-bajar",
+
+storageBucket:
+"kissan-bajar.firebasestorage.app",
+
+messagingSenderId:
+"629043004551",
+
+appId:
+"1:629043004551:web:f484c026c838399cff6422",
+
+measurementId:
+"G-TE6ZLGS1KF"
+
+};
+
+
+/* ================= VARIABLES ================= */
+
+let auth = null;
+let db = null;
+let storage = null;
+let user = null;
+let listings = [];
+let adminUnlocked = false;
+
+
+/* SHORT ID FUNCTION */
+
+const $ = id =>
+document.getElementById(id);
+
+
+/* ================= MESSAGE ================= */
+
+function msg(id,text,err=false){
+
+const e = $(id);
+
+if(!e) return;
+
+e.textContent = text;
+
+e.className =
+'msg ' + (err ? 'err' : 'ok');
+
+}
+
+
+/* ================= FIREBASE ERROR ================= */
+
+function firebaseError(e){
+
+const c =
+e && e.code ? e.code : '';
+
+const m = {
+
+'auth/invalid-credential':
+'ईमेल/पासवर्ड गलत है।',
+
+'auth/wrong-password':
+'पासवर्ड गलत है।',
+
+'auth/user-not-found':
+'अकाउंट नहीं मिला।',
+
+'auth/email-already-in-use':
+'यह ईमेल पहले से उपयोग में है।',
+
+'auth/weak-password':
+'पासवर्ड कम से कम 6 अक्षर का रखें।',
+
+'auth/invalid-email':
+'ईमेल गलत है।',
+
+'auth/too-many-requests':
+'बहुत प्रयास हो गए। थोड़ी देर बाद प्रयास करें।',
+
+'auth/operation-not-allowed':
+'Firebase में Email/Password login चालू नहीं है।',
+
+'auth/network-request-failed':
+'Internet connection की समस्या है।',
+
+'permission-denied':
+'Firestore Rules ने अनुमति नहीं दी।',
+
+'storage/unauthorized':
+'Storage Rules ने फोटो upload रोक दिया।',
+
+'storage/unknown':
+'Storage में समस्या हुई।',
+
+'storage/quota-exceeded':
+'Storage quota की समस्या है।'
+
+};
+
+return m[c] ||
+(e && e.message) ||
+'अज्ञात Firebase error';
+
+}
+
+
+/* ================= NAVIGATION ================= */
+
+function page(id){
+
+document
+.querySelectorAll('.page')
+.forEach(p =>
+p.classList.remove('on')
+);
+
+
+/* जिन pages के लिए login जरूरी है */
+
+const protectedPages = [
+'sell',
+'buy',
+'orders',
+'profile'
+];
+
+
+if(
+protectedPages.includes(id) &&
+!user
+){
+
+$('login').classList.add('on');
+
+msg(
+'authMsg',
+'🔒 पहले लॉगिन करें।',
+true
+);
+
+window.scrollTo(0,0);
+
+return;
+
+}
+
+
+if($(id)){
+
+$(id).classList.add('on');
+
+}else{
+
+$('home').classList.add('on');
+
+}
+
+
+window.scrollTo(0,0);
+
+
+if(id === 'sell'){
+syncSell();
+}
+
+
+if(id === 'buy'){
+loadListings();
+}
+
+
+if(id === 'orders'){
+loadOrders();
+}
+
+
+if(id === 'profile'){
+loadProfile();
+}
+
+}
+
+
+/* ================= NAV BUTTONS ================= */
+
+document
+.querySelectorAll('[data-page]')
+.forEach(button => {
+
+button.addEventListener(
+'click',
+function(){
+
+page(
+this.getAttribute('data-page')
+);
+
+}
+);
+
+});
+
+
+/* ================= BUTTON EVENTS ================= */
+
+$('logoutNav')
+.addEventListener(
+'click',
+logout
+);
+
+
+$('emailLogin')
+.addEventListener(
+'click',
+function(){
+emailAuth('login');
+}
+);
+
+
+$('emailSignup')
+.addEventListener(
+'click',
+function(){
+emailAuth('signup');
+}
+);
+
+
+$('listGrainBtn')
+.addEventListener(
+'click',
+listGrain
+);
+
+
+$('refreshListings')
+.addEventListener(
+'click',
+loadListings
+);
+
+
+$('search')
+.addEventListener(
+'input',
+renderListings
+);
+
+
+$('adminLoginBtn')
+.addEventListener(
+'click',
+adminLogin
+);
+
+
+/* ================= FIREBASE START ================= */
+
+function firebaseStart(){
+
+try{
+
+if(!window.firebase){
+
+throw new Error(
+'Firebase library लोड नहीं हुई।'
+);
+
+}
+
+
+if(!firebase.apps.length){
+
+firebase.initializeApp(
+firebaseConfig
+);
+
+}
+
+
+auth = firebase.auth();
+
+db = firebase.firestore();
+
+storage = firebase.storage();
+
+auth.languageCode = 'hi';
+
+
+auth.onAuthStateChanged(
+async function(u){
+
+user = u || null;
+
+updateUI();
+
+
+if(user){
+
+try{
+
+await ensureUser();
+
+}catch(e){
+
+console.error(
+'User save error:',
+e
+);
+
+}
+
+}
+
+}
+);
+
+
+msg(
+'authMsg',
+'🟢 Firebase तैयार है।'
+);
+
+
+}catch(e){
+
+console.error(
+'Firebase start error:',
+e
+);
+
+msg(
+'authMsg',
+'❌ Firebase शुरू नहीं हुआ: '+
+firebaseError(e),
+true
+);
+
+}
+
+}
+
+
+/* ================= SAVE USER ================= */
+
+async function ensureUser(){
+
+if(!user || !db){
+return;
+}
+
+
+const ref =
+db.collection('users')
+.doc(user.uid);
+
+
+const snapshot =
+await ref.get();
+
+
+const old =
+snapshot.exists
+?
+snapshot.data()
+:
+{};
+
+
+/*
+नया contact number हो तो save होगा,
+वरना पुराना number रहेगा।
+*/
+
+const enteredPhone =
+$('contactPhone')
+?
+$('contactPhone')
+.value
+.replace(/\D/g,'')
+:
+'';
+
+
+const phone =
+enteredPhone ||
+old.phone ||
+'';
+
+
+const enteredName =
+$('name')
+?
+$('name')
+.value
+.trim()
+:
+'';
+
+
+const name =
+enteredName ||
+user.displayName ||
+old.name ||
+'';
+
+
+/*
+Existing user की role को बिना वजह
+overwrite नहीं करेंगे।
+*/
+
+let role =
+old.role ||
+'';
+
+
+if(!role){
+
+role =
+$('role')
+?
+$('role').value
+:
+'buyer';
+
+}
+
+
+await ref.set({
+
+uid:user.uid,
+
+name:name,
+
+email:user.email ||
+old.email ||
+'',
+
+phone:phone,
+
+role:role,
+
+updatedAt:
+firebase.firestore.FieldValue.serverTimestamp()
+
+},{
+merge:true
+});
+
+
+if($('contactPhone')){
+
+$('contactPhone').value =
+phone;
+
+}
+
+
+if($('name') && name){
+
+$('name').value =
+name;
+
+}
+
+
+if($('role')){
+
+$('role').value =
+role;
+
+}
+
+}
+
+
+/* ================= EMAIL AUTH ================= */
+
+async function emailAuth(mode){
+
+try{
+
+if(!auth){
+
+throw new Error(
+'Firebase अभी तैयार नहीं है।'
+);
+
+}
+
+
+const email =
+$('email')
+.value
+.trim();
+
+
+const pass =
+$('pass')
+.value;
+
+
+if(
+!email ||
+pass.length < 6
+){
+
+throw new Error(
+'ईमेल और कम से कम 6 अक्षर का पासवर्ड भरें।'
+);
+
+}
+
+
+/* ================= SIGNUP ================= */
+
+if(mode === 'signup'){
+
+const name =
+$('name')
+.value
+.trim();
+
+
+const phone =
+$('contactPhone')
+.value
+.replace(/\D/g,'');
+
+
+const role =
+$('role')
+.value;
+
+
+if(!name){
+
+throw new Error(
+'नाम भरें।'
+);
+
+}
+
+
+if(phone.length !== 10){
+
+throw new Error(
+'संपर्क के लिए 10 अंकों का मोबाइल नंबर डालें।'
+);
+
+}
+
+
+const credential =
+await auth
+.createUserWithEmailAndPassword(
+email,
+pass
+);
+
+
+await credential.user
+.updateProfile({
+
+displayName:name
+
+});
+
+
+/*
+Signup के समय role और phone
+स्पष्ट रूप से save करें।
+*/
+
+await db
+.collection('users')
+.doc(credential.user.uid)
+.set({
+
+uid:credential.user.uid,
+
+name:name,
+
+email:email,
+
+phone:phone,
+
+role:role,
+
+createdAt:
+firebase.firestore.FieldValue.serverTimestamp(),
+
+updatedAt:
+firebase.firestore.FieldValue.serverTimestamp()
+
+},{
+merge:true
+});
+
+
+msg(
+'authMsg',
+'✅ अकाउंट बन गया और लॉगिन सफल है।'
+);
+
+
+page('home');
+
+
+return;
+
+}
+
+
+/* ================= LOGIN ================= */
+
+await auth
+.signInWithEmailAndPassword(
+email,
+pass
+);
+
+
+const currentUser =
+auth.currentUser;
+
+
+if(currentUser){
+
+/*
+Login के समय पुराना role/phone
+Firestore से रहेगा।
+*/
+
+const ref =
+db.collection('users')
+.doc(currentUser.uid);
+
+
+const snapshot =
+await ref.get();
+
+
+if(snapshot.exists){
+
+const old =
+snapshot.data();
+
+
+if($('name')){
+
+$('name').value =
+old.name ||
+currentUser.displayName ||
+'';
+
+}
+
+
+if($('contactPhone')){
+
+$('contactPhone').value =
+old.phone ||
+'';
+
+}
+
+
+if($('role')){
+
+$('role').value =
+old.role ||
+'buyer';
+
+}
+
+}
+
+}
+
+
+msg(
+'authMsg',
+'✅ ईमेल से लॉगिन सफल।'
+);
+
+
+page('home');
+
+
+}catch(e){
+
+console.error(e);
+
+msg(
+'authMsg',
+'❌ '+firebaseError(e),
+true
+);
+
+}
+
+}
+
+
+/* ================= LOGOUT ================= */
+
+async function logout(){
+
+try{
+
+if(auth){
+
+await auth.signOut();
+
+}
+
+}catch(e){
+
+console.error(e);
+
+}
+
+
+user = null;
+
+adminUnlocked = false;
+
+page('home');
+
+updateUI();
+
+}
+
+
+/* ================= UPDATE UI ================= */
+
+function updateUI(){
+
+const on =
+!!user;
+
+
+$('loginNav')
+.classList
+.toggle(
+'hide',
+on
+);
+
+
+$('logoutNav')
+.classList
+.toggle(
+'hide',
+!on
+);
+
+
+$('homeUser')
+.textContent =
+
+on
+
+?
+
+'🟢 लॉगिन: '+
+(
+user.displayName ||
+user.email ||
+'यूज़र'
+)
+
+:
+
+'लॉगिन करके खरीद या बिक्री शुरू करें।';
+
+
+syncSell();
+
+}
+
+
+/* ================= SELL UI ================= */
+
+function syncSell(){
+
+const on =
+!!user;
+
+
+$('sellForm')
+.classList
+.toggle(
+'hide',
+!on
+);
+
+
+$('sellMsg')
+.textContent =
+
+on
+
+?
+
+'आप लॉगिन हैं। अनाज की जानकारी भरें।'
+
+:
+
+'पहले लॉगिन करें।';
+
+}
+
+
+/* ================= PHOTO PREVIEW ================= */
+
+$('photo')
+.addEventListener(
+'change',
+function(e){
+
+const f =
+e.target.files[0];
+
+
+if(f){
+
+$('preview').src =
+URL.createObjectURL(f);
+
+$('preview')
+.classList
+.remove('hide');
+
+}else{
+
+$('preview')
+.classList
+.add('hide');
+
+}
+
+}
+);
+
+
+/* ================= FARMER LISTING ================= */
+
+async function listGrain(){
+
+try{
+
+if(!user){
+
+page('login');
+
+return;
+
+}
+
+
+if(!db){
+
+throw new Error(
+'Firestore तैयार नहीं है।'
+);
+
+}
+
+
+const grain =
+$('grain')
+.value
+.trim();
+
+
+const qty =
+Number(
+$('qty').value
+);
+
+
+const rate =
+Number(
+$('rate').value
+);
+
+
+if(
+!grain ||
+qty <= 0 ||
+rate < 0
+){
+
+throw new Error(
+'अनाज, मात्रा और रेट सही भरें।'
+);
+
+}
+
+
+let photoURL = '';
+
+
+const f =
+$('photo')
+.files[0];
+
+
+if(f){
+
+if(
+f.size >
+5 * 1024 * 1024
+){
+
+throw new Error(
+'फोटो 5MB से छोटी रखें।'
+);
+
+}
+
+
+if(!storage){
+
+throw new Error(
+'Firebase Storage तैयार नहीं है।'
+);
+
+}
+
+
+const safe =
+f.name.replace(
+/[^a-zA-Z0-9._-]/g,
+'_'
+);
+
+
+const ref =
+storage.ref(
+'grainPhotos/' +
+user.uid +
+'/' +
+Date.now() +
+'_' +
+safe
+);
+
+
+await ref.put(f);
+
+
+photoURL =
+await ref.getDownloadURL();
+
+}
+
+
+await db
+.collection('listings')
+.add({
+
+sellerId:
+user.uid,
+
+sellerName:
+user.displayName ||
+user.email ||
+'किसान',
+
+grain:
+grain,
+
+qty:
+qty,
+
+unit:
+$('unit').value,
+
+rate:
+rate,
+
+upi:
+$('upi').value.trim(),
+
+location:
+$('location').value.trim(),
+
+description:
+$('desc').value.trim(),
+
+photoURL:
+photoURL,
+
+status:
+'pending',
+
+createdAt:
+firebase.firestore.FieldValue.serverTimestamp()
+
+});
+
+
+msg(
+'sellMsg',
+'✅ बिक्री request भेज दी गई। Admin की मंजूरी के बाद खरीदार को दिखाई देगी।'
+);
+
+
+/* Form साफ */
+
+$('grain').value = '';
+$('qty').value = '';
+$('rate').value = '';
+$('upi').value = '';
+$('location').value = '';
+$('desc').value = '';
+$('photo').value = '';
+
+$('preview')
+.classList
+.add('hide');
+
+
+}catch(e){
+
+console.error(e);
+
+msg(
+'sellMsg',
+'❌ '+firebaseError(e),
+true
+);
+
+}
+
+}
+
+
+/* ================= BUYER LISTINGS ================= */
+
+async function loadListings(){
+
+if(!user){
+
+$('listings').innerHTML =
+'<div class="msg err">🔒 पहले लॉगिन करें।</div>';
+
+return;
+
+}
+
+
+if(!db){
+
+$('listings').innerHTML =
+'<div class="msg err">❌ Firestore तैयार नहीं है।</div>';
+
+return;
+
+}
+
+
+$('buyLock').textContent =
+'';
+
+
+$('listings').innerHTML =
+'<div class="msg">⏳ Approved अनाज लोड हो रहा है...</div>';
+
+
+try{
+
+const snapshot =
+await db
+.collection('listings')
+.where(
+'status',
+'==',
+'approved'
+)
+.get();
+
+
+listings = [];
+
+
+snapshot.forEach(
+function(d){
+
+listings.push({
+
+id:d.id,
+
+...d.data()
+
+});
+
+}
+);
+
+
+renderListings();
+
+
+}catch(e){
+
+console.error(e);
+
+$('listings').innerHTML =
+'<div class="msg err">❌ '+
+firebaseError(e)+
+'</div>';
+
+}
+
+}
+
+
+/* ================= ESCAPE HTML ================= */
+
+function esc(v){
+
+return String(
+v ?? ''
+)
+.replace(
+/[&<>"']/g,
+function(m){
+
+return {
+
+'&':'&amp;',
+
+'<':'&lt;',
+
+'>':'&gt;',
+
+'"':'&quot;',
+
+"'":'&#039;'
+
+}[m];
+
+}
+);
+
+}
+
+
+/* ================= RENDER LISTINGS ================= */
+
+function renderListings(){
+
+const q =
+$('search')
+.value
+.trim()
+.toLowerCase();
+
+
+const a =
+listings.filter(
+function(x){
+
+return (
+
+(x.grain || '')
+.toLowerCase()
+.includes(q)
+
+||
+
+(x.location || '')
+.toLowerCase()
+.includes(q)
+
+);
+
+}
+);
+
+
+if(!a.length){
+
+$('listings').innerHTML =
+'<div class="msg">अभी कोई Approved अनाज उपलब्ध नहीं है।</div>';
+
+return;
+
+}
+
+
+$('listings').innerHTML =
+
+a.map(function(x){
+
+return `
+
+<div class="item">
+
+${
+x.photoURL
+?
+`<img src="${esc(x.photoURL)}" alt="अनाज की फोटो">`
+:
+''
+}
+
+<span class="pill">
+Approved
+</span>
+
+<h3>
+${esc(x.grain)}
+</h3>
+
+<div>
+मात्रा:
+${esc(x.qty)}
+${esc(x.unit)}
+</div>
+
+<div class="price">
+₹${esc(x.rate)}
+</div>
+
+<div>
+📍 ${esc(x.location)}
+</div>
+
+<div class="small">
+${esc(x.description)}
+</div>
+
+<button
+class="main blue bookBtn"
+data-id="${esc(x.id)}">
+
+📦 बुक करें
+
+</button>
+
+</div>
+
+`;
+
+}).join('');
+
+
+document
+.querySelectorAll('.bookBtn')
+.forEach(function(bu
