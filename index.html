@@ -1,0 +1,1099 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>किसान अनाज बाज़ार</title>
+
+<style>
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:Arial,sans-serif;
+  background:#f4f8f4;
+  color:#222;
+}
+header{
+  background:#138a3d;
+  color:#fff;
+  padding:14px;
+  position:sticky;
+  top:0;
+  z-index:1000;
+  box-shadow:0 2px 8px #0002;
+}
+.headerTop{
+  max-width:1200px;
+  margin:auto;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+}
+.logo{
+  font-size:21px;
+  font-weight:bold;
+}
+nav{
+  max-width:1200px;
+  margin:12px auto 0;
+  display:flex;
+  gap:6px;
+  flex-wrap:wrap;
+}
+button{
+  border:0;
+  border-radius:8px;
+  padding:10px 14px;
+  cursor:pointer;
+  font-weight:bold;
+}
+nav button{
+  background:#fff;
+  color:#138a3d;
+}
+.adminBtn{
+  background:#ffb300;
+  color:#222;
+}
+.logoutBtn{
+  background:#c62828!important;
+  color:#fff!important;
+}
+main{
+  max-width:1200px;
+  margin:auto;
+  padding:18px;
+}
+.page{
+  display:none;
+}
+.page.active{
+  display:block;
+}
+.card{
+  background:#fff;
+  border-radius:14px;
+  padding:18px;
+  margin-bottom:18px;
+  box-shadow:0 2px 10px #0001;
+}
+.hero{
+  background:linear-gradient(135deg,#138a3d,#49a95e);
+  color:white;
+  border-radius:18px;
+  padding:30px 20px;
+  margin-bottom:18px;
+}
+.hero h1{
+  margin-top:0;
+}
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+  gap:16px;
+}
+input,select,textarea{
+  width:100%;
+  padding:12px;
+  margin:7px 0 13px;
+  border:1px solid #ccc;
+  border-radius:8px;
+  font-size:15px;
+}
+textarea{
+  min-height:90px;
+  resize:vertical;
+}
+label{
+  font-weight:bold;
+  display:block;
+}
+.primary{
+  background:#138a3d;
+  color:#fff;
+}
+.secondary{
+  background:#eee;
+}
+.danger{
+  background:#d32f2f;
+  color:#fff;
+}
+.warning{
+  background:#ffb300;
+  color:#222;
+}
+.success{
+  background:#2e7d32;
+  color:#fff;
+}
+.status{
+  padding:5px 9px;
+  border-radius:20px;
+  display:inline-block;
+  font-size:12px;
+  font-weight:bold;
+}
+.pending{
+  background:#fff3cd;
+  color:#856404;
+}
+.approved{
+  background:#d4edda;
+  color:#155724;
+}
+.rejected{
+  background:#f8d7da;
+  color:#721c24;
+}
+.photo{
+  width:100%;
+  height:190px;
+  object-fit:cover;
+  border-radius:10px;
+  background:#eee;
+}
+.price{
+  font-size:20px;
+  color:#138a3d;
+  font-weight:bold;
+}
+.small{
+  font-size:13px;
+  color:#666;
+}
+.msg{
+  padding:10px;
+  border-radius:8px;
+  margin:10px 0;
+  display:none;
+}
+.msg.show{
+  display:block;
+}
+.msg.ok{
+  background:#d4edda;
+  color:#155724;
+}
+.msg.err{
+  background:#f8d7da;
+  color:#721c24;
+}
+.center{
+  text-align:center;
+}
+.hidden{
+  display:none!important;
+}
+.authTabs{
+  display:flex;
+  gap:5px;
+  margin-bottom:15px;
+}
+.authTabs button{
+  flex:1;
+}
+.authTabs .active{
+  background:#138a3d;
+  color:#fff;
+}
+.productCard{
+  overflow:hidden;
+}
+.productInfo{
+  padding-top:12px;
+}
+.statGrid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
+  gap:12px;
+}
+.stat{
+  background:#fff;
+  padding:18px;
+  border-radius:12px;
+  box-shadow:0 2px 8px #0001;
+  text-align:center;
+}
+.stat strong{
+  display:block;
+  font-size:27px;
+  color:#138a3d;
+}
+.adminPanel{
+  display:none;
+  position:fixed;
+  inset:0;
+  background:#f4f8f4;
+  z-index:5000;
+  overflow:auto;
+}
+.adminHeader{
+  background:#263238;
+  color:white;
+  padding:15px;
+  position:sticky;
+  top:0;
+  z-index:5;
+}
+.adminHeaderInner{
+  max-width:1200px;
+  margin:auto;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+.adminBody{
+  max-width:1200px;
+  margin:auto;
+  padding:18px;
+}
+.adminTabs{
+  display:flex;
+  flex-wrap:wrap;
+  gap:7px;
+  margin-bottom:15px;
+}
+.adminTab{
+  background:#ddd;
+}
+.adminTab.active{
+  background:#263238;
+  color:#fff;
+}
+.adminSection{
+  display:none;
+}
+.adminSection.active{
+  display:block;
+}
+.tableWrap{
+  overflow:auto;
+}
+table{
+  width:100%;
+  border-collapse:collapse;
+  min-width:700px;
+  background:#fff;
+}
+th,td{
+  padding:10px;
+  border-bottom:1px solid #ddd;
+  text-align:left;
+}
+th{
+  background:#263238;
+  color:#fff;
+}
+footer{
+  background:#123d25;
+  color:#fff;
+  padding:25px;
+  text-align:center;
+  margin-top:30px;
+}
+a.call{
+  color:#fff;
+  text-decoration:none;
+  font-weight:bold;
+}
+.notification{
+  background:#fff8e1;
+  border-left:4px solid #ffb300;
+  padding:12px;
+  margin-bottom:10px;
+  border-radius:8px;
+}
+.preview{
+  max-width:250px;
+  max-height:200px;
+  display:none;
+  border-radius:10px;
+  object-fit:cover;
+}
+@media(max-width:600px){
+  .headerTop{
+    align-items:flex-start;
+    flex-direction:column;
+  }
+  nav button{
+    flex:1 1 45%;
+  }
+  main{
+    padding:10px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <div class="headerTop">
+    <div class="logo">🌾 किसान अनाज बाज़ार</div>
+    <div id="userStatus">Login नहीं है</div>
+  </div>
+
+  <nav>
+    <button onclick="showPage('home')">🏠 Home</button>
+    <button onclick="showPage('sell')">🌾 अनाज बेचें</button>
+    <button onclick="showPage('buy')">🛒 अनाज खरीदें</button>
+    <button onclick="showPage('orders')">📦 Orders</button>
+    <button onclick="showPage('notifications')">🔔 Notification</button>
+    <button onclick="showPage('profile')">👤 Profile</button>
+    <button onclick="showPage('login')" id="loginNav">🔐 Login</button>
+    <button onclick="logoutUser()" id="logoutNav" class="logoutBtn hidden">Logout</button>
+    <button onclick="openAdmin()" class="adminBtn">🔐 Admin</button>
+  </nav>
+</header>
+
+<main>
+
+<!-- HOME -->
+<section id="home" class="page active">
+
+  <div class="hero">
+    <h1>🌾 किसान अनाज बाज़ार</h1>
+    <p>
+      किसानों से सीधे अनाज खरीदें और किसानों को अपना अनाज बेचने का आसान ऑनलाइन माध्यम दें।
+    </p>
+
+    <button class="warning" onclick="showPage('sell')">
+      🌾 अपना अनाज बेचें
+    </button>
+
+    <button class="secondary" onclick="showPage('buy')">
+      🛒 अनाज खरीदें
+    </button>
+  </div>
+
+  <div class="grid">
+    <div class="card">
+      <h3>👨‍🌾 किसानों के लिए</h3>
+      <p>अपना अनाज, मात्रा, कीमत और फोटो डालकर बिक्री के लिए भेजें।</p>
+    </div>
+
+    <div class="card">
+      <h3>🛒 खरीदारों के लिए</h3>
+      <p>Admin द्वारा Approved किए गए अनाज देखें और Booking करें।</p>
+    </div>
+
+    <div class="card">
+      <h3>🔐 Approval System</h3>
+      <p>किसान की Listing पहले Pending रहेगी। Admin की मंजूरी के बाद ही दिखाई जाएगी।</p>
+    </div>
+  </div>
+
+  <div class="card center">
+    <h2>📞 सहायता</h2>
+    <p>Helpline: <b>7042894282</b></p>
+    <a class="call" href="tel:7042894282">
+      <button class="primary">📞 Call करें</button>
+    </a>
+    <a href="https://wa.me/917042894282" target="_blank">
+      <button class="success">💬 WhatsApp</button>
+    </a>
+  </div>
+
+</section>
+
+
+<!-- LOGIN -->
+<section id="login" class="page">
+
+  <div class="card">
+
+    <div class="authTabs">
+      <button id="loginTab" class="active" onclick="switchAuth('login')">
+        Login
+      </button>
+
+      <button id="registerTab" onclick="switchAuth('register')">
+        Registration
+      </button>
+    </div>
+
+    <div id="authMsg" class="msg"></div>
+
+    <!-- LOGIN -->
+    <div id="loginBox">
+
+      <label>Email</label>
+      <input id="loginEmail" type="email" placeholder="आपका Email">
+
+      <label>Password</label>
+      <input id="loginPassword" type="password" placeholder="Password">
+
+      <button class="primary" onclick="loginUser()">
+        🔐 Login
+      </button>
+
+    </div>
+
+
+    <!-- REGISTER -->
+    <div id="registerBox" class="hidden">
+
+      <label>नाम</label>
+      <input id="regName" placeholder="पूरा नाम">
+
+      <label>Mobile Number</label>
+      <input id="regMobile" type="tel" maxlength="10" placeholder="10 digit mobile number">
+
+      <label>Email</label>
+      <input id="regEmail" type="email" placeholder="Email">
+
+      <label>Password</label>
+      <input id="regPassword" type="password" placeholder="कम से कम 6 अक्षर">
+
+      <label>आप कौन हैं?</label>
+      <select id="regRole">
+        <option value="farmer">👨‍🌾 किसान</option>
+        <option value="buyer">🛒 खरीदार</option>
+      </select>
+
+      <label>UPI ID (किसान के लिए)</label>
+      <input id="regUpi" placeholder="example@upi">
+
+      <button class="primary" onclick="registerUser()">
+        📝 Registration करें
+      </button>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- SELL -->
+<section id="sell" class="page">
+
+  <div class="card">
+
+    <h2>🌾 अपना अनाज बेचें</h2>
+
+    <div id="sellLoginMsg" class="msg show err">
+      अनाज बेचने के लिए पहले Login करें।
+    </div>
+
+    <div id="sellFormBox" class="hidden">
+
+      <div id="sellMsg" class="msg"></div>
+
+      <label>अनाज का नाम</label>
+      <select id="grain">
+        <option value="">अनाज चुनें</option>
+        <option>गेहूं</option>
+        <option>धान</option>
+        <option>चावल</option>
+        <option>मक्का</option>
+        <option>बाजरा</option>
+        <option>ज्वार</option>
+        <option>चना</option>
+        <option>सरसों</option>
+        <option>मूंग</option>
+        <option>मसूर</option>
+        <option>अरहर</option>
+        <option>सोयाबीन</option>
+        <option>अन्य</option>
+      </select>
+
+      <label>मात्रा</label>
+      <input id="qty" type="number" min="1" placeholder="मात्रा">
+
+      <label>Unit</label>
+      <select id="unit">
+        <option value="क्विंटल">क्विंटल</option>
+        <option value="किलो">किलो</option>
+        <option value="टन">टन</option>
+      </select>
+
+      <label>Rate ₹</label>
+      <input id="rate" type="number" min="1" placeholder="प्रति Unit कीमत">
+
+      <label>UPI ID</label>
+      <input id="listingUpi" placeholder="UPI ID">
+
+      <label>गाँव / शहर</label>
+      <input id="location" placeholder="गाँव, शहर">
+
+      <label>जिला</label>
+      <input id="district" placeholder="जिला">
+
+      <label>Pickup Address</label>
+      <textarea id="pickupAddress" placeholder="जहाँ से अनाज उठाया जा सकता है"></textarea>
+
+      <label>Quality / जानकारी</label>
+      <textarea id="description" placeholder="अनाज की गुणवत्ता आदि"></textarea>
+
+      <label>अनाज की Photo</label>
+      <input id="grainPhoto" type="file" accept="image/*">
+
+      <img id="photoPreview" class="preview">
+
+      <br>
+
+      <button class="primary" onclick="submitListing()">
+        📤 बिक्री के लिए Submit करें
+      </button>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- BUY -->
+<section id="buy" class="page">
+
+  <div class="card">
+    <h2>🛒 Approved अनाज</h2>
+
+    <input id="searchBox"
+           placeholder="🔎 गेहूं, धान, जिला आदि खोजें..."
+           oninput="filterProducts()">
+
+    <button class="secondary" onclick="loadApprovedListings()">
+      🔄 Refresh
+    </button>
+  </div>
+
+  <div id="products" class="grid"></div>
+
+</section>
+
+
+<!-- ORDERS -->
+<section id="orders" class="page">
+
+  <div class="card">
+    <h2>📦 मेरे Orders</h2>
+
+    <div id="ordersMsg" class="msg"></div>
+
+    <div id="ordersList"></div>
+  </div>
+
+</section>
+
+
+<!-- NOTIFICATIONS -->
+<section id="notifications" class="page">
+
+  <div class="card">
+    <h2>🔔 Notifications</h2>
+
+    <div id="notificationsList">
+      Login करने के बाद notifications दिखाई देंगी।
+    </div>
+  </div>
+
+</section>
+
+
+<!-- PROFILE -->
+<section id="profile" class="page">
+
+  <div class="card">
+
+    <h2>👤 मेरा Profile</h2>
+
+    <div id="profileMsg" class="msg"></div>
+
+    <div id="profileData">
+      Login करने के बाद profile दिखाई देगी।
+    </div>
+
+  </div>
+
+</section>
+
+</main>
+
+
+<footer>
+  <h3>🌾 किसान अनाज बाज़ार</h3>
+  <p>किसानों और खरीदारों को जोड़ने वाला ऑनलाइन प्लेटफॉर्म</p>
+  <p>📞 Helpline: <b>7042894282</b></p>
+</footer>
+
+
+<!-- ======================================================
+     ADMIN PANEL
+====================================================== -->
+
+<div id="adminPanel" class="adminPanel">
+
+  <div class="adminHeader">
+
+    <div class="adminHeaderInner">
+
+      <div>
+        <b>🔐 Admin Panel</b>
+      </div>
+
+      <button onclick="closeAdmin()" class="danger">
+        ✕ Close
+      </button>
+
+    </div>
+
+  </div>
+
+
+  <div class="adminBody">
+
+    <div id="adminMsg" class="msg"></div>
+
+    <div class="statGrid">
+
+      <div class="stat">
+        <span>Listings</span>
+        <strong id="statListings">0</strong>
+      </div>
+
+      <div class="stat">
+        <span>Pending</span>
+        <strong id="statPending">0</strong>
+      </div>
+
+      <div class="stat">
+        <span>Orders</span>
+        <strong id="statOrders">0</strong>
+      </div>
+
+      <div class="stat">
+        <span>Users</span>
+        <strong id="statUsers">0</strong>
+      </div>
+
+    </div>
+
+    <br>
+
+    <div class="adminTabs">
+
+      <button class="adminTab active"
+              onclick="adminTab('dashboard',this)">
+        Dashboard
+      </button>
+
+      <button class="adminTab"
+              onclick="adminTab('listings',this)">
+        🌾 Listings
+      </button>
+
+      <button class="adminTab"
+              onclick="adminTab('orders',this)">
+        📦 Orders
+      </button>
+
+      <button class="adminTab"
+              onclick="adminTab('users',this)">
+        👥 Users
+      </button>
+
+    </div>
+
+
+    <!-- ADMIN DASHBOARD -->
+    <section id="adminDashboard" class="adminSection active">
+
+      <div class="card">
+
+        <h2>Admin Dashboard</h2>
+
+        <p>
+          यहाँ से किसान की submitted listings को approve या reject किया जा सकता है।
+        </p>
+
+        <p>
+          Approved listing ही buyer को दिखाई जाएगी।
+        </p>
+
+      </div>
+
+    </section>
+
+
+    <!-- ADMIN LISTINGS -->
+    <section id="adminListings" class="adminSection">
+
+      <div class="card">
+
+        <h2>🌾 सभी Listings</h2>
+
+        <div id="adminListingsBox">
+          Loading...
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- ADMIN ORDERS -->
+    <section id="adminOrders" class="adminSection">
+
+      <div class="card">
+
+        <h2>📦 सभी Orders</h2>
+
+        <div id="adminOrdersBox">
+          Loading...
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- ADMIN USERS -->
+    <section id="adminUsers" class="adminSection">
+
+      <div class="card">
+
+        <h2>👥 Users</h2>
+
+        <div id="adminUsersBox">
+          Loading...
+        </div>
+
+      </div>
+
+    </section>
+
+  </div>
+
+</div>
+
+
+<!-- ======================================================
+     GLOBAL ADMIN OPEN SCRIPT
+     Firebase module fail होने पर भी Admin button काम करेगा।
+====================================================== -->
+
+<script>
+
+window.openAdmin = async function(){
+
+  const panel = document.getElementById("adminPanel");
+
+  if(!panel){
+    alert("Admin panel नहीं मिला।");
+    return;
+  }
+
+  panel.style.display = "block";
+
+  /*
+    Firebase module नीचे load होने के बाद
+    checkAdminAccess function उपलब्ध होगा।
+  */
+
+  setTimeout(function(){
+
+    if(typeof window.checkAdminAccess === "function"){
+      window.checkAdminAccess();
+    }else{
+      showAdminMessage(
+        "Firebase अभी load नहीं हुआ। Internet check करके page refresh करें।",
+        "err"
+      );
+    }
+
+  },300);
+
+};
+
+
+window.closeAdmin = function(){
+
+  document.getElementById("adminPanel").style.display="none";
+
+};
+
+
+window.adminTab = function(name,btn){
+
+  document.querySelectorAll(".adminSection")
+    .forEach(x=>x.classList.remove("active"));
+
+  document.querySelectorAll(".adminTab")
+    .forEach(x=>x.classList.remove("active"));
+
+  const section=document.getElementById("admin"+capitalize(name));
+
+  if(section){
+    section.classList.add("active");
+  }
+
+  if(btn){
+    btn.classList.add("active");
+  }
+
+};
+
+
+function capitalize(x){
+  return x.charAt(0).toUpperCase()+x.slice(1);
+}
+
+
+function showAdminMessage(text,type){
+
+  const box=document.getElementById("adminMsg");
+
+  if(!box)return;
+
+  box.textContent=text;
+  box.className="msg show "+(type||"err");
+
+}
+
+
+</script>
+
+
+<!-- ======================================================
+     FIREBASE
+====================================================== -->
+
+<script type="module">
+
+import { initializeApp }
+from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
+
+import {
+  getAuth,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  onAuthStateChanged,
+  signOut,
+  updateProfile
+}
+from "https://www.gstatic.com/firebasejs/12.19.0/firebase-auth.js";
+
+import {
+  getFirestore,
+  collection,
+  addDoc,
+  getDocs,
+  getDoc,
+  doc,
+  setDoc,
+  updateDoc,
+  deleteDoc,
+  query,
+  where,
+  serverTimestamp
+}
+from "https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js";
+
+import {
+  getStorage,
+  ref,
+  uploadBytes,
+  getDownloadURL
+}
+from "https://www.gstatic.com/firebasejs/12.19.0/firebase-storage.js";
+
+
+/* ======================================================
+   FIREBASE CONFIG
+====================================================== */
+
+const firebaseConfig = {
+
+  apiKey: "AIzaSyDxjigog6ctxY25UFGrH7M3pYx1IN2RWSw",
+
+  authDomain: "kissan-bajar.firebaseapp.com",
+
+  databaseURL:
+    "https://kissan-bajar-default-rtdb.firebaseio.com",
+
+  projectId: "kissan-bajar",
+
+  storageBucket:
+    "kissan-bajar.firebasestorage.app",
+
+  messagingSenderId:
+    "629043004551",
+
+  appId:
+    "1:629043004551:web:f484c026c838399cff6422",
+
+  measurementId:
+    "G-TE6ZLGS1KF"
+
+};
+
+
+const app=initializeApp(firebaseConfig);
+
+const auth=getAuth(app);
+
+const db=getFirestore(app);
+
+const storage=getStorage(app);
+
+
+let currentUser=null;
+
+let currentProfile=null;
+
+let allProducts=[];
+
+
+/* ======================================================
+   HELPERS
+====================================================== */
+
+function msg(id,text,type="ok"){
+
+  const box=document.getElementById(id);
+
+  if(!box)return;
+
+  box.textContent=text;
+
+  box.className="msg show "+type;
+
+}
+
+
+function escapeHTML(value){
+
+  if(value===undefined || value===null){
+    return "";
+  }
+
+  return String(value)
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;")
+    .replace(/'/g,"&#039;");
+}
+
+
+function formatDate(value){
+
+  if(!value)return "अभी";
+
+  try{
+
+    const d=value.toDate
+      ? value.toDate()
+      : new Date(value);
+
+    return d.toLocaleString("hi-IN");
+
+  }catch(e){
+
+    return "अभी";
+
+  }
+
+}
+
+
+/* ======================================================
+   PAGE SYSTEM
+====================================================== */
+
+window.showPage=function(page){
+
+  document.querySelectorAll(".page")
+    .forEach(p=>p.classList.remove("active"));
+
+  const target=document.getElementById(page);
+
+  if(target){
+    target.classList.add("active");
+  }
+
+  if(page==="buy"){
+    loadApprovedListings();
+  }
+
+  if(page==="orders"){
+    loadMyOrders();
+  }
+
+  if(page==="notifications"){
+    loadNotifications();
+  }
+
+  if(page==="profile"){
+    loadProfile();
+  }
+
+  if(page==="sell"){
+    updateSellPage();
+  }
+
+  window.scrollTo({
+    top:0,
+    behavior:"smooth"
+  });
+
+};
+
+
+/* ======================================================
+   AUTH TABS
+====================================================== */
+
+window.switchAuth=function(type){
+
+  const loginBox=document.getElementById("loginBox");
+  const registerBox=document.getElementById("registerBox");
+
+  const loginTab=document.getElementById("loginTab");
+  const registerTab=document.getElementById("registerTab");
+
+  if(type==="login"){
+
+    loginBox.classList.remove("hidden");
+    registerBox.classList.add("hidden");
+
+    loginTab.classList.add("active");
+    registerTab.classList.remove("active");
+
+  }else{
+
+    loginBox.classList.add("hidden");
+    registerBox.classList.remove("hidden");
+
+    loginTab.classList.remove("active");
+    registerTab.classList.add("active");
+
+  }
+
+};
+
+
+/* ======================================================
+   REGISTER
+====================================================== */
+
+window.registerUser=async function(){
+
+  const name=document.getElementById("regName").value.trim();
+
+  const mobile=document.getElementById("regMobile").value.trim();
+
+  const email=document.getElementById("regEmail").value.trim();
+
+  const password=document.getElementById("regPassword").value;
+
+  const role=document.getElementById("regRole").value;
+
+  const upi=document.getElementById("regUpi").value.trim();
+
+
+  if(!nam
