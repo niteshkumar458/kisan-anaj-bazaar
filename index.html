@@ -1,0 +1,1070 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nitesh Industry - Online Store</title>
+
+<style>
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:Arial,sans-serif;
+  background:#f5f6f8;
+  color:#222
+}
+header{
+  background:#0b7a3b;
+  color:white;
+  padding:15px;
+  position:sticky;
+  top:0;
+  z-index:100
+}
+.header{
+  max-width:1200px;
+  margin:auto;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  flex-wrap:wrap
+}
+.logo{
+  font-size:23px;
+  font-weight:bold
+}
+.search{
+  flex:1;
+  min-width:220px;
+  padding:12px;
+  border:0;
+  border-radius:8px;
+  font-size:15px
+}
+button{
+  border:0;
+  border-radius:7px;
+  padding:10px 14px;
+  cursor:pointer;
+  font-weight:bold
+}
+.cart-btn{
+  background:#ffca28;
+  color:#111
+}
+.admin-btn{
+  background:white;
+  color:#0b7a3b
+}
+.container{
+  max-width:1200px;
+  margin:auto;
+  padding:15px
+}
+.hero{
+  background:white;
+  padding:25px;
+  border-radius:12px;
+  margin-bottom:15px;
+  text-align:center
+}
+.hero h1{margin:5px 0}
+.categories{
+  display:flex;
+  gap:8px;
+  overflow-x:auto;
+  padding:5px 0 12px
+}
+.cat{
+  white-space:nowrap;
+  background:white;
+  border:1px solid #ddd
+}
+.cat.active{
+  background:#0b7a3b;
+  color:white
+}
+.section-title{
+  margin:20px 0 12px
+}
+.products{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(210px,1fr));
+  gap:15px
+}
+.product{
+  background:white;
+  border-radius:12px;
+  overflow:hidden;
+  box-shadow:0 2px 8px #00000012
+}
+.product img{
+  width:100%;
+  height:180px;
+  object-fit:cover;
+  background:#eee
+}
+.product-body{padding:12px}
+.brand{
+  color:#777;
+  font-size:13px
+}
+.price{
+  color:#0b7a3b;
+  font-size:20px;
+  font-weight:bold
+}
+.old{
+  text-decoration:line-through;
+  color:#999;
+  margin-left:5px;
+  font-size:13px
+}
+.discount{
+  color:#d32f2f;
+  font-size:13px;
+  font-weight:bold
+}
+.stock{
+  font-size:13px;
+  margin:6px 0
+}
+.product-buttons{
+  display:flex;
+  gap:6px;
+  margin-top:10px
+}
+.buy{
+  background:#ff9800;
+  color:white;
+  flex:1
+}
+.add{
+  background:#0b7a3b;
+  color:white;
+  flex:1
+}
+.card{
+  background:white;
+  border-radius:12px;
+  padding:18px;
+  margin-top:18px;
+  box-shadow:0 2px 8px #00000010
+}
+.rates{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(160px,1fr));
+  gap:10px
+}
+.rate{
+  border:1px solid #ddd;
+  padding:12px;
+  border-radius:8px;
+  background:#fafafa
+}
+.cart-item{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+  padding:10px 0;
+  border-bottom:1px solid #eee
+}
+.qty{
+  display:flex;
+  align-items:center;
+  gap:7px
+}
+.qty button{
+  padding:5px 9px;
+  background:#eee
+}
+.form-grid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:10px
+}
+input,select,textarea{
+  width:100%;
+  padding:11px;
+  border:1px solid #ccc;
+  border-radius:7px;
+  font-size:14px
+}
+textarea{min-height:80px}
+.full{grid-column:1/-1}
+.place{
+  width:100%;
+  background:#0b7a3b;
+  color:white;
+  font-size:17px;
+  margin-top:10px
+}
+footer{
+  background:#222;
+  color:white;
+  text-align:center;
+  padding:20px;
+  margin-top:30px
+}
+
+/* ADMIN */
+#adminPanel{
+  display:none;
+  position:fixed;
+  inset:0;
+  background:#f3f4f6;
+  z-index:999;
+  overflow:auto
+}
+.admin-header{
+  background:#111;
+  color:white;
+  padding:15px;
+  position:sticky;
+  top:0;
+  z-index:10
+}
+.admin-wrap{
+  max-width:1200px;
+  margin:auto;
+  padding:15px
+}
+.admin-grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:10px
+}
+.stat{
+  background:white;
+  padding:18px;
+  border-radius:10px
+}
+.stat b{
+  display:block;
+  font-size:24px;
+  color:#0b7a3b
+}
+.admin-tabs{
+  display:flex;
+  gap:7px;
+  overflow:auto;
+  margin:15px 0
+}
+.admin-tabs button{
+  white-space:nowrap;
+  background:white
+}
+.admin-section{display:none}
+.admin-section.active{display:block}
+.admin-product,
+.order{
+  background:white;
+  padding:15px;
+  border-radius:10px;
+  margin-bottom:10px
+}
+.admin-actions{
+  display:flex;
+  gap:7px;
+  flex-wrap:wrap;
+  margin-top:10px
+}
+.edit{background:#1976d2;color:white}
+.delete{background:#d32f2f;color:white}
+.status{background:#ff9800;color:white}
+.close{background:#d32f2f;color:white}
+.success{
+  background:#dff5e5;
+  color:#08752d;
+  padding:10px;
+  border-radius:7px;
+  margin:10px 0
+}
+.empty{
+  text-align:center;
+  padding:30px;
+  color:#777
+}
+
+@media(max-width:700px){
+  .form-grid{grid-template-columns:1fr}
+  .admin-grid{grid-template-columns:repeat(2,1fr)}
+  .logo{font-size:19px}
+  .search{order:3;flex-basis:100%}
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <div class="header">
+    <div class="logo">🛍️ Nitesh Industry</div>
+
+    <input
+      id="searchInput"
+      class="search"
+      placeholder="🔎 सामान खोजें — जैसे Rice, Shirt, Shoes..."
+      oninput="renderProducts()"
+    >
+
+    <button class="cart-btn" onclick="openCart()">
+      🛒 Cart (<span id="cartCount">0</span>)
+    </button>
+
+    <button class="admin-btn" onclick="openAdminLogin()">
+      🔐 Admin
+    </button>
+  </div>
+</header>
+
+<main class="container">
+
+<section class="hero">
+  <h1>🛍️ Nitesh Industry</h1>
+  <p>एक ही जगह कपड़े, जूते, अनाज, खाद्य सामान, Kitchen और रोज़मर्रा की चीज़ें</p>
+</section>
+
+<h2 class="section-title">📂 Categories</h2>
+
+<div class="categories" id="categories"></div>
+
+<h2 class="section-title">🛒 सभी सामान</h2>
+<div id="products" class="products"></div>
+
+<section class="card">
+  <h2>💰 आज के आवश्यक सामान के Reference Rates</h2>
+  <p>ये reference rates हैं। आपकी दुकान की बिक्री कीमत Admin Panel से अलग रखी जा सकती है।</p>
+  <div id="rates" class="rates"></div>
+</section>
+
+<section class="card" id="cartSection">
+  <h2>🛒 आपका Cart</h2>
+  <div id="cartItems"></div>
+  <h3 id="cartTotal">कुल: ₹0</h3>
+</section>
+
+<section class="card" id="orderSection">
+  <h2>📦 Order भेजें</h2>
+
+  <div class="form-grid">
+
+    <div>
+      <label>नाम</label>
+      <input id="customerName" placeholder="आपका नाम">
+    </div>
+
+    <div>
+      <label>मोबाइल नंबर</label>
+      <input id="customerPhone" maxlength="10" placeholder="10 digit mobile">
+    </div>
+
+    <div class="full">
+      <label>Delivery Address</label>
+      <textarea id="customerAddress"
+      placeholder="गांव / शहर / जिला / पूरा पता"></textarea>
+    </div>
+
+    <div>
+      <label>Payment</label>
+      <select id="payment">
+        <option value="COD">Cash on Delivery</option>
+        <option value="UPI">UPI Payment</option>
+      </select>
+    </div>
+
+  </div>
+
+  <button class="place" onclick="placeOrder()">
+    ✅ Order भेजें
+  </button>
+
+  <div id="orderMessage"></div>
+</section>
+
+</main>
+
+<footer>
+  © 2026 Nitesh Industry | Online Shopping Store
+</footer>
+
+
+<!-- ADMIN PANEL -->
+
+<div id="adminPanel">
+
+  <div class="admin-header">
+    <div class="header">
+      <b>🔐 Nitesh Industry Admin Panel</b>
+      <button class="close" onclick="closeAdmin()">✖ Close</button>
+    </div>
+  </div>
+
+  <div class="admin-wrap">
+
+    <div class="admin-grid">
+      <div class="stat">
+        Products
+        <b id="statProducts">0</b>
+      </div>
+
+      <div class="stat">
+        Orders
+        <b id="statOrders">0</b>
+      </div>
+
+      <div class="stat">
+        Sales
+        <b id="statSales">₹0</b>
+      </div>
+
+      <div class="stat">
+        Pending
+        <b id="statPending">0</b>
+      </div>
+    </div>
+
+    <div class="admin-tabs">
+      <button onclick="showAdminTab('dashboard')">📊 Dashboard</button>
+      <button onclick="showAdminTab('add')">➕ Add Product</button>
+      <button onclick="showAdminTab('productsAdmin')">📦 Products</button>
+      <button onclick="showAdminTab('ordersAdmin')">🛒 Orders</button>
+    </div>
+
+    <section id="dashboard" class="admin-section active">
+      <div class="card">
+        <h2>📊 Dashboard</h2>
+        <p>यहाँ से आपकी दुकान का Product, Order और Sales status देखा जा सकता है।</p>
+      </div>
+    </section>
+
+    <section id="add" class="admin-section">
+
+      <div class="card">
+        <h2 id="productFormTitle">➕ नया Product जोड़ें</h2>
+
+        <input type="hidden" id="editId">
+
+        <div class="form-grid">
+
+          <div>
+            <label>Product Name</label>
+            <input id="pName" placeholder="जैसे Premium T-Shirt">
+          </div>
+
+          <div>
+            <label>Brand</label>
+            <input id="pBrand" placeholder="जैसे Nitesh Brand">
+          </div>
+
+          <div>
+            <label>Category</label>
+            <select id="pCategory"></select>
+          </div>
+
+          <div>
+            <label>Price ₹</label>
+            <input id="pPrice" type="number" placeholder="499">
+          </div>
+
+          <div>
+            <label>Old Price ₹</label>
+            <input id="pOldPrice" type="number" placeholder="699">
+          </div>
+
+          <div>
+            <label>Stock</label>
+            <input id="pStock" type="number" placeholder="100">
+          </div>
+
+          <div class="full">
+            <label>Image URL</label>
+            <input id="pImage"
+            placeholder="https://...">
+          </div>
+
+          <div class="full">
+            <label>Description</label>
+            <textarea id="pDescription"
+            placeholder="Product की जानकारी"></textarea>
+          </div>
+
+        </div>
+
+        <button class="place" onclick="saveProduct()">
+          💾 Product Save करें
+        </button>
+
+        <button
+          id="cancelEdit"
+          style="display:none;margin-top:8px"
+          onclick="resetProductForm()">
+          Cancel Edit
+        </button>
+
+        <div id="productMessage"></div>
+
+      </div>
+
+    </section>
+
+    <section id="productsAdmin" class="admin-section">
+      <div class="card">
+        <h2>📦 Products Manage करें</h2>
+        <div id="adminProductsList"></div>
+      </div>
+    </section>
+
+    <section id="ordersAdmin" class="admin-section">
+      <div class="card">
+        <h2>🛒 Customer Orders</h2>
+        <div id="adminOrdersList"></div>
+      </div>
+    </section>
+
+  </div>
+</div>
+
+
+<script>
+
+/* =========================
+   SETTINGS
+========================= */
+
+const ADMIN_CODE = "845691";
+
+const categories = [
+  "सभी",
+  "🌾 अनाज",
+  "🥣 दाल",
+  "🛢️ तेल/मसाला",
+  "🥔 फल/सब्जी",
+  "👕 पुरुष कपड़े",
+  "👗 महिला कपड़े",
+  "👶 बच्चों के कपड़े",
+  "👟 जूते",
+  "🧥 Winter",
+  "🍫 Food",
+  "🍳 Kitchen",
+  "🧴 घरेलू सामान",
+  "📱 Electronics"
+];
+
+
+/* =========================
+   REFERENCE RATES
+========================= */
+
+const rates = [
+  ["चावल","₹46.54/kg"],
+  ["गेहूं","₹32.06/kg"],
+  ["आटा","₹37.66/kg"],
+  ["चना दाल","₹89.17/kg"],
+  ["अरहर दाल","₹126.10/kg"],
+  ["उड़द दाल","₹123.23/kg"],
+  ["मूंग दाल","₹112.45/kg"],
+  ["मसूर दाल","₹90.55/kg"],
+  ["बाजरा","₹38.55/kg"],
+  ["ज्वार","₹45.20/kg"],
+  ["रागी","₹55.77/kg"],
+  ["सूजी","₹47.59/kg"],
+  ["मैदा","₹42.83/kg"],
+  ["बेसन","₹96.79/kg"],
+  ["सरसों तेल","₹203.30/kg"],
+  ["सोया तेल","₹167.05/kg"],
+  ["सूरजमुखी तेल","₹192.46/kg"],
+  ["आलू","₹22.68/kg"],
+  ["प्याज","₹53.97/kg"],
+  ["टमाटर","₹41.31/kg"],
+  ["चीनी","₹55.62/kg"],
+  ["गुड़","₹66.43/kg"],
+  ["केला","₹49.51/kg"],
+  ["अदरक","₹35.66/kg"],
+  ["लहसुन","₹45.44/kg"]
+];
+
+
+/* =========================
+   DEFAULT PRODUCTS
+========================= */
+
+const defaultProducts = [
+
+{
+ id:1,
+ name:"Premium T-Shirt",
+ brand:"Nitesh Brand",
+ category:"👕 पुरुष कपड़े",
+ price:499,
+ oldPrice:699,
+ stock:50,
+ image:"https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=700&q=80",
+ description:"Premium quality men's T-Shirt"
+},
+
+{
+ id:2,
+ name:"Men's Jeans",
+ brand:"Nitesh Fashion",
+ category:"👕 पुरुष कपड़े",
+ price:899,
+ oldPrice:1299,
+ stock:30,
+ image:"https://images.unsplash.com/photo-1542272604-787c3835535d?auto=format&fit=crop&w=700&q=80",
+ description:"Comfortable jeans"
+},
+
+{
+ id:3,
+ name:"Ladies Kurti",
+ brand:"Nitesh Fashion",
+ category:"👗 महिला कपड़े",
+ price:699,
+ oldPrice:999,
+ stock:40,
+ image:"https://images.unsplash.com/photo-1583391733956-6c78276477e2?auto=format&fit=crop&w=700&q=80",
+ description:"Beautiful ladies kurti"
+},
+
+{
+ id:4,
+ name:"Women's Saree",
+ brand:"Nitesh Fashion",
+ category:"👗 महिला कपड़े",
+ price:999,
+ oldPrice:1499,
+ stock:20,
+ image:"https://images.unsplash.com/photo-1610030469983-98e550d6193c?auto=format&fit=crop&w=700&q=80",
+ description:"Traditional saree"
+},
+
+{
+ id:5,
+ name:"Kids Dress",
+ brand:"Kids World",
+ category:"👶 बच्चों के कपड़े",
+ price:599,
+ oldPrice:799,
+ stock:25,
+ image:"https://images.unsplash.com/photo-1519238263530-99bdd11df2ea?auto=format&fit=crop&w=700&q=80",
+ description:"Comfortable kids dress"
+},
+
+{
+ id:6,
+ name:"Sports Shoes",
+ brand:"Nitesh Sports",
+ category:"👟 जूते",
+ price:899,
+ oldPrice:1299,
+ stock:35,
+ image:"https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=700&q=80",
+ description:"Lightweight sports shoes"
+},
+
+{
+ id:7,
+ name:"Ladies Sandals",
+ brand:"Fashion Footwear",
+ category:"👟 जूते",
+ price:599,
+ oldPrice:799,
+ stock:40,
+ image:"https://images.unsplash.com/photo-1543163521-1bf539c55dd2?auto=format&fit=crop&w=700&q=80",
+ description:"Stylish sandals"
+},
+
+{
+ id:8,
+ name:"Premium Blanket",
+ brand:"Nitesh Home",
+ category:"🧥 Winter",
+ price:799,
+ oldPrice:1199,
+ stock:25,
+ image:"https://images.unsplash.com/photo-1584100936595-c0654b55a2e2?auto=format&fit=crop&w=700&q=80",
+ description:"Warm winter blanket"
+},
+
+{
+ id:9,
+ name:"Potato Chips",
+ brand:"Demo Food",
+ category:"🍫 Food",
+ price:50,
+ oldPrice:60,
+ stock:100,
+ image:"https://images.unsplash.com/photo-1566478989037-eec170784d0b?auto=format&fit=crop&w=700&q=80",
+ description:"Packaged potato chips"
+},
+
+{
+ id:10,
+ name:"Chocolate Pack",
+ brand:"Demo Food",
+ category:"🍫 Food",
+ price:99,
+ oldPrice:120,
+ stock:100,
+ image:"https://images.unsplash.com/photo-1549007994-cb92caebd54b?auto=format&fit=crop&w=700&q=80",
+ description:"Chocolate pack"
+},
+
+{
+ id:11,
+ name:"चावल",
+ brand:"Nitesh Agro",
+ category:"🌾 अनाज",
+ price:47,
+ oldPrice:50,
+ stock:500,
+ image:"https://images.unsplash.com/photo-1586201375761-83865001e31c?auto=format&fit=crop&w=700&q=80",
+ description:"Rice - reference based starting price"
+},
+
+{
+ id:12,
+ name:"गेहूं",
+ brand:"Nitesh Agro",
+ category:"🌾 अनाज",
+ price:33,
+ oldPrice:36,
+ stock:500,
+ image:"https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=700&q=80",
+ description:"Wheat"
+},
+
+{
+ id:13,
+ name:"आटा",
+ brand:"Nitesh Agro",
+ category:"🌾 अनाज",
+ price:38,
+ oldPrice:42,
+ stock:500,
+ image:"https://images.unsplash.com/photo-1627485937980-221c88ac04f9?auto=format&fit=crop&w=700&q=80",
+ description:"Wheat flour"
+},
+
+{
+ id:14,
+ name:"चना दाल",
+ brand:"Nitesh Agro",
+ category:"🥣 दाल",
+ price:90,
+ oldPrice:100,
+ stock:300,
+ image:"https://images.unsplash.com/photo-1585996406172-7b3f4b7b1f8b?auto=format&fit=crop&w=700&q=80",
+ description:"Chana Dal"
+},
+
+{
+ id:15,
+ name:"अरहर दाल",
+ brand:"Nitesh Agro",
+ category:"🥣 दाल",
+ price:126,
+ oldPrice:140,
+ stock:300,
+ image:"https://images.unsplash.com/photo-1612257999754-3b7f5f0f6e6a?auto=format&fit=crop&w=700&q=80",
+ description:"Tur Dal"
+},
+
+{
+ id:16,
+ name:"सरसों तेल",
+ brand:"Nitesh Agro",
+ category:"🛢️ तेल/मसाला",
+ price:203,
+ oldPrice:220,
+ stock:200,
+ image:"https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?auto=format&fit=crop&w=700&q=80",
+ description:"Mustard oil"
+},
+
+{
+ id:17,
+ name:"आलू",
+ brand:"Nitesh Fresh",
+ category:"🥔 फल/सब्जी",
+ price:23,
+ oldPrice:28,
+ stock:500,
+ image:"https://images.unsplash.com/photo-1518977676601-b53f82aba655?auto=format&fit=crop&w=700&q=80",
+ description:"Fresh potato"
+},
+
+{
+ id:18,
+ name:"प्याज",
+ brand:"Nitesh Fresh",
+ category:"🥔 फल/सब्जी",
+ price:54,
+ oldPrice:60,
+ stock:500,
+ image:"https://images.unsplash.com/photo-1508747703725-719777637510?auto=format&fit=crop&w=700&q=80",
+ description:"Fresh onion"
+},
+
+{
+ id:19,
+ name:"Kadhai",
+ brand:"Nitesh Home",
+ category:"🍳 Kitchen",
+ price:699,
+ oldPrice:899,
+ stock:20,
+ image:"https://images.unsplash.com/photo-1556910103-1c02745aae4d?auto=format&fit=crop&w=700&q=80",
+ description:"Kitchen cooking kadhai"
+},
+
+{
+ id:20,
+ name:"Water Bottle",
+ brand:"Nitesh Home",
+ category:"🍳 Kitchen",
+ price:199,
+ oldPrice:299,
+ stock:50,
+ image:"https://images.unsplash.com/photo-1602143407151-7111542de6e8?auto=format&fit=crop&w=700&q=80",
+ description:"Reusable water bottle"
+}
+
+];
+
+
+/* =========================
+   DATA
+========================= */
+
+let products =
+JSON.parse(localStorage.getItem("nitesh_products"))
+|| defaultProducts;
+
+let orders =
+JSON.parse(localStorage.getItem("nitesh_orders"))
+|| [];
+
+let cart =
+JSON.parse(localStorage.getItem("nitesh_cart"))
+|| [];
+
+let selectedCategory = "सभी";
+
+
+/* =========================
+   INIT
+========================= */
+
+function init(){
+
+  renderCategories();
+  renderCategorySelect();
+  renderProducts();
+  renderCart();
+  renderRates();
+  updateCartCount();
+
+}
+
+init();
+
+
+/* =========================
+   CATEGORIES
+========================= */
+
+function renderCategories(){
+
+  const box=document.getElementById("categories");
+
+  box.innerHTML="";
+
+  categories.forEach(cat=>{
+
+    const btn=document.createElement("button");
+
+    btn.className="cat";
+
+    if(cat===selectedCategory)
+      btn.classList.add("active");
+
+    btn.textContent=cat;
+
+    btn.onclick=()=>{
+
+      selectedCategory=cat;
+
+      renderCategories();
+      renderProducts();
+
+    };
+
+    box.appendChild(btn);
+
+  });
+
+}
+
+
+function renderCategorySelect(){
+
+  const select=document.getElementById("pCategory");
+
+  select.innerHTML="";
+
+  categories
+  .filter(x=>x!=="सभी")
+  .forEach(cat=>{
+
+    const option=document.createElement("option");
+
+    option.value=cat;
+    option.textContent=cat;
+
+    select.appendChild(option);
+
+  });
+
+}
+
+
+/* =========================
+   PRODUCTS
+========================= */
+
+function renderProducts(){
+
+  const box=document.getElementById("products");
+
+  const search=
+  document.getElementById("searchInput")
+  .value
+  .toLowerCase()
+  .trim();
+
+  let list=products.filter(p=>{
+
+    const categoryOK =
+      selectedCategory==="सभी"
+      || p.category===selectedCategory;
+
+    const searchOK =
+      !search
+      || p.name.toLowerCase().includes(search)
+      || p.brand.toLowerCase().includes(search)
+      || p.category.toLowerCase().includes(search);
+
+    return categoryOK && searchOK;
+
+  });
+
+  if(!list.length){
+
+    box.innerHTML=
+    `<div class="empty">❌ कोई सामान नहीं मिला।</div>`;
+
+    return;
+  }
+
+  box.innerHTML=list.map(p=>{
+
+    let discount="";
+
+    if(p.oldPrice>p.price){
+
+      discount =
+      Math.round(
+        ((p.oldPrice-p.price)/p.oldPrice)*100
+      );
+
+    }
+
+    return `
+
+    <div class="product">
+
+      <img
+        src="${p.image}"
+        onerror="this.src='https://via.placeholder.com/500?text=Nitesh+Industry'"
+      >
+
+      <div class="product-body">
+
+        <div class="brand">${p.brand}</div>
+
+        <h3>${p.name}</h3>
+
+        <div>
+          <span class="price">₹${p.price}</span>
+
+          ${
+            p.oldPrice>p.price
+            ? `<span class="old">₹${p.oldPrice}</span>`
+            : ""
+          }
+        </div>
+
+        ${
+          discount
+          ? `<div class="discount">${discount}% OFF</div>`
+          : ""
+        }
+
+        <div class="stock">
+          ${p.stock>0
+            ? `✅ Stock: ${p.stock}`
+            : `❌ Out of Stock`
+          }
+        </div>
+
+        <p>${p.description||""}</p>
+
+        <div class="product-buttons">
+
+          <button
+            class="add"
+            ${p.stock<=0?"disabled":""}
+            onclick="addToCart(${p.id})">
+            🛒 Cart
+          </button>
+
+          <button
+            class="buy"
+            ${p.stock<=0?"disabled":""}
+            onclick="buyNow(${p.id})">
+            ⚡ Buy Now
+          </button>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    `;
+
+  }).join("");
+
+}
+
+
+/* =========================
+   CART
+========================= */
+
+function addToCart(id){
+
+  const product=products.find(p=>p.id==id);
+
+  if(!product || product.stock<=0)
+    return;
+
+  const existing=cart.find(x=>x.id==id);
+
+  if(existing){
+
+    if(existing.qty<pro
