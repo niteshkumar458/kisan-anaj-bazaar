@@ -1,0 +1,1664 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Kisan Anaj Bazaar</title>
+
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,sans-serif;background:#f4f6f5;color:#222}
+header{background:#08783b;color:#fff;padding:12px;position:sticky;top:0;z-index:20}
+.head{max-width:1200px;margin:auto;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.logo{font-size:21px;font-weight:bold}
+.search{flex:1;min-width:200px;padding:11px;border:0;border-radius:7px}
+button{border:0;border-radius:7px;padding:10px 13px;font-weight:bold;cursor:pointer}
+button:disabled{opacity:.5;cursor:not-allowed}
+.cartBtn{background:#ffc107}
+.adminBtn{background:#fff;color:#08783b}
+.wrap{max-width:1200px;margin:auto;padding:15px}
+.hero,.box{background:#fff;border-radius:12px;padding:18px;margin-bottom:15px}
+.hero{text-align:center}
+.categories{display:flex;gap:7px;overflow:auto;padding-bottom:10px}
+.cat{white-space:nowrap;background:#fff;border:1px solid #ddd}
+.cat.active{background:#08783b;color:#fff}
+.products{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:15px}
+.product{background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 2px 8px #0001}
+.product img{width:100%;height:180px;object-fit:cover;background:#eee}
+.pbody{padding:12px}
+.brand{font-size:13px;color:#777}
+.price{font-size:20px;font-weight:bold;color:#08783b}
+.old{text-decoration:line-through;color:#999;font-size:13px;margin-left:6px}
+.stock{font-size:13px;margin:6px 0}
+.actions{display:flex;gap:6px;margin-top:10px}
+.add{background:#08783b;color:#fff;flex:1}
+.buy{background:#ff9800;color:#fff;flex:1}
+input,select,textarea{
+width:100%;padding:11px;border:1px solid #ccc;border-radius:7px;margin-top:5px
+}
+textarea{min-height:80px}
+.form{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.full{grid-column:1/-1}
+.place{width:100%;background:#08783b;color:white;margin-top:10px;font-size:16px}
+.cartItem{
+display:flex;justify-content:space-between;align-items:center;
+border-bottom:1px solid #eee;padding:10px 0;gap:8px
+}
+.qty{display:flex;align-items:center;gap:5px}
+.qty button{padding:5px 9px;background:#eee}
+.empty{text-align:center;padding:25px;color:#777}
+.success{
+background:#e2f7e8;color:#08783b;padding:10px;
+border-radius:7px;margin-top:10px
+}
+.error{
+background:#fde7e7;color:#c62828;padding:10px;
+border-radius:7px;margin-top:10px
+}
+footer{
+background:#222;color:#fff;text-align:center;padding:20px;margin-top:30px
+}
+
+/* ADMIN */
+#admin{
+display:none;position:fixed;inset:0;background:#f1f3f4;
+z-index:100;overflow:auto
+}
+.adminHead{
+background:#111;color:#fff;padding:12px;
+position:sticky;top:0;z-index:5
+}
+.adminHeadIn{
+max-width:1200px;margin:auto;
+display:flex;justify-content:space-between;
+align-items:center;gap:10px
+}
+.adminWrap{max-width:1200px;margin:auto;padding:15px}
+.stats{
+display:grid;grid-template-columns:repeat(4,1fr);gap:10px
+}
+.stat{background:#fff;padding:15px;border-radius:10px}
+.stat b{display:block;font-size:24px;color:#08783b}
+.tabs{
+display:flex;gap:7px;overflow:auto;margin:15px 0
+}
+.tabs button{background:#fff;white-space:nowrap}
+.tab{display:none}
+.tab.active{display:block}
+.adminProduct,.order{
+background:#fff;padding:15px;border-radius:10px;margin-bottom:10px
+}
+.adminActions{
+display:flex;gap:7px;flex-wrap:wrap;margin-top:10px
+}
+.edit{background:#1976d2;color:white}
+.delete{background:#d32f2f;color:white}
+.status{background:#ff9800;color:#fff}
+.close{background:#d32f2f;color:#fff}
+.pending{border-left:5px solid #ff9800}
+.badge{
+display:inline-block;padding:5px 8px;
+border-radius:5px;background:#eee;font-size:12px
+}
+.notify{
+background:#d32f2f;color:#fff;
+padding:4px 7px;border-radius:20px;font-size:12px
+}
+.orderHead{
+display:flex;justify-content:space-between;
+gap:10px;flex-wrap:wrap
+}
+.orderItems{
+background:#f7f7f7;padding:10px;
+border-radius:7px;margin-top:10px
+}
+
+@media(max-width:650px){
+.form{grid-template-columns:1fr}
+.full{grid-column:auto}
+.stats{grid-template-columns:1fr 1fr}
+.search{order:3;flex-basis:100%}
+}
+</style>
+</head>
+
+<body>
+
+<header>
+<div class="head">
+
+<div class="logo">🌾 Kisan Anaj Bazaar</div>
+
+<input
+id="search"
+class="search"
+placeholder="🔎 धान, गेहूं, चावल, मक्का..."
+oninput="renderProducts()"
+>
+
+<button class="cartBtn" onclick="scrollCart()">
+🛒 Cart <span id="cartCount">0</span>
+</button>
+
+<button class="adminBtn" onclick="adminLogin()">
+🔐 Admin
+</button>
+
+</div>
+</header>
+
+
+<main class="wrap">
+
+<section class="hero">
+<h1>🌾 किसान अनाज बाजार</h1>
+<p>
+किसानों से सीधे कृषि सामान खरीदें और अपना सामान बेचें
+</p>
+</section>
+
+
+<h2>📂 Categories</h2>
+<div id="categories" class="categories"></div>
+
+
+<h2>🌾 उपलब्ध सामान</h2>
+
+<div id="products" class="products">
+<div class="empty">सामान लोड हो रहा है...</div>
+</div>
+
+
+<section class="box">
+
+<h2>🛒 आपका Cart</h2>
+
+<div id="cart"></div>
+
+<h3 id="total">कुल: ₹0</h3>
+
+</section>
+
+
+<section class="box" id="orderBox">
+
+<h2>📦 Order की जानकारी</h2>
+
+<div class="form">
+
+<div>
+<label>नाम</label>
+<input id="customerName" placeholder="आपका नाम">
+</div>
+
+<div>
+<label>मोबाइल</label>
+<input
+id="customerPhone"
+maxlength="10"
+inputmode="numeric"
+placeholder="10 digit mobile"
+>
+</div>
+
+<div class="full">
+<label>Delivery Address</label>
+
+<textarea
+id="address"
+placeholder="गांव / शहर / जिला / पूरा पता"
+></textarea>
+
+</div>
+
+<div>
+
+<label>Payment</label>
+
+<select id="payment">
+
+<option value="COD">
+Cash on Delivery
+</option>
+
+<option value="UPI">
+UPI
+</option>
+
+</select>
+
+</div>
+
+</div>
+
+
+<button class="place" onclick="placeOrder()">
+✅ Order भेजें
+</button>
+
+<div id="orderMsg"></div>
+
+</section>
+
+</main>
+
+
+<footer>
+© 2026 Kisan Anaj Bazaar
+</footer>
+
+
+
+<!-- ================= ADMIN ================= -->
+
+<div id="admin">
+
+<div class="adminHead">
+
+<div class="adminHeadIn">
+
+<b>
+🌾 Kisan Anaj Bazaar — Admin
+</b>
+
+<button class="close" onclick="closeAdmin()">
+✖ बंद
+</button>
+
+</div>
+
+</div>
+
+
+<div class="adminWrap">
+
+
+<div class="stats">
+
+<div class="stat">
+Products
+<b id="sProducts">0</b>
+</div>
+
+<div class="stat">
+Orders
+<b id="sOrders">0</b>
+</div>
+
+<div class="stat">
+Pending
+<b id="sPending">0</b>
+</div>
+
+<div class="stat">
+Sales
+<b id="sSales">₹0</b>
+</div>
+
+</div>
+
+
+<div class="tabs">
+
+<button onclick="tab('dashboard')">
+📊 Dashboard
+</button>
+
+<button onclick="tab('add')">
+➕ Product
+</button>
+
+<button onclick="tab('plist')">
+📦 Products
+</button>
+
+<button onclick="tab('orders')">
+🛒 Orders
+<span id="newBadge"></span>
+</button>
+
+</div>
+
+
+<!-- DASHBOARD -->
+
+<section id="dashboard" class="tab active">
+
+<div class="box">
+
+<h2>📊 Dashboard</h2>
+
+<p>
+यहाँ से Products, Orders और Sales देख सकते हैं।
+</p>
+
+<div id="dashboardInfo"></div>
+
+</div>
+
+</section>
+
+
+<!-- ADD PRODUCT -->
+
+<section id="add" class="tab">
+
+<div class="box">
+
+<h2 id="formTitle">
+➕ सामान जोड़ें
+</h2>
+
+<input type="hidden" id="editId">
+
+<div class="form">
+
+<div>
+<label>सामान का नाम</label>
+<input id="pName" placeholder="जैसे धान">
+</div>
+
+<div>
+<label>Brand / किसान</label>
+<input id="pBrand" placeholder="जैसे Nitesh Agro">
+</div>
+
+<div>
+<label>Category</label>
+<select id="pCategory"></select>
+</div>
+
+<div>
+<label>Price ₹</label>
+<input id="pPrice" type="number" min="0">
+</div>
+
+<div>
+<label>पुरानी कीमत ₹</label>
+<input id="pOld" type="number" min="0">
+</div>
+
+<div>
+<label>Stock / मात्रा</label>
+<input id="pStock" type="number" min="0">
+</div>
+
+<div class="full">
+<label>Image URL</label>
+<input
+id="pImage"
+placeholder="Image का URL"
+>
+</div>
+
+<div class="full">
+<label>Description</label>
+<textarea id="pDesc"></textarea>
+</div>
+
+</div>
+
+
+<button class="place" onclick="saveProduct()">
+💾 Save Product
+</button>
+
+<button
+id="cancelEdit"
+style="display:none;margin-top:7px"
+onclick="resetProduct()"
+>
+Cancel Edit
+</button>
+
+<div id="productMsg"></div>
+
+</div>
+
+</section>
+
+
+<!-- PRODUCTS -->
+
+<section id="plist" class="tab">
+
+<div class="box">
+
+<h2>📦 Products</h2>
+
+<div id="adminProducts"></div>
+
+</div>
+
+</section>
+
+
+<!-- ORDERS -->
+
+<section id="orders" class="tab">
+
+<div class="box">
+
+<h2>🛒 Customer Orders</h2>
+
+<div id="adminOrders"></div>
+
+</div>
+
+</section>
+
+
+</div>
+</div>
+
+
+
+<!-- ================= FIREBASE ================= -->
+
+<script type="module">
+
+import { initializeApp }
+from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
+
+import {
+getFirestore,
+collection,
+addDoc,
+getDocs,
+onSnapshot,
+doc,
+updateDoc,
+deleteDoc,
+query,
+orderBy,
+serverTimestamp
+}
+from "https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js";
+
+
+/* =========================
+   FIREBASE CONFIG
+========================= */
+
+const firebaseConfig = {
+
+apiKey:
+"AIzaSyDxjigog6ctxY25UFGrH7M3pYx1IN2RWSw",
+
+authDomain:
+"kissan-bajar.firebaseapp.com",
+
+databaseURL:
+"https://kissan-bajar-default-rtdb.firebaseio.com",
+
+projectId:
+"kissan-bajar",
+
+storageBucket:
+"kissan-bajar.firebasestorage.app",
+
+messagingSenderId:
+"629043004551",
+
+appId:
+"1:629043004551:web:f484c026c838399cff6422",
+
+measurementId:
+"G-TE6ZLGS1KF"
+
+};
+
+
+let app;
+let db;
+
+
+/* =========================
+   FIREBASE START
+========================= */
+
+try{
+
+app=initializeApp(firebaseConfig);
+
+db=getFirestore(app);
+
+console.log("Firebase successfully initialized");
+
+}catch(error){
+
+console.error("Firebase initialization error:",error);
+
+document.getElementById("products").innerHTML=`
+
+<div class="error">
+
+❌ Firebase शुरू नहीं हुआ।
+
+<br><br>
+
+${error.message}
+
+</div>
+
+`;
+
+}
+
+
+/* =========================
+   SETTINGS
+========================= */
+
+const ADMIN_CODE="845691";
+
+
+const categories=[
+
+"सभी",
+
+"🌾 अनाज",
+
+"🥣 दाल",
+
+"🛢️ तेल/मसाला",
+
+"🥔 फल/सब्जी",
+
+"👕 कपड़े",
+
+"👟 जूते",
+
+"🧥 Winter",
+
+"🍫 Food",
+
+"🍳 Kitchen",
+
+"🧴 घरेलू सामान",
+
+"📱 अन्य"
+
+];
+
+
+let products=[];
+let orders=[];
+let cart=[];
+let selectedCategory="सभी";
+
+
+/* =========================
+   CATEGORY UI
+========================= */
+
+function renderCategories(){
+
+const box=document.getElementById("categories");
+
+box.innerHTML=categories.map(c=>{
+
+const safe=c.replace(/'/g,"\\'");
+
+return `
+
+<button
+class="cat ${c===selectedCategory?'active':''}"
+onclick="window.setCategory('${safe}')"
+>
+${c}
+</button>
+
+`;
+
+}).join("");
+
+}
+
+
+window.setCategory=function(c){
+
+selectedCategory=c;
+
+renderCategories();
+
+renderProducts();
+
+};
+
+
+/* =========================
+   CATEGORY SELECT
+========================= */
+
+function categorySelect(){
+
+const select=document.getElementById("pCategory");
+
+select.innerHTML=
+
+categories
+.filter(x=>x!=="सभी")
+.map(x=>`
+
+<option value="${x}">
+${x}
+</option>
+
+`)
+.join("");
+
+}
+
+
+/* =========================
+   LOAD PRODUCTS
+========================= */
+
+function listenProducts(){
+
+if(!db)return;
+
+
+onSnapshot(
+
+collection(db,"products"),
+
+snapshot=>{
+
+products=snapshot.docs.map(d=>({
+
+id:d.id,
+
+...d.data()
+
+}));
+
+renderProducts();
+
+renderAdminProducts();
+
+updateStats();
+
+},
+
+error=>{
+
+console.error("Products error:",error);
+
+document.getElementById("products").innerHTML=`
+
+<div class="error">
+
+❌ Products load नहीं हुए।
+
+<br><br>
+
+Firestore Rules check करें।
+
+<br><br>
+
+${error.message}
+
+</div>
+
+`;
+
+}
+
+);
+
+}
+
+
+/* =========================
+   RENDER PRODUCTS
+========================= */
+
+window.renderProducts=function(){
+
+const box=document.getElementById("products");
+
+const searchBox=document.getElementById("search");
+
+const text=(searchBox.value||"")
+.toLowerCase()
+.trim();
+
+
+const list=products.filter(p=>{
+
+const catOK=
+
+selectedCategory==="सभी" ||
+p.category===selectedCategory;
+
+
+const searchOK=
+
+!text ||
+
+String(p.name||"")
+.toLowerCase()
+.includes(text) ||
+
+String(p.brand||"")
+.toLowerCase()
+.includes(text) ||
+
+String(p.category||"")
+.toLowerCase()
+.includes(text);
+
+
+return catOK && searchOK;
+
+});
+
+
+if(!list.length){
+
+box.innerHTML=`
+
+<div class="empty">
+
+❌ कोई सामान नहीं मिला।
+
+<br><br>
+
+Admin से Product जोड़ें।
+
+</div>
+
+`;
+
+return;
+
+}
+
+
+box.innerHTML=list.map(p=>{
+
+const price=Number(p.price)||0;
+
+const oldPrice=Number(p.oldPrice)||0;
+
+const stock=Number(p.stock)||0;
+
+
+const discount=
+
+oldPrice>price
+
+?Math.round(
+((oldPrice-price)/oldPrice)*100
+)
+
+:"";
+
+
+const image=
+
+p.image ||
+"https://via.placeholder.com/500?text=Kisan+Anaj+Bazaar";
+
+
+return `
+
+<div class="product">
+
+<img
+src="${image}"
+onerror="this.src='https://via.placeholder.com/500?text=Kisan+Anaj+Bazaar'"
+>
+
+<div class="pbody">
+
+<div class="brand">
+${p.brand||"Kisan Anaj Bazaar"}
+</div>
+
+<h3>${p.name||"अनाज"}</h3>
+
+
+<div>
+
+<span class="price">
+₹${price}
+</span>
+
+${oldPrice>price
+?`
+
+<span class="old">
+₹${oldPrice}
+</span>
+
+`
+:""}
+
+</div>
+
+
+${discount
+?`
+
+<b style="color:#d32f2f">
+${discount}% OFF
+</b>
+
+`
+:""}
+
+
+<div class="stock">
+
+${stock>0
+?`✅ उपलब्ध मात्रा: ${stock}`
+:`❌ Stock खत्म`}
+
+</div>
+
+
+<p>
+${p.description||""}
+</p>
+
+
+<div class="actions">
+
+<button
+class="add"
+${stock<=0?"disabled":""}
+onclick="window.addCart('${p.id}')"
+>
+🛒 Cart
+</button>
+
+
+<button
+class="buy"
+${stock<=0?"disabled":""}
+onclick="window.buyNow('${p.id}')"
+>
+⚡ अभी खरीदें
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+`;
+
+}).join("");
+
+};
+
+
+/* =========================
+   CART
+========================= */
+
+window.addCart=function(id){
+
+const p=products.find(x=>x.id===id);
+
+if(!p||Number(p.stock)<=0)return;
+
+
+const item=cart.find(x=>x.id===id);
+
+
+if(item){
+
+if(item.qty<Number(p.stock)){
+
+item.qty++;
+
+}
+
+}else{
+
+cart.push({
+
+id:id,
+
+qty:1
+
+});
+
+}
+
+
+renderCart();
+
+};
+
+
+window.buyNow=function(id){
+
+const p=products.find(x=>x.id===id);
+
+if(!p||Number(p.stock)<=0)return;
+
+
+cart=[{
+
+id:id,
+
+qty:1
+
+}];
+
+
+renderCart();
+
+
+document.getElementById("orderBox")
+.scrollIntoView({
+behavior:"smooth"
+});
+
+};
+
+
+window.changeQty=function(id,n){
+
+const item=cart.find(x=>x.id===id);
+
+const p=products.find(x=>x.id===id);
+
+
+if(!item||!p)return;
+
+
+item.qty+=n;
+
+
+if(item.qty<=0){
+
+cart=cart.filter(x=>x.id!==id);
+
+}
+
+
+if(item.qty>Number(p.stock)){
+
+item.qty=Number(p.stock);
+
+}
+
+
+renderCart();
+
+};
+
+
+window.removeCart=function(id){
+
+cart=cart.filter(x=>x.id!==id);
+
+renderCart();
+
+};
+
+
+function renderCart(){
+
+const box=document.getElementById("cart");
+
+
+if(!cart.length){
+
+box.innerHTML=`
+
+<div class="empty">
+🛒 Cart अभी खाली है।
+</div>
+
+`;
+
+document.getElementById("total")
+.textContent="कुल: ₹0";
+
+document.getElementById("cartCount")
+.textContent="0";
+
+return;
+
+}
+
+
+let total=0;
+let count=0;
+
+
+box.innerHTML=cart.map(i=>{
+
+const p=products.find(x=>x.id===i.id);
+
+if(!p)return"";
+
+
+const sub=
+Number(p.price)*i.qty;
+
+
+total+=sub;
+
+count+=i.qty;
+
+
+return `
+
+<div class="cartItem">
+
+<div>
+
+<b>${p.name}</b>
+
+<br>
+
+₹${p.price} × ${i.qty}
+
+</div>
+
+
+<div class="qty">
+
+<button
+onclick="window.changeQty('${p.id}',-1)"
+>
+−
+</button>
+
+<b>${i.qty}</b>
+
+<button
+onclick="window.changeQty('${p.id}',1)"
+>
++
+</button>
+
+<button
+onclick="window.removeCart('${p.id}')"
+>
+🗑️
+</button>
+
+</div>
+
+</div>
+
+`;
+
+}).join("");
+
+
+document.getElementById("total")
+.textContent="कुल: ₹"+total;
+
+
+document.getElementById("cartCount")
+.textContent=count;
+
+}
+
+
+window.scrollCart=function(){
+
+document.getElementById("cart")
+.parentElement
+.scrollIntoView({
+behavior:"smooth"
+});
+
+};
+
+
+/* =========================
+   PLACE ORDER
+========================= */
+
+window.placeOrder=async function(){
+
+if(!db){
+
+alert("Firebase अभी तैयार नहीं है। Page Refresh करें।");
+
+return;
+
+}
+
+
+if(!cart.length){
+
+alert("पहले सामान Cart में डालें।");
+
+return;
+
+}
+
+
+const name=
+document.getElementById("customerName")
+.value.trim();
+
+
+const phone=
+document.getElementById("customerPhone")
+.value.trim();
+
+
+const address=
+document.getElementById("address")
+.value.trim();
+
+
+const payment=
+document.getElementById("payment").value;
+
+
+if(!name||!phone||!address){
+
+alert(
+"नाम, मोबाइल और address भरें।"
+);
+
+return;
+
+}
+
+
+if(!/^[0-9]{10}$/.test(phone)){
+
+alert(
+"सही 10 digit mobile number डालें।"
+);
+
+return;
+
+}
+
+
+let items=[];
+let total=0;
+
+
+for(const i of cart){
+
+const p=
+products.find(x=>x.id===i.id);
+
+
+if(!p)continue;
+
+
+if(i.qty>Number(p.stock)){
+
+alert(
+p.name+
+" की उपलब्ध मात्रा कम है।"
+);
+
+return;
+
+}
+
+
+items.push({
+
+productId:p.id,
+
+name:p.name,
+
+price:Number(p.price)||0,
+
+qty:i.qty
+
+});
+
+
+total+=
+(Number(p.price)||0)*i.qty;
+
+}
+
+
+if(!items.length){
+
+alert("Cart में valid product नहीं है।");
+
+return;
+
+}
+
+
+try{
+
+
+const orderRef=
+
+await addDoc(
+
+collection(db,"orders"),
+
+{
+
+customer:{
+
+name:name,
+
+phone:phone,
+
+address:address
+
+},
+
+items:items,
+
+total:total,
+
+payment:payment,
+
+status:"Pending",
+
+createdAt:serverTimestamp()
+
+}
+
+);
+
+
+/* UPDATE STOCK */
+
+for(const i of cart){
+
+const p=
+products.find(x=>x.id===i.id);
+
+
+if(p){
+
+await updateDoc(
+
+doc(db,"products",p.id),
+
+{
+
+stock:
+Number(p.stock)-i.qty
+
+}
+
+);
+
+}
+
+}
+
+
+cart=[];
+
+renderCart();
+
+renderProducts();
+
+
+document.getElementById("orderMsg")
+.innerHTML=`
+
+<div class="success">
+
+✅ Order सफलतापूर्वक भेज दिया गया।
+
+<br>
+
+<b>Order ID:</b>
+${orderRef.id}
+
+</div>
+
+`;
+
+
+document.getElementById("customerName")
+.value="";
+
+document.getElementById("customerPhone")
+.value="";
+
+document.getElementById("address")
+.value="";
+
+
+}catch(e){
+
+console.error(e);
+
+document.getElementById("orderMsg")
+.innerHTML=`
+
+<div class="error">
+
+❌ Order नहीं गया।
+
+<br><br>
+
+${e.message}
+
+</div>
+
+`;
+
+}
+
+};
+
+
+/* =========================
+   ADMIN LOGIN
+========================= */
+
+window.adminLogin=function(){
+
+const code=
+prompt("🔐 Admin Code डालें:");
+
+
+if(code===ADMIN_CODE){
+
+document.getElementById("admin")
+.style.display="block";
+
+
+updateStats();
+
+renderAdminProducts();
+
+renderAdminOrders();
+
+
+}else if(code!==null){
+
+alert("❌ गलत Admin Code");
+
+}
+
+};
+
+
+window.closeAdmin=function(){
+
+document.getElementById("admin")
+.style.display="none";
+
+};
+
+
+window.tab=function(id){
+
+document.querySelectorAll(".tab")
+.forEach(x=>
+x.classList.remove("active")
+);
+
+
+const section=
+document.getElementById(id);
+
+
+if(section){
+
+section.classList.add("active");
+
+}
+
+
+if(id==="plist"){
+
+renderAdminProducts();
+
+}
+
+
+if(id==="orders"){
+
+renderAdminOrders();
+
+}
+
+};
+
+
+/* =========================
+   SAVE PRODUCT
+========================= */
+
+window.saveProduct=async function(){
+
+if(!db){
+
+alert("Firebase तैयार नहीं है।");
+
+return;
+
+}
+
+
+const editId=
+document.getElementById("editId").value;
+
+
+const name=
+document.getElementById("pName").value.trim();
+
+
+const brand=
+document.getElementById("pBrand").value.trim();
+
+
+const category=
+document.getElementById("pCategory").value;
+
+
+const price=
+Number(
+document.getElementById("pPrice").value
+);
+
+
+const oldPrice=
+Number(
+document.getElementById("pOld").value
+)||price;
+
+
+const stock=
+Number(
+document.getElementById("pStock").value
+);
+
+
+const image=
+document.getElementById("pImage")
+.value.trim();
+
+
+const description=
+document.getElementById("pDesc")
+.value.trim();
+
+
+if(
+!name ||
+price<0 ||
+stock<0
+){
+
+alert(
+"नाम, Price और Stock सही भरें।"
+);
+
+return;
+
+}
+
+
+const data={
+
+name:name,
+
+brand:
+brand||"Kisan Anaj Bazaar",
+
+category:category,
+
+price:price,
+
+oldPrice:oldPrice,
+
+stock:stock,
+
+image:image,
+
+description:description,
+
+updatedAt:
+serverTimestamp()
+
+};
+
+
+try{
+
+
+if(editId){
+
+await updateDoc(
+
+doc(
+db,
+"products",
+editId
+),
+
+data
+
+);
+
+
+document.getElementById(
+"productMsg"
+).innerHTML=`
+
+<div class="success">
+✅ Product update हो गया।
+</div>
+
+`;
+
+
+}else{
+
+
+await addDoc(
+
+collection(db,"products"),
+
+{
+
+...data,
+
+createdAt:
+serverTimestamp()
+
+}
+
+);
+
+
+document.getElementById(
+"productMsg"
+).innerHTML=`
+
+<div class="success">
+✅ Product Firebase में upload हो गया।
+<br>
+अब customers को दिखेगा।
+</div>
+
+`;
+
+}
+
+
+resetProduct();
+
+
+}catch(e){
+
+console.error(e);
+
+document.getElementById(
+"productMsg"
+).innerHTML=`
+
+<div class="error">
+
+❌ Product save नहीं हुआ।
+
+<br><br>
+
+${e.message}
+
+</div>
+
+`;
+
+}
+
+};
+
+
+/* =========================
+   EDIT PRODUCT
+========================= */
+
+window.editProduct=function(id){
+
+const p=
+products.find(x=>x.id===id);
+
+
+if(!p)return;
+
+
+document.getElementById("editId")
+.value=p.id;
+
+
+document.getElementById("pName")
+.value=p.name||"";
+
+
+document.getElementById("pBrand")
+.value=p.brand||"";
+
+
+document.getElementById("pCategory")
+.value=p.category||"🌾 अनाज";
+
+
+document.getElementById("pPrice")
+.value=p.price||0;
+
+
+document.getElementById("pOld")
+.value=p.oldPrice||0;
+
+
+document.getElementById("pStock")
+.value=p.sto
