@@ -1,0 +1,333 @@
+<!doctype html>
+<html lang="hi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Kisan Anaj Bazaar</title>
+  <style>
+    *{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:#f5f7f5;color:#172017}
+    header{background:#176b35;color:#fff;padding:14px 18px;position:sticky;top:0;z-index:10;box-shadow:0 2px 8px #0002}
+    .bar{max-width:1050px;margin:auto;display:flex;align-items:center;justify-content:space-between;gap:10px}
+    .brand{font-size:21px;font-weight:800}.brand small{display:block;font-size:12px;font-weight:500;opacity:.9}
+    button{border:0;border-radius:10px;padding:11px 15px;font-weight:700;cursor:pointer;background:#176b35;color:#fff}
+    button.secondary{background:#e8eee9;color:#176b35}button.danger{background:#b3261e}button:disabled{opacity:.55;cursor:not-allowed}
+    main{max-width:1050px;margin:auto;padding:18px}.hero{background:linear-gradient(135deg,#e8f6ea,#fff);padding:22px;border-radius:18px;margin-bottom:16px}
+    h1,h2,h3{margin-top:0}.hero h1{font-size:30px;margin-bottom:6px}.muted{color:#667166}
+    .actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:14px}
+    .search{display:grid;grid-template-columns:1fr 180px;gap:9px;margin:16px 0}
+    input,select,textarea{width:100%;padding:12px;border:1px solid #ccd5cc;border-radius:10px;background:#fff;font:inherit}
+    textarea{min-height:90px;resize:vertical}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}
+    .card{background:#fff;border-radius:15px;padding:16px;box-shadow:0 2px 10px #0000000d;border:1px solid #e3e8e3}
+    .price{font-size:20px;font-weight:800;color:#176b35}.tag{display:inline-block;background:#edf6ee;color:#176b35;padding:4px 8px;border-radius:99px;font-size:12px}
+    .hidden{display:none!important}.modal{position:fixed;inset:0;background:#0008;display:grid;place-items:center;padding:16px;z-index:50}
+    .modalbox{background:#fff;width:min(480px,100%);max-height:90vh;overflow:auto;border-radius:18px;padding:20px}
+    .row{display:grid;grid-template-columns:1fr 1fr;gap:10px}.field{margin:10px 0}.notice{padding:11px;border-radius:10px;background:#fff6d8;color:#6b5200;margin:10px 0}
+    .ok{background:#e7f7eb;color:#135a2d}.err{background:#fdebea;color:#8c1d18}.section{margin:22px 0}
+    .topline{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+    .cart{position:fixed;right:15px;bottom:15px;background:#176b35;color:white;border-radius:99px;padding:13px 17px;box-shadow:0 5px 20px #0003;z-index:20}
+    footer{text-align:center;padding:30px;color:#6b756b}.small{font-size:13px}
+    @media(max-width:600px){.search{grid-template-columns:1fr}.row{grid-template-columns:1fr}.hero h1{font-size:24px}}
+  </style>
+</head>
+<body>
+<header>
+  <div class="bar">
+    <div class="brand">🌾 Kisan Anaj Bazaar<small>किसानों से सीधे कृषि सामान खरीदें और बेचें</small></div>
+    <div id="headerUser"></div>
+  </div>
+</header>
+
+<main>
+  <section class="hero">
+    <h1>किसान अनाज बाजार</h1>
+    <div class="muted">धान, गेहूं, मक्का, दलहन और दूसरे कृषि उत्पाद खरीदें या बेचें।</div>
+    <div class="actions">
+      <button id="loginBtn">🔐 Login / Register</button>
+      <button id="sellBtn" class="secondary">🚜 अपना सामान बेचें</button>
+      <button id="ordersBtn" class="secondary hidden">📦 मेरे ऑर्डर</button>
+    </div>
+    <div id="status" class="notice hidden"></div>
+  </section>
+
+  <section class="section">
+    <div class="topline"><h2>🌾 उपलब्ध कृषि सामान</h2><span id="productCount" class="muted"></span></div>
+    <div class="search">
+      <input id="search" placeholder="🔎 जैसे धान, गेहूं, मक्का...">
+      <select id="category">
+        <option value="">सभी सामान</option><option>धान</option><option>गेहूं</option><option>मक्का</option>
+        <option>दलहन</option><option>सब्जी</option><option>अन्य</option>
+      </select>
+    </div>
+    <div id="products" class="grid"></div>
+  </section>
+</main>
+
+<button id="cartBtn" class="cart">🛒 Cart <span id="cartCount">0</span></button>
+<footer>© 2026 Kisan Anaj Bazaar</footer>
+
+<div id="authModal" class="modal hidden">
+  <div class="modalbox">
+    <div class="topline"><h2 id="authTitle">Login</h2><button id="closeAuth" class="secondary">✕</button></div>
+    <div id="authMessage" class="notice hidden"></div>
+    <div class="field"><label>ईमेल</label><input id="authEmail" type="email" autocomplete="email" placeholder="example@gmail.com"></div>
+    <div class="field"><label>पासवर्ड</label><input id="authPassword" type="password" autocomplete="current-password" placeholder="कम से कम 6 अक्षर"></div>
+    <div id="nameField" class="field hidden"><label>नाम</label><input id="authName" placeholder="आपका नाम"></div>
+    <div class="actions">
+      <button id="authSubmit">Login</button>
+      <button id="switchAuth" class="secondary">नया account बनाएं</button>
+      <button id="resetPassword" class="secondary">पासवर्ड भूल गए?</button>
+    </div>
+  </div>
+</div>
+
+<div id="sellModal" class="modal hidden">
+  <div class="modalbox">
+    <div class="topline"><h2>🚜 सामान बेचें</h2><button id="closeSell" class="secondary">✕</button></div>
+    <div id="sellMessage" class="notice hidden"></div>
+    <div class="field"><label>सामान का नाम</label><input id="pName" placeholder="जैसे बासमती चावल"></div>
+    <div class="row">
+      <div class="field"><label>श्रेणी</label><select id="pCategory"><option>धान</option><option>गेहूं</option><option>मक्का</option><option>दलहन</option><option>सब्जी</option><option>अन्य</option></select></div>
+      <div class="field"><label>कीमत ₹/किलो</label><input id="pPrice" type="number" min="0" step="0.01"></div>
+    </div>
+    <div class="row">
+      <div class="field"><label>मात्रा (किलो)</label><input id="pQty" type="number" min="0" step="0.01"></div>
+      <div class="field"><label>मोबाइल</label><input id="pPhone" inputmode="numeric" maxlength="10"></div>
+    </div>
+    <div class="field"><label>किसान का नाम</label><input id="pFarmer"></div>
+    <div class="field"><label>स्थान</label><input id="pLocation" placeholder="गांव / शहर / जिला"></div>
+    <div class="field"><label>विवरण</label><textarea id="pDescription"></textarea></div>
+    <button id="postProduct">📤 सामान पोस्ट करें</button>
+  </div>
+</div>
+
+<div id="cartModal" class="modal hidden">
+  <div class="modalbox">
+    <div class="topline"><h2>🛒 Cart</h2><button id="closeCart" class="secondary">✕</button></div>
+    <div id="cartItems"></div>
+    <hr>
+    <h3>कुल: ₹<span id="cartTotal">0</span></h3>
+    <div class="field"><label>खरीदार का नाम</label><input id="buyerName"></div>
+    <div class="field"><label>मोबाइल</label><input id="buyerPhone" maxlength="10" inputmode="numeric"></div>
+    <div class="field"><label>डिलीवरी पता</label><textarea id="buyerAddress"></textarea></div>
+    <button id="placeOrder">✅ ऑर्डर भेजें</button>
+    <div id="orderMessage" class="notice hidden"></div>
+  </div>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-app.js";
+import {
+  getAuth, onAuthStateChanged, createUserWithEmailAndPassword,
+  signInWithEmailAndPassword, signOut, sendPasswordResetEmail,
+  updateProfile
+} from "https://www.gstatic.com/firebasejs/12.7.0/firebase-auth.js";
+import {
+  getFirestore, collection, addDoc, getDocs, query, orderBy,
+  serverTimestamp, doc, setDoc
+} from "https://www.gstatic.com/firebasejs/12.7.0/firebase-firestore.js";
+
+/*
+  IMPORTANT:
+  Paste the Firebase Web App config from:
+  Firebase Console -> Project settings -> Your apps -> Web app.
+  Do NOT put a Firebase service-account/private key here.
+*/
+const firebaseConfig = {
+  apiKey: "AIzaSyDxjigog6ctxY25UFGrH7M3pYx1IN2RWSw",
+  authDomain: "kissan-bajar.firebaseapp.com",
+  projectId: "kissan-bajar",
+  storageBucket: "kissan-bajar.firebasestorage.app",
+  messagingSenderId: "629043004551",
+  appId: "1:629043004551:web:f484c026c838399cff6422"
+};
+
+const configReady = !Object.values(firebaseConfig).some(v => String(v).startsWith("PASTE_"));
+let app, auth, db;
+
+const $ = id => document.getElementById(id);
+const show = el => el.classList.remove("hidden");
+const hide = el => el.classList.add("hidden");
+function msg(el, text, ok=false){ el.textContent=text; el.className="notice "+(ok?"ok":"err"); show(el); }
+function cleanEmail(v){ return v.trim().toLowerCase(); }
+
+let currentUser = null;
+let products = [];
+let cart = [];
+
+function authError(code){
+  const map = {
+    "auth/email-already-in-use":"इस ईमेल से account पहले से बना है। Login करें।",
+    "auth/invalid-email":"ईमेल सही नहीं है।",
+    "auth/weak-password":"पासवर्ड कम से कम 6 अक्षर का रखें।",
+    "auth/invalid-credential":"ईमेल या पासवर्ड गलत है।",
+    "auth/user-not-found":"इस ईमेल से account नहीं मिला। पहले Register करें।",
+    "auth/wrong-password":"पासवर्ड गलत है।",
+    "auth/too-many-requests":"बहुत बार कोशिश हुई है। थोड़ी देर बाद फिर कोशिश करें।",
+    "auth/network-request-failed":"Internet connection की समस्या है।",
+    "auth/operation-not-allowed":"Firebase में Email/Password sign-in अभी enabled नहीं है।"
+  };
+  return map[code] || ("Login error: " + code);
+}
+
+function openAuth(mode="login"){
+  $("authTitle").textContent=mode==="login"?"Login":"Register";
+  $("authSubmit").textContent=mode==="login"?"Login":"Register";
+  $("switchAuth").textContent=mode==="login"?"नया account बनाएं":"पहले से account है? Login";
+  mode==="login" ? hide($("nameField")) : show($("nameField"));
+  $("authMessage").className="notice hidden";
+  show($("authModal"));
+}
+function closeModals(){ hide($("authModal")); hide($("sellModal")); hide($("cartModal")); }
+
+$("loginBtn").onclick=()=>currentUser ? signOut(auth) : openAuth("login");
+$("closeAuth").onclick=()=>hide($("authModal"));
+$("switchAuth").onclick=()=>{
+  const registering=$("authTitle").textContent==="Register";
+  openAuth(registering?"login":"register");
+};
+$("resetPassword").onclick=async()=>{
+  const email=cleanEmail($("authEmail").value);
+  if(!email) return msg($("authMessage"),"पहले ईमेल लिखें।");
+  try{ await sendPasswordResetEmail(auth,email); msg($("authMessage"),"Password reset email भेज दिया गया है।",true); }
+  catch(e){ msg($("authMessage"),authError(e.code)); }
+};
+
+$("authSubmit").onclick=async()=>{
+  if(!configReady) return msg($("authMessage"),"पहले Firebase Web App config पूरा करें।");
+  const email=cleanEmail($("authEmail").value), pass=$("authPassword").value;
+  if(!email || pass.length<6) return msg($("authMessage"),"ईमेल और कम से कम 6 अक्षर का पासवर्ड भरें।");
+  $("authSubmit").disabled=true;
+  try{
+    if($("authTitle").textContent==="Register"){
+      const name=$("authName").value.trim();
+      if(!name) throw new Error("NAME_REQUIRED");
+      const cred=await createUserWithEmailAndPassword(auth,email,pass);
+      await updateProfile(cred.user,{displayName:name});
+      await setDoc(doc(db,"users",cred.user.uid),{
+        uid:cred.user.uid,name,email,role:"seller",createdAt:serverTimestamp()
+      },{merge:true});
+      msg($("authMessage"),"Account बन गया और आप Login हो गए।",true);
+      setTimeout(()=>hide($("authModal")),500);
+    }else{
+      await signInWithEmailAndPassword(auth,email,pass);
+      msg($("authMessage"),"Login सफल।",true);
+      setTimeout(()=>hide($("authModal")),350);
+    }
+  }catch(e){
+    msg($("authMessage"),e.message==="NAME_REQUIRED"?"नाम भरें।":authError(e.code));
+  }finally{$("authSubmit").disabled=false;}
+};
+
+$("sellBtn").onclick=()=>{
+  if(!currentUser) return openAuth("login");
+  $("pFarmer").value=currentUser.displayName||"";
+  show($("sellModal"));
+};
+$("closeSell").onclick=()=>hide($("sellModal"));
+
+async function postProduct(){
+  if(!currentUser) return openAuth("login");
+  const name=$("pName").value.trim(), category=$("pCategory").value;
+  const price=Number($("pPrice").value), quantity=Number($("pQty").value);
+  const phone=$("pPhone").value.trim(), farmer=$("pFarmer").value.trim(), location=$("pLocation").value.trim();
+  if(!name||!price||!quantity||!farmer||!/^[0-9]{10}$/.test(phone)||!location)
+    return msg($("sellMessage"),"नाम, कीमत, मात्रा, किसान नाम, 10-अंकों का मोबाइल और स्थान भरें।");
+  $("postProduct").disabled=true;
+  try{
+    await addDoc(collection(db,"products"),{
+      name,category,price,quantity,phone,farmer,location,
+      description:$("pDescription").value.trim(),sellerId:currentUser.uid,
+      sellerEmail:currentUser.email,createdAt:serverTimestamp(),active:true
+    });
+    msg($("sellMessage"),"सामान सफलतापूर्वक पोस्ट हो गया।",true);
+    ["pName","pPrice","pQty","pPhone","pLocation","pDescription"].forEach(id=>$(id).value="");
+    await loadProducts();
+  }catch(e){ msg($("sellMessage"),"सामान पोस्ट नहीं हुआ: "+e.code); }
+  finally{$("postProduct").disabled=false;}
+}
+$("postProduct").onclick=postProduct;
+
+async function loadProducts(){
+  if(!configReady){ $("products").innerHTML='<div class="card"><b>Firebase config बाकी है।</b><p class="muted">इस file में Firebase Web App config भरने के बाद products और login चलेंगे।</p></div>'; return; }
+  try{
+    const snap=await getDocs(query(collection(db,"products"),orderBy("createdAt","desc")));
+    products=snap.docs.map(d=>({id:d.id,...d.data()}));
+  }catch(e){
+    // If no createdAt index/order exists, retry without ordering.
+    try{
+      const snap=await getDocs(collection(db,"products"));
+      products=snap.docs.map(d=>({id:d.id,...d.data()}));
+    }catch(err){ $("products").innerHTML='<div class="card"><b>Products load नहीं हुए</b><p class="muted">'+err.code+'</p></div>'; return; }
+  }
+  renderProducts();
+}
+function renderProducts(){
+  const term=$("search").value.trim().toLowerCase(), cat=$("category").value;
+  const list=products.filter(p=>(!cat||p.category===cat)&&(!term||[p.name,p.category,p.farmer,p.location,p.description].join(" ").toLowerCase().includes(term)));
+  $("productCount").textContent=list.length+" सामान";
+  $("products").innerHTML=list.length?list.map(p=>`
+    <article class="card">
+      <span class="tag">${esc(p.category||"अन्य")}</span>
+      <h3>${esc(p.name||"सामान")}</h3>
+      <div class="price">₹${Number(p.price||0).toLocaleString("en-IN")}/kg</div>
+      <p>मात्रा: ${Number(p.quantity||0).toLocaleString("en-IN")} kg</p>
+      <p>👨‍🌾 ${esc(p.farmer||"")}<br>📍 ${esc(p.location||"")}</p>
+      ${p.description?`<p class="muted small">${esc(p.description)}</p>`:""}
+      <button data-add="${p.id}">🛒 Cart में डालें</button>
+    </article>`).join(""):'<div class="card">कोई सामान नहीं मिला।</div>';
+  document.querySelectorAll("[data-add]").forEach(b=>b.onclick=()=>addCart(b.dataset.add));
+}
+function esc(v){return String(v??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]));}
+$("search").oninput=renderProducts;$("category").onchange=renderProducts;
+
+function addCart(id){
+  const p=products.find(x=>x.id===id); if(!p)return;
+  const found=cart.find(x=>x.id===id);
+  if(found) found.count++; else cart.push({...p,count:1});
+  renderCart(); msg($("status"),"सामान Cart में डाल दिया गया।",true);
+}
+function renderCart(){
+  $("cartCount").textContent=cart.reduce((s,x)=>s+x.count,0);
+  $("cartItems").innerHTML=cart.length?cart.map((x,i)=>`
+    <div class="card" style="margin:8px 0">
+      <b>${esc(x.name)}</b><br>₹${x.price}/kg × ${x.count} = ₹${(x.price*x.count).toLocaleString("en-IN")}
+      <button class="danger small" data-remove="${i}" style="float:right;padding:6px 9px">हटाएं</button>
+    </div>`).join(""):"<p class='muted'>Cart अभी खाली है।</p>";
+  $("cartTotal").textContent=cart.reduce((s,x)=>s+x.price*x.count,0).toLocaleString("en-IN");
+  document.querySelectorAll("[data-remove]").forEach(b=>b.onclick=()=>{cart.splice(Number(b.dataset.remove),1);renderCart();});
+}
+$("cartBtn").onclick=()=>{renderCart();show($("cartModal"));};
+$("closeCart").onclick=()=>hide($("cartModal"));
+
+$("placeOrder").onclick=async()=>{
+  if(!currentUser) return openAuth("login");
+  if(!cart.length)return msg($("orderMessage"),"Cart खाली है।");
+  const name=$("buyerName").value.trim(),phone=$("buyerPhone").value.trim(),address=$("buyerAddress").value.trim();
+  if(!name||!/^[0-9]{10}$/.test(phone)||!address)return msg($("orderMessage"),"नाम, 10-अंकों का मोबाइल और पता भरें।");
+  try{
+    await addDoc(collection(db,"orders"),{
+      buyerId:currentUser.uid,buyerEmail:currentUser.email,buyerName:name,buyerPhone:phone,buyerAddress:address,
+      items:cart.map(x=>({productId:x.id,name:x.name,price:x.price,count:x.count,sellerId:x.sellerId||""})),
+      total:cart.reduce((s,x)=>s+x.price*x.count,0),status:"pending",createdAt:serverTimestamp()
+    });
+    cart=[];renderCart();msg($("orderMessage"),"ऑर्डर सफलतापूर्वक भेज दिया गया।",true);
+  }catch(e){msg($("orderMessage"),"ऑर्डर नहीं गया: "+e.code);}
+};
+
+if(configReady){
+  app=initializeApp(firebaseConfig); auth=getAuth(app); db=getFirestore(app);
+  onAuthStateChanged(auth,user=>{
+    currentUser=user;
+    $("loginBtn").textContent=user?"🚪 Logout":"🔐 Login / Register";
+    $("ordersBtn").classList.toggle("hidden",!user);
+    $("headerUser").textContent=user?("👤 "+(user.displayName||user.email)):"";
+    if(user) $("status").className="notice ok", $("status").textContent="आप Login हैं।", show($("status"));
+  });
+  loadProducts();
+}else{
+  msg($("status"),"Firebase Web App config अभी पूरा नहीं है। इसलिए Login/Products शुरू नहीं होंगे।");
+}
+renderCart();
+</script>
+</body>
+</html>
