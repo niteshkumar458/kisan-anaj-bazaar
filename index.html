@@ -1,0 +1,2223 @@
+<!doctype html>
+
+<html lang="hi">  
+<head>  
+<meta charset="utf-8">  
+<meta name="viewport" content="width=device-width,initial-scale=1">  
+<title>Kisan Anaj Bazaar</title>  <style>  
+*{box-sizing:border-box}  
+body{  
+  margin:0;  
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;  
+  background:#f5f7f5;  
+  color:#172017  
+}  
+header{  
+  background:#176b35;  
+  color:#fff;  
+  padding:14px 18px;  
+  position:sticky;  
+  top:0;  
+  z-index:10;  
+  box-shadow:0 2px 8px #0002  
+}  
+.bar{  
+  max-width:1100px;  
+  margin:auto;  
+  display:flex;  
+  align-items:center;  
+  justify-content:space-between;  
+  gap:10px  
+}  
+.brand{font-size:21px;font-weight:800}  
+.brand small{display:block;font-size:12px;font-weight:500;opacity:.9}  
+  
+button{  
+  border:0;  
+  border-radius:10px;  
+  padding:11px 15px;  
+  font-weight:700;  
+  cursor:pointer;  
+  background:#176b35;  
+  color:#fff  
+}  
+button.secondary{background:#e8eee9;color:#176b35}  
+button.danger{background:#b3261e}  
+button:disabled{opacity:.55;cursor:not-allowed}  
+  
+main{max-width:1100px;margin:auto;padding:18px}  
+  
+.hero{  
+  background:linear-gradient(135deg,#e8f6ea,#fff);  
+  padding:22px;  
+  border-radius:18px;  
+  margin-bottom:16px  
+}  
+.hero h1{font-size:30px;margin:0 0 6px}  
+  
+h1,h2,h3{margin-top:0}  
+.muted{color:#667166}  
+  
+.actions{  
+  display:flex;  
+  gap:9px;  
+  flex-wrap:wrap;  
+  margin-top:14px  
+}  
+  
+.search{  
+  display:grid;  
+  grid-template-columns:1fr 180px;  
+  gap:9px;  
+  margin:16px 0  
+}  
+  
+input,select,textarea{  
+  width:100%;  
+  padding:12px;  
+  border:1px solid #ccd5cc;  
+  border-radius:10px;  
+  background:#fff;  
+  font:inherit  
+}  
+textarea{  
+  min-height:90px;  
+  resize:vertical  
+}  
+  
+.grid{  
+  display:grid;  
+  grid-template-columns:repeat(auto-fit,minmax(240px,1fr));  
+  gap:14px  
+}  
+  
+.card{  
+  background:#fff;  
+  border-radius:15px;  
+  padding:16px;  
+  box-shadow:0 2px 10px #0000000d;  
+  border:1px solid #e3e8e3  
+}  
+  
+.price{  
+  font-size:20px;  
+  font-weight:800;  
+  color:#176b35  
+}  
+  
+.tag{  
+  display:inline-block;  
+  background:#edf6ee;  
+  color:#176b35;  
+  padding:4px 8px;  
+  border-radius:99px;  
+  font-size:12px  
+}  
+  
+.hidden{display:none!important}  
+  
+.modal{  
+  position:fixed;  
+  inset:0;  
+  background:#0008;  
+  display:grid;  
+  place-items:center;  
+  padding:16px;  
+  z-index:50  
+}  
+  
+.modalbox{  
+  background:#fff;  
+  width:min(760px,100%);  
+  max-height:92vh;  
+  overflow:auto;  
+  border-radius:18px;  
+  padding:20px  
+}  
+  
+.row{  
+  display:grid;  
+  grid-template-columns:1fr 1fr;  
+  gap:10px  
+}  
+  
+.field{margin:10px 0}  
+  
+.notice{  
+  padding:11px;  
+  border-radius:10px;  
+  background:#fff6d8;  
+  color:#6b5200;  
+  margin:10px 0  
+}  
+.ok{background:#e7f7eb;color:#135a2d}  
+.err{background:#fdebea;color:#8c1d18}  
+  
+.section{margin:22px 0}  
+  
+.topline{  
+  display:flex;  
+  justify-content:space-between;  
+  align-items:center;  
+  gap:10px;  
+  flex-wrap:wrap  
+}  
+  
+.cart{  
+  position:fixed;  
+  right:15px;  
+  bottom:15px;  
+  background:#176b35;  
+  color:white;  
+  border-radius:99px;  
+  padding:13px 17px;  
+  box-shadow:0 5px 20px #0003;  
+  z-index:20  
+}  
+  
+footer{  
+  text-align:center;  
+  padding:30px;  
+  color:#6b756b  
+}  
+  
+.small{font-size:13px}  
+  
+.admin-card{  
+  border-left:5px solid #176b35  
+}  
+  
+.status-pending{  
+  color:#8a6500;  
+  font-weight:700  
+}  
+  
+.status-approved{  
+  color:#176b35;  
+  font-weight:700  
+}  
+  
+.status-rejected{  
+  color:#b3261e;  
+  font-weight:700  
+}  
+  
+.help-card{  
+  background:#fff;  
+  border:1px solid #dfe7df;  
+  border-radius:15px;  
+  padding:18px;  
+  margin-top:25px  
+}  
+  
+.help-buttons{  
+  display:flex;  
+  gap:10px;  
+  flex-wrap:wrap;  
+  margin-top:12px  
+}  
+  
+.help-buttons a{  
+  text-decoration:none  
+}  
+  
+@media(max-width:600px){  
+  .search,.row{  
+    grid-template-columns:1fr  
+  }  
+  .hero h1{  
+    font-size:24px  
+  }  
+  .modalbox{  
+    padding:16px  
+  }  
+}  
+</style>  </head>  <body>  <header>  
+<div class="bar">  
+  <div class="brand">  
+    🌾 Kisan Anaj Bazaar  
+    <small>किसानों से सीधे कृषि सामान खरीदें और बेचें</small>  
+  </div>  
+  <div id="headerUser"></div>  
+</div>  
+</header>  <main>  <section class="hero">  <h1>किसान अनाज बाजार</h1>  <div class="muted">  
+किसान अपना अनाज बेचें और खरीदार सीधे उपलब्ध सामान देखें।  
+</div>  <div class="actions">  
+  <button id="loginBtn">🔐 Login / Register</button>  
+  <button id="sellBtn" class="secondary hidden">🚜 अपना सामान बेचें</button>  
+  <button id="ordersBtn" class="secondary hidden">📦 मेरे ऑर्डर</button>  
+  <button id="adminBtn" class="hidden">👑 Admin Panel</button>  
+</div>  <div id="status" class="notice hidden"></div>  </section>  <section class="section">  <div class="topline">  
+  <h2>🌾 उपलब्ध कृषि सामान</h2>  
+  <span id="productCount" class="muted"></span>  
+</div>  <div class="search">  
+  <input id="search" placeholder="🔎 जैसे धान, गेहूं, मक्का...">    <select id="category">  
+    <option value="">सभी सामान</option>  
+    <option>धान</option>  
+    <option>गेहूं</option>  
+    <option>मक्का</option>  
+    <option>दलहन</option>  
+    <option>सब्जी</option>  
+    <option>अन्य</option>  
+  </select>  
+</div>  <div id="products" class="grid"></div>  </section>  <section class="help-card">  <h3>📞 Help & Support</h3>  <p class="muted">  
+किसी भी सहायता के लिए हमसे संपर्क करें।  
+</p>  <div class="help-buttons">  <a href="tel:+917042894282">  
+<button>📞 Call 7042894282</button>  
+</a>  <a href="https://wa.me/917042894282"  
+target="_blank"  
+rel="noopener">
+<button class="secondary">💬 WhatsApp</button>
+</a>
+
+</div>  </section>  </main>  <button id="cartBtn" class="cart">  
+🛒 Cart <span id="cartCount">0</span>  
+</button>  <footer>  
+© 2026 Kisan Anaj Bazaar  
+</footer>  <!-- AUTH -->  <div id="authModal" class="modal hidden">  <div class="modalbox">  <div class="topline">  
+<h2 id="authTitle">Login</h2>  
+<button id="closeAuth" class="secondary">✕</button>  
+</div>  <div id="authMessage" class="notice hidden"></div>  <div id="nameField" class="field hidden">  
+<label>नाम</label>  
+<input id="authName" placeholder="आपका नाम">  
+</div>  <div class="field">  
+<label>ईमेल</label>  
+<input  
+id="authEmail"  
+type="email"  
+autocomplete="email"  
+placeholder="example@gmail.com">  
+</div>  <div class="field">  
+<label>पासवर्ड</label>  
+<input  
+id="authPassword"  
+type="password"  
+autocomplete="current-password"  
+placeholder="कम से कम 6 अक्षर">  
+</div>  <div class="actions">  <button id="authSubmit">Login</button>
+
+<button id="switchAuth" class="secondary">  
+नया account बनाएं  
+</button>  <button id="resetPassword" class="secondary">  
+पासवर्ड भूल गए?  
+</button>  </div>  </div>  
+</div>  <!-- SELL -->  <div id="sellModal" class="modal hidden">  <div class="modalbox">  <div class="topline">  
+<h2>🚜 सामान बेचें</h2>  
+<button id="closeSell" class="secondary">✕</button>  
+</div>  <div id="sellMessage" class="notice hidden"></div>  <div class="field">  
+<label>सामान का नाम</label>  
+<input id="pName" placeholder="जैसे बासमती चावल">  
+</div>  <div class="row">  <div class="field">  
+<label>श्रेणी</label>  <select id="pCategory">  
+<option>धान</option>  
+<option>गेहूं</option>  
+<option>मक्का</option>  
+<option>दलहन</option>  
+<option>सब्जी</option>  
+<option>अन्य</option>  
+</select>  </div>  <div class="field">  
+<label>कीमत ₹/किलो</label>  
+<input id="pPrice" type="number" min="0" step="0.01">  
+</div>  </div>  <div class="row">  <div class="field">  
+<label>मात्रा (किलो)</label>  
+<input id="pQty" type="number" min="0" step="0.01">  
+</div>  <div class="field">  
+<label>मोबाइल</label>  
+<input id="pPhone" inputmode="numeric" maxlength="10">  
+</div>  </div>  <div class="field">  
+<label>किसान का नाम</label>  
+<input id="pFarmer">  
+</div>  <div class="field">  
+<label>स्थान (गांव / शहर / जिला)</label>  
+<input id="pLocation">  
+</div>  <div class="field">  
+<label>विवरण</label>  
+<textarea id="pDescription"></textarea>  
+</div>  <button id="postProduct">  
+📤 सामान पोस्ट करें  
+</button>  </div>  
+</div>  <!-- CART -->  <div id="cartModal" class="modal hidden">  <div class="modalbox">  <div class="topline">  
+<h2>🛒 Cart</h2>  
+<button id="closeCart" class="secondary">✕</button>  
+</div>  <div id="cartItems"></div>  <hr>  <h3>  
+कुल: ₹<span id="cartTotal">0</span>  
+</h3>  <div class="field">  
+<label>खरीदार का नाम</label>  
+<input id="buyerName">  
+</div>  <div class="field">  
+<label>मोबाइल</label>  
+<input  
+id="buyerPhone"  
+maxlength="10"  
+inputmode="numeric">  
+</div>  <div class="field">  
+<label>डिलीवरी / पिकअप पता</label>  
+<textarea id="buyerAddress"></textarea>  
+</div>  <button id="placeOrder">  
+✅ ऑर्डर भेजें  
+</button>  <div id="orderMessage" class="notice hidden"></div>  </div>  
+</div>  <!-- ORDERS -->  <div id="ordersModal" class="modal hidden">  <div class="modalbox">  <div class="topline">  
+<h2>📦 मेरे ऑर्डर</h2>  
+<button id="closeOrders" class="secondary">✕</button>  
+</div>  <div id="myOrders"></div>  </div>  
+</div>  <!-- ADMIN -->  <div id="adminModal" class="modal hidden">  <div class="modalbox">  <div class="topline">  
+<h2>👑 Admin Panel</h2>  
+<button id="closeAdmin" class="secondary">✕</button>  
+</div>  <div id="adminMessage" class="notice hidden"></div>  <div id="adminBox"></div>  </div>  
+</div>  <script type="module">  
+  
+import {initializeApp}  
+from "https://www.gstatic.com/firebasejs/12.7.0/firebase-app.js";  
+  
+import {  
+getAuth,  
+onAuthStateChanged,  
+createUserWithEmailAndPassword,  
+signInWithEmailAndPassword,  
+signOut,  
+sendPasswordResetEmail,  
+updateProfile  
+}  
+from "https://www.gstatic.com/firebasejs/12.7.0/firebase-auth.js";  
+  
+import {  
+getFirestore,  
+collection,  
+addDoc,  
+getDocs,  
+getDoc,  
+setDoc,  
+doc,  
+updateDoc,  
+query,  
+serverTimestamp,  
+where  
+}  
+from "https://www.gstatic.com/firebasejs/12.7.0/firebase-firestore.js";  
+  
+  
+/* ================= FIREBASE ================= */  
+  
+const firebaseConfig = {  
+  
+apiKey:"AIzaSyDxjigog6ctxY25UFGrH7M3pYx1IN2RWSw",  
+  
+authDomain:"kissan-bajar.firebaseapp.com",  
+  
+projectId:"kissan-bajar",  
+  
+storageBucket:"kissan-bajar.firebasestorage.app",  
+  
+messagingSenderId:"629043004551",  
+  
+appId:"1:629043004551:web:f484c026c838399cff6422"  
+  
+};  
+  
+  
+const app=initializeApp(firebaseConfig);  
+  
+const auth=getAuth(app);  
+  
+const db=getFirestore(app);  
+  
+  
+/* ================= HELPERS ================= */  
+  
+const $=id=>document.getElementById(id);  
+  
+const show=e=>e.classList.remove("hidden");  
+  
+const hide=e=>e.classList.add("hidden");  
+  
+const esc=v=>  
+String(v??"").replace(  
+/[&<>"']/g,  
+m=>({  
+"&":"&amp;",  
+"<":"&lt;",  
+">":"&gt;",  
+'"':"&quot;",  
+"'":"&#39;"  
+}[m])  
+);  
+  
+const email=v=>v.trim().toLowerCase();  
+  
+  
+let currentUser=null;  
+  
+let myProfile=null;  
+  
+let isAdmin=false;  
+  
+let products=[];  
+  
+let cart=[];  
+  
+  
+/* ================= MESSAGE ================= */  
+  
+function msg(el,text,ok=false){  
+  
+el.textContent=text;  
+  
+el.className="notice "+(ok?"ok":"err");  
+  
+show(el);  
+  
+}  
+  
+  
+/* ================= FIREBASE ERROR ================= */  
+  
+function authError(code){  
+  
+const m={  
+  
+"auth/email-already-in-use":  
+"इस ईमेल से account पहले से बना है। Login करें।",  
+  
+"auth/invalid-email":  
+"ईमेल सही नहीं है।",  
+  
+"auth/weak-password":  
+"पासवर्ड कम से कम 6 अक्षर का रखें।",  
+  
+"auth/invalid-credential":  
+"ईमेल या पासवर्ड गलत है।",  
+  
+"auth/user-not-found":  
+"इस ईमेल से account नहीं मिला।",  
+  
+"auth/wrong-password":  
+"पासवर्ड गलत है।",  
+  
+"auth/too-many-requests":  
+"बहुत बार कोशिश हुई है। थोड़ी देर बाद फिर कोशिश करें।",  
+  
+"auth/network-request-failed":  
+"Internet connection की समस्या है।",  
+  
+"auth/operation-not-allowed":  
+"Firebase में Email/Password Login enabled नहीं है।",  
+  
+"permission-denied":  
+"Firebase Firestore Rules ने access रोक दिया है।"  
+  
+};  
+  
+return m[code] || ("Firebase error: "+code);  
+  
+}  
+  
+  
+/* ================= USER PROFILE ================= */  
+  
+async function getMyProfile(){  
+  
+if(!currentUser)return null;  
+  
+const s=await getDoc(  
+doc(db,"users",currentUser.uid)  
+);  
+  
+return s.exists()  
+?{id:s.id,...s.data()}  
+:null;  
+  
+}  
+  
+  
+/* ================= ADMIN CHECK ================= */  
+  
+async function checkAdmin(){  
+  
+if(!currentUser)return false;  
+  
+try{  
+  
+const s=await getDoc(  
+doc(db,"admins",currentUser.uid)  
+);  
+  
+return s.exists() &&  
+s.data().active===true;  
+  
+}catch(e){  
+  
+console.error("Admin check:",e);  
+  
+return false;  
+  
+}  
+  
+}  
+  
+  
+/* ================= AUTH MODAL ================= */  
+  
+function openAuth(mode="login"){  
+  
+$("authTitle").textContent=  
+mode==="login"?"Login":"Register";  
+  
+$("authSubmit").textContent=  
+mode==="login"?"Login":"Register";  
+  
+$("switchAuth").textContent=  
+mode==="login"  
+?"नया account बनाएं"  
+:"पहले से account है? Login";  
+  
+if(mode==="login")  
+hide($("nameField"));  
+else  
+show($("nameField"));  
+  
+$("authMessage").className="notice hidden";  
+  
+show($("authModal"));  
+  
+}  
+  
+  
+/* ================= LOGIN BUTTON ================= */  
+  
+$("loginBtn").onclick=()=>{  
+  
+if(currentUser){  
+  
+signOut(auth);  
+  
+}else{  
+  
+openAuth("login");  
+  
+}  
+  
+};  
+  
+  
+/* ================= CLOSE AUTH ================= */  
+  
+$("closeAuth").onclick=()=>{  
+hide($("authModal"));  
+};  
+  
+  
+/* ================= SWITCH LOGIN REGISTER ================= */  
+  
+$("switchAuth").onclick=()=>{  
+  
+openAuth(  
+$("authTitle").textContent==="Register"  
+?"login"  
+:"register"  
+);  
+  
+};  
+  
+  
+/* ================= PASSWORD RESET ================= */  
+  
+$("resetPassword").onclick=async()=>{  
+  
+const e=email($("authEmail").value);  
+  
+if(!e)  
+return msg(  
+$("authMessage"),  
+"पहले ईमेल लिखें।"  
+);  
+  
+try{  
+  
+await sendPasswordResetEmail(auth,e);  
+  
+msg(  
+$("authMessage"),  
+"Password reset email भेज दिया गया है।",  
+true  
+);  
+  
+}catch(x){  
+  
+msg(  
+$("authMessage"),  
+authError(x.code)  
+);  
+  
+}  
+  
+};  
+  
+  
+/* ================= AUTH SUBMIT ================= */  
+  
+$("authSubmit").onclick=async()=>{  
+  
+const e=email($("authEmail").value);  
+  
+const p=$("authPassword").value;  
+  
+if(!e||p.length<6){  
+  
+return msg(  
+$("authMessage"),  
+"ईमेल और कम से कम 6 अक्षर का पासवर्ड भरें।"  
+);  
+  
+}  
+  
+$("authSubmit").disabled=true;  
+  
+try{  
+  
+/* REGISTER */  
+  
+if($("authTitle").textContent==="Register"){  
+  
+const n=$("authName").value.trim();  
+  
+if(!n){  
+  
+$("authSubmit").disabled=false;  
+  
+return msg(  
+$("authMessage"),  
+"नाम भरें।"  
+);  
+  
+}  
+  
+const c=  
+await createUserWithEmailAndPassword(  
+auth,  
+e,  
+p  
+);  
+  
+await updateProfile(  
+c.user,  
+{  
+displayName:n  
+}  
+);  
+  
+await setDoc(  
+doc(db,"users",c.user.uid),  
+{  
+uid:c.user.uid,  
+name:n,  
+email:e,  
+role:"user",  
+buyPermission:true,  
+sellPermission:false,  
+createdAt:serverTimestamp()  
+},  
+{merge:true}  
+);  
+  
+msg(  
+$("authMessage"),  
+"Account बन गया।",  
+true  
+);  
+  
+setTimeout(  
+()=>hide($("authModal")),  
+700  
+);  
+  
+  
+/* LOGIN */  
+  
+}else{  
+  
+await signInWithEmailAndPassword(  
+auth,  
+e,  
+p  
+);  
+  
+msg(  
+$("authMessage"),  
+"Login सफल।",  
+true  
+);  
+  
+setTimeout(  
+()=>hide($("authModal")),  
+400  
+);  
+  
+}  
+  
+}catch(x){  
+  
+console.error(x);  
+  
+msg(  
+$("authMessage"),  
+authError(x.code)  
+);  
+  
+}finally{  
+  
+$("authSubmit").disabled=false;  
+  
+}  
+  
+};  
+  
+  
+/* ================= SELL BUTTON ================= */  
+  
+$("sellBtn").onclick=async()=>{  
+  
+if(!currentUser)  
+return openAuth("login");  
+  
+try{  
+  
+myProfile=await getMyProfile();  
+  
+}catch(e){  
+  
+return msg(  
+$("status"),  
+authError(e.code)  
+);  
+  
+}  
+  
+if(  
+!myProfile ||  
+myProfile.sellPermission!==true  
+){  
+  
+return msg(  
+$("status"),  
+"आपको अभी सामान बेचने की permission नहीं मिली है।"  
+);  
+  
+}  
+  
+$("pFarmer").value=  
+currentUser.displayName ||  
+myProfile.name ||  
+"";  
+  
+$("pPhone").value=  
+myProfile.phone ||  
+"";  
+  
+show($("sellModal"));  
+  
+};  
+  
+  
+/* ================= CLOSE SELL ================= */  
+  
+$("closeSell").onclick=()=>{  
+hide($("sellModal"));  
+};  
+  
+  
+/* ================= POST PRODUCT ================= */  
+  
+$("postProduct").onclick=async()=>{  
+  
+if(!currentUser)  
+return openAuth("login");  
+  
+try{  
+  
+myProfile=await getMyProfile();  
+  
+}catch(e){  
+  
+return msg(  
+$("sellMessage"),  
+authError(e.code)  
+);  
+  
+}  
+  
+if(  
+!myProfile ||  
+myProfile.sellPermission!==true  
+){  
+  
+return msg(  
+$("sellMessage"),  
+"Sell Permission अभी OFF है।"  
+);  
+  
+}  
+  
+  
+const n=  
+$("pName").value.trim();  
+  
+const cat=  
+$("pCategory").value;  
+  
+const price=  
+Number($("pPrice").value);  
+  
+const qty=  
+Number($("pQty").value);  
+  
+const phone=  
+$("pPhone").value.trim();  
+  
+const farmer=  
+$("pFarmer").value.trim();  
+  
+const loc=  
+$("pLocation").value.trim();  
+  
+const description=  
+$("pDescription").value.trim();  
+  
+  
+if(  
+!n ||  
+price<=0 ||  
+qty<=0 ||  
+!farmer ||  
+!/^[0-9]{10}$/.test(phone) ||  
+!loc  
+){  
+  
+return msg(  
+$("sellMessage"),  
+"सभी जरूरी जानकारी सही भरें।"  
+);  
+  
+}  
+  
+  
+$("postProduct").disabled=true;  
+  
+  
+try{  
+  
+await addDoc(  
+collection(db,"products"),  
+{  
+  
+name:n,  
+  
+category:cat,  
+  
+price:price,  
+  
+quantity:qty,  
+  
+phone:phone,  
+  
+farmer:farmer,  
+  
+location:loc,  
+  
+description:description,  
+  
+sellerId:currentUser.uid,  
+  
+sellerEmail:currentUser.email,  
+  
+status:"pending",  
+  
+active:false,  
+  
+createdAt:serverTimestamp()  
+  
+}  
+);  
+  
+  
+msg(  
+$("sellMessage"),  
+"✅ सामान पोस्ट हो गया है। Admin approval के बाद खरीदारों को दिखाई देगा।",  
+true  
+);  
+  
+  
+["pName","pPrice","pQty","pLocation","pDescription"]  
+.forEach(id=>{  
+$(id).value="";  
+});  
+  
+  
+}catch(e){  
+  
+console.error(e);  
+  
+msg(  
+$("sellMessage"),  
+"सामान पोस्ट नहीं हुआ: "+authError(e.code)  
+);  
+  
+}finally{  
+  
+$("postProduct").disabled=false;  
+  
+}  
+  
+};  
+  
+  
+/* ================= LOAD APPROVED PRODUCTS ================= */  
+  
+async function loadProducts(){  
+  
+try{  
+  
+/*  
+Firestore Rules के अनुसार  
+public/buyer product read के लिए:  
+  
+status == approved  
+AND  
+active == true  
+  
+इसीलिए query में दोनों conditions हैं।  
+*/  
+  
+const s=await getDocs(  
+  
+query(  
+  
+collection(db,"products"),  
+  
+where(  
+"status",  
+"==",  
+"approved"  
+),  
+  
+where(  
+"active",  
+"==",  
+true  
+)  
+  
+)  
+  
+);  
+  
+  
+products=s.docs  
+.map(d=>({  
+id:d.id,  
+...d.data()  
+}))  
+.sort((a,b)=>{  
+  
+const at=a.createdAt?.seconds||0;  
+  
+const bt=b.createdAt?.seconds||0;  
+  
+return bt-at;  
+  
+});  
+  
+  
+renderProducts();  
+  
+  
+}catch(e){  
+  
+console.error(  
+"Products loading error:",  
+e  
+);  
+  
+$("products").innerHTML=  
+  
+'<div class="card">'+  
+'<b>Products load नहीं हुए।</b>'+  
+'<p class="muted">'+  
+esc(authError(e.code))+  
+'</p>'+  
+'</div>';  
+  
+}  
+  
+}  
+  
+  
+/* ================= RENDER PRODUCTS ================= */  
+  
+function renderProducts(){  
+  
+const term=  
+$("search").value  
+.trim()  
+.toLowerCase();  
+  
+const cat=  
+$("category").value;  
+  
+  
+const list=  
+products.filter(p=>  
+  
+(!cat || p.category===cat)  
+  
+&&  
+  
+(  
+!term ||  
+  
+`${p.name||""}  
+${p.category||""}  
+${p.farmer||""}  
+${p.location||""}`  
+.toLowerCase()  
+.includes(term)  
+)  
+  
+);  
+  
+  
+$("productCount").textContent=  
+list.length+" सामान";  
+  
+  
+if(!list.length){  
+  
+$("products").innerHTML=  
+  
+'<div class="card">'+  
+  
+'<b>अभी कोई Approved सामान उपलब्ध नहीं है।</b>'+  
+  
+'<p class="muted">'+  
+'किसान सामान पोस्ट करेंगे और Admin approval के बाद यहाँ दिखाई देगा।'+  
+'</p>'+  
+  
+'</div>';  
+  
+return;  
+  
+}  
+  
+  
+$("products").innerHTML=  
+  
+list.map(p=>`  
+  
+<div class="card">  
+  
+<span class="tag">  
+${esc(p.category)}  
+</span>  
+  
+<h3>  
+🌾 ${esc(p.name)}  
+</h3>  
+  
+<div class="price">  
+₹${Number(p.price||0).toLo
+/* ================= PLACE ORDER ================= */
+
+$("placeOrder").onclick=async()=>{
+
+if(!currentUser){
+
+hide($("cartModal"));
+
+return openAuth("login");
+
+}
+
+if(!cart.length){
+
+return msg(
+$("orderMessage"),
+"Cart खाली है।"
+);
+
+}
+
+const name=
+$("buyerName").value.trim();
+
+const phone=
+$("buyerPhone").value.trim();
+
+const address=
+$("buyerAddress").value.trim();
+
+if(
+!name ||
+!/^[0-9]{10}$/.test(phone) ||
+!address
+){
+
+return msg(
+$("orderMessage"),
+"नाम, 10-अंकों का मोबाइल और पता भरें।"
+);
+
+}
+
+$("placeOrder").disabled=true;
+
+try{
+
+const total=
+cart.reduce(
+(a,x)=>
+a+(Number(x.price)||0)*x.qty,
+0
+);
+
+const orderData={
+
+buyerId:currentUser.uid,
+
+buyerName:name,
+
+buyerEmail:currentUser.email || "",
+
+buyerPhone:phone,
+
+address:address,
+
+items:cart.map(x=>({
+
+productId:x.id,
+
+name:x.name,
+
+price:Number(x.price)||0,
+
+qty:x.qty,
+
+sellerId:x.sellerId,
+
+sellerName:x.farmer || ""
+
+})),
+
+total:total,
+
+status:"booked",
+
+createdAt:serverTimestamp()
+
+};
+
+const orderRef=
+await addDoc(
+collection(db,"orders"),
+orderData
+);
+
+
+/* ===== SELLER NOTIFICATION ===== */
+
+for(const item of cart){
+
+try{
+
+await addDoc(
+collection(db,"notifications"),
+{
+
+type:"new_order",
+
+orderId:orderRef.id,
+
+sellerId:item.sellerId,
+
+buyerId:currentUser.uid,
+
+buyerName:name,
+
+buyerPhone:phone,
+
+productId:item.id,
+
+productName:item.name,
+
+quantity:item.qty,
+
+message:
+"आपके सामान का नया order आया है।",
+
+createdAt:serverTimestamp()
+
+}
+);
+
+}catch(notificationError){
+
+console.warn(
+"Notification create failed:",
+notificationError
+);
+
+}
+
+}
+
+
+/* ===== SUCCESS ===== */
+
+cart=[];
+
+renderCart();
+
+$("buyerName").value="";
+
+$("buyerPhone").value="";
+
+$("buyerAddress").value="";
+
+msg(
+$("orderMessage"),
+"✅ Order सफलतापूर्वक भेज दिया गया है।",
+true
+);
+
+setTimeout(()=>{
+
+hide($("cartModal"));
+
+},1200);
+
+
+}catch(e){
+
+console.error(
+"Order error:",
+e
+);
+
+msg(
+$("orderMessage"),
+"Order नहीं गया: "+authError(e.code)
+);
+
+}finally{
+
+$("placeOrder").disabled=false;
+
+}
+
+};
+
+
+/* ================= ORDERS BUTTON ================= */
+
+$("ordersBtn").onclick=async()=>{
+
+if(!currentUser){
+
+return openAuth("login");
+
+}
+
+show($("ordersModal"));
+
+await loadOrders();
+
+};
+
+
+/* ================= CLOSE ORDERS ================= */
+
+$("closeOrders").onclick=()=>{
+
+hide($("ordersModal"));
+
+};
+
+
+/* ================= LOAD MY ORDERS ================= */
+
+async function loadOrders(){
+
+if(!currentUser)return;
+
+$("myOrders").innerHTML=
+"<p>📦 Orders लोड हो रहे हैं...</p>";
+
+try{
+
+const q=query(
+collection(db,"orders"),
+where(
+"buyerId",
+"==",
+currentUser.uid
+)
+);
+
+const s=
+await getDocs(q);
+
+if(s.empty){
+
+$("myOrders").innerHTML=
+
+`<div class="card">
+<b>अभी कोई order नहीं है।</b>
+<p class="muted">
+जब आप सामान खरीदेंगे तो आपका order यहाँ दिखाई देगा।
+</p>
+</div>`;
+
+return;
+
+}
+
+const orders=
+s.docs
+.map(d=>({
+id:d.id,
+...d.data()
+}))
+.sort((a,b)=>
+(b.createdAt?.seconds||0)-
+(a.createdAt?.seconds||0)
+);
+
+
+$("myOrders").innerHTML=
+
+orders.map(o=>{
+
+let statusText="Order Booked";
+
+if(o.status==="approved")
+statusText="Request Approved";
+
+if(o.status==="pickup_scheduled")
+statusText="Pickup Scheduled";
+
+if(o.status==="picked")
+statusText="अनाज Picked Up";
+
+if(o.status==="advance_paid")
+statusText="Advance Payment Done";
+
+if(o.status==="final_paid")
+statusText="Final Payment Done";
+
+if(o.status==="completed")
+statusText="Order Completed";
+
+if(o.status==="cancelled")
+statusText="Order Cancelled";
+
+
+return `
+
+<div class="card">
+
+<h3>
+📦 Order #${esc(o.id.slice(0,8))}
+</h3>
+
+<p>
+<b>स्थिति:</b>
+<span class="status-approved">
+${esc(statusText)}
+</span>
+</p>
+
+<p>
+<b>कुल राशि:</b>
+₹${Number(o.total||0).toLocaleString("en-IN")}
+</p>
+
+<p>
+<b>पता:</b>
+${esc(o.address||"")}
+</p>
+
+<hr>
+
+<h4>सामान</h4>
+
+${(o.items||[]).map(item=>`
+
+<div class="card">
+
+<b>${esc(item.name)}</b>
+
+<p>
+मात्रा:
+${esc(item.qty)}
+</p>
+
+<p>
+कीमत:
+₹${Number(item.price||0).toLocaleString("en-IN")}
+</p>
+
+</div>
+
+`).join("")}
+
+</div>
+
+`;
+
+}).join("");
+
+
+}catch(e){
+
+console.error(
+"Orders error:",
+e
+);
+
+$("myOrders").innerHTML=
+
+`<div class="notice err">
+${esc(authError(e.code))}
+</div>`;
+
+}
+
+}
+
+
+/* ================= ADMIN PANEL ================= */
+
+$("adminBtn").onclick=async()=>{
+
+if(!isAdmin){
+
+return msg(
+$("status"),
+"Admin access केवल authorized account के लिए है।"
+);
+
+}
+
+show($("adminModal"));
+
+await renderAdmin();
+
+};
+
+
+/* ================= CLOSE ADMIN ================= */
+
+$("closeAdmin").onclick=()=>{
+
+hide($("adminModal"));
+
+};
+
+
+/* ================= RENDER ADMIN ================= */
+
+async function renderAdmin(){
+
+if(!isAdmin)return;
+
+$("adminBox").innerHTML=
+"<p>👑 Admin data लोड हो रहा है...</p>";
+
+try{
+
+const productSnap=
+await getDocs(
+collection(db,"products")
+);
+
+const userSnap=
+await getDocs(
+collection(db,"users")
+);
+
+const orderSnap=
+await getDocs(
+collection(db,"orders")
+);
+
+
+const allProducts=
+productSnap.docs.map(d=>({
+id:d.id,
+...d.data()
+}));
+
+const allUsers=
+userSnap.docs.map(d=>({
+id:d.id,
+...d.data()
+}));
+
+const allOrders=
+orderSnap.docs.map(d=>({
+id:d.id,
+...d.data()
+}));
+
+
+const pending=
+allProducts.filter(
+p=>p.status==="pending"
+);
+
+
+$("adminBox").innerHTML=`
+
+<div class="grid">
+
+<div class="card">
+<h3>📦 Total Products</h3>
+<h2>${allProducts.length}</h2>
+</div>
+
+<div class="card">
+<h3>⏳ Pending</h3>
+<h2>${pending.length}</h2>
+</div>
+
+<div class="card">
+<h3>👤 Users</h3>
+<h2>${allUsers.length}</h2>
+</div>
+
+<div class="card">
+<h3>🛒 Orders</h3>
+<h2>${allOrders.length}</h2>
+</div>
+
+</div>
+
+
+<h3 style="margin-top:25px">
+🚜 Sell Requests
+</h3>
+
+<div id="adminProducts"></div>
+
+
+<h3 style="margin-top:25px">
+👥 User Permissions
+</h3>
+
+<div id="adminUsers"></div>
+
+
+<h3 style="margin-top:25px">
+📦 All Orders
+</h3>
+
+<div id="adminOrders"></div>
+
+`;
+
+
+/* ===== PENDING PRODUCTS ===== */
+
+if(!pending.length){
+
+$("adminProducts").innerHTML=
+
+`<div class="card">
+<p class="muted">
+अभी कोई Pending Sell Request नहीं है।
+</p>
+</div>`;
+
+}else{
+
+$("adminProducts").innerHTML=
+
+pending.map(p=>`
+
+<div class="card admin-card">
+
+<h3>
+🌾 ${esc(p.name)}
+</h3>
+
+<p>
+<b>किसान:</b>
+${esc(p.farmer)}
+</p>
+
+<p>
+<b>Category:</b>
+${esc(p.category)}
+</p>
+
+<p>
+<b>Quantity:</b>
+${esc(p.quantity)} किलो
+</p>
+
+<p>
+<b>Price:</b>
+₹${Number(p.price||0).toLocaleString("en-IN")}/किलो
+</p>
+
+<p>
+<b>Mobile:</b>
+${esc(p.phone)}
+</p>
+
+<p>
+<b>Location:</b>
+${esc(p.location)}
+</p>
+
+<p>
+<b>Description:</b>
+${esc(p.description||"")}
+</p>
+
+<div class="actions">
+
+<button
+onclick="window.approveProduct('${p.id}')">
+✅ Approve
+</button>
+
+<button
+class="danger"
+onclick="window.rejectProduct('${p.id}')">
+❌ Reject
+</button>
+
+</div>
+
+</div>
+
+`).join("");
+
+}
+
+
+/* ===== USERS ===== */
+
+const normalUsers=
+allUsers.filter(
+u=>u.id!==currentUser.uid
+);
+
+
+if(!normalUsers.length){
+
+$("adminUsers").innerHTML=
+
+`<div class="card">
+<p class="muted">
+कोई दूसरा user नहीं मिला।
+</p>
+</div>`;
+
+}else{
+
+$("adminUsers").innerHTML=
+
+normalUsers.map(u=>`
+
+<div class="card">
+
+<h3>
+👤 ${esc(u.name||"User")}
+</h3>
+
+<p>
+${esc(u.email||"")}
+</p>
+
+<p>
+Sell Permission:
+<b>
+${u.sellPermission===true
+?"ON"
+:"OFF"}
+</b>
+</p>
+
+<p>
+Buy Permission:
+<b>
+${u.buyPermission===true
+?"ON"
+:"OFF"}
+</b>
+</p>
+
+<div class="actions">
+
+<button
+onclick="window.setPermission(
+'${u.id}',
+'sellPermission',
+${u.sellPermission!==true}
+)">
+
+${u.sellPermission===true
+?"🚫 Sell बंद करें"
+:"🚜 Sell ON करें"}
+
+</button>
+
+
+<button
+class="secondary"
+onclick="window.setPermission(
+'${u.id}',
+'buyPermission',
+${u.buyPermission!==true}
+)">
+
+${u.buyPermission===true
+?"🚫 Buy बंद करें"
+:"🛒 Buy ON करें"}
+
+</button>
+
+</div>
+
+</div>
+
+`).join("");
+
+}
+
+
+/* ===== ORDERS ===== */
+
+if(!allOrders.length){
+
+$("adminOrders").innerHTML=
+
+`<div class="card">
+<p class="muted">
+अभी कोई order नहीं है।
+</p>
+</div>`;
+
+}else{
+
+$("adminOrders").innerHTML=
+
+allOrders.map(o=>`
+
+<div class="card">
+
+<h3>
+📦 Order #${esc(o.id.slice(0,8))}
+</h3>
+
+<p>
+<b>Buyer:</b>
+${esc(o.buyerName||"")}
+</p>
+
+<p>
+<b>Mobile:</b>
+${esc(o.buyerPhone||"")}
+</p>
+
+<p>
+<b>Total:</b>
+₹${Number(o.total||0).toLocaleString("en-IN")}
+</p>
+
+<p>
+<b>Address:</b>
+${esc(o.address||"")}
+</p>
+
+<p>
+<b>Status:</b>
+${esc(o.status||"booked")}
+</p>
+
+<select
+onchange="
+window.changeOrderStatus(
+'${o.id}',
+this.value
+)">
+
+<option value="booked"
+${o.status==="booked"?"selected":""}>
+Request Received
+</option>
+
+<option value="approved"
+${o.status==="approved"?"selected":""}>
+Request Approved
+</option>
+
+<option value="pickup_scheduled"
+${o.status==="pickup_scheduled"?"selected":""}>
+Pickup Scheduled
+</option>
+
+<option value="picked"
+${o.status==="picked"?"selected":""}>
+Grain Picked
+</option>
+
+<option value="advance_paid"
+${o.status==="advance_paid"?"selected":""}>
+Advance Payment Done
+</option>
+
+<option value="final_paid"
+${o.status==="final_paid"?"selected":""}>
+Final Payment Done
+</option>
+
+<option value="completed"
+${o.status==="completed"?"selected":""}>
+Order Completed
+</option>
+
+<option value="cancelled"
+${o.status==="cancelled"?"selected":""}>
+Cancelled
+</option>
+
+</select>
+
+</div>
+
+`).join("");
+
+}
+
+
+}catch(e){
+
+console.error(
+"Admin error:",
+e
+);
+
+$("adminBox").innerHTML=
+
+`<div class="notice err">
+Admin data load नहीं हुआ:
+${esc(authError(e.code))}
+</div>`;
+
+}
+
+}
+
+
+/* ================= APPROVE PRODUCT ================= */
+
+window.approveProduct=async id=>{
+
+if(!isAdmin)return;
+
+try{
+
+await updateDoc(
+doc(db,"products",id),
+{
+
+status:"approved",
+
+active:true,
+
+approvedBy:currentUser.uid,
+
+approvedAt:serverTimestamp()
+
+}
+);
+
+msg(
+$("adminMessage"),
+"✅ सामान Approved हो गया।",
+true
+);
+
+await loadProducts();
+
+await renderAdmin();
+
+}catch(e){
+
+console.error(e);
+
+msg(
+$("adminMessage"),
+"Approve नहीं हुआ: "+
+authError(e.code)
+);
+
+}
+
+};
+
+
+/* ================= REJECT PRODUCT ================= */
+
+window.rejectProduct=async id=>{
+
+if(!isAdmin)return;
+
+try{
+
+await updateDoc(
+doc(db,"products",id),
+{
+
+status:"rejected",
+
+active:false,
+
+rejectedBy:currentUser.uid,
+
+rejectedAt:serverTimestamp()
+
+}
+);
+
+msg(
+$("adminMessage"),
+"❌ सामान Reject हो गया।"
+);
+
+await renderAdmin();
+
+}catch(e){
+
+console.error(e);
+
+msg(
+$("adminMessage"),
+"Reject नहीं हुआ: "+
+authError(e.code)
+);
+
+}
+
+};
+
+
+/* ================= PERMISSION ================= */
+
+window.setPermission=
+async(uid,field,value)=>{
+
+if(!isAdmin)return;
+
+if(
+field!=="sellPermission" &&
+field!=="buyPermission"
+){
+
+return;
+
+}
+
+try{
+
+await updateDoc(
+doc(db,"users",uid),
+{
+[field]:value
+}
+);
+
+msg(
+$("adminMessage"),
+"✅ Permission अपडेट हो गई।",
+true
+);
+
+await renderAdmin();
+
+}catch(e){
+
+console.error(e);
+
+msg(
+$("adminMessage"),
+"Permission update नहीं हुई: "+
+authError(e.code)
+);
+
+}
+
+};
+
+
+/* ================= ORDER STATUS ================= */
+
+window.changeOrderStatus=
+async(id,status)=>{
+
+if(!isAdmin)return;
+
+const allowed=[
+"booked",
+"approved",
+"pickup_scheduled",
+"picked",
+"advance_paid",
+"final_paid",
+"completed",
+"cancelled"
+];
+
+if(!allowed.includes(status))return;
+
+try{
+
+await updateDoc(
+doc(db,"orders",id),
+{
+
+status:status,
+
+updatedAt:serverTimestamp(),
+
+updatedBy:currentUser.uid
+
+}
+);
+
+msg(
+$("adminMessage"),
+"✅ Order status अपडेट हो गया।",
+true
+);
+
+}catch(e){
+
+console.error(e);
+
+msg(
+$("adminMessage"),
+"Order status update नहीं हुआ: "+
+authError(e.code)
+);
+
+}
+
+};
+
+
+/* ================= SEARCH ================= */
+
+$("search").oninput=
+renderProducts;
+
+$("category").onchange=
+renderProducts;
+
+
+/* ================= AUTH STATE ================= */
+
+onAuthStateChanged(
+auth,
+async user=>{
+
+currentUser=user;
+
+myProfile=null;
+
+isAdmin=false;
+
+
+if(user){
+
+try{
+
+myProfile=
+await getMyProfile();
+
+isAdmin=
+await checkAdmin();
+
+}catch(e){
+
+console.error(
+"Profile/Admin error:",
+e
+);
+
+}
+
+
+$("loginBtn").textContent=
+"🚪 Logout";
+
+show($("sellBtn"));
+
+show($("ordersBtn"));
+
+
+if(isAdmin){
+
+show($("adminBtn"));
+
+msg(
+$("status"),
+"✅ Admin account verified.",
+true
+);
+
+}else{
+
+hide($("adminBtn"));
+
+}
+
+
+$("headerUser").innerHTML=
+
+`<span class="small">
+👤 ${esc(
+user.displayName ||
+user.email ||
+"User"
+)}
+</span>`;
+
+}else{
+
+$("loginBtn").textContent=
+"🔐 Login / Register";
+
+hide($("sellBtn"));
+
+hide($("ordersBtn"));
+
+hide($("adminBtn"));
+
+$("headerUser").innerHTML="";
+
+}
+
+});
+
+
+/* ================= INITIAL LOAD ================= */
+
+loadProducts();
+
+renderCart();
+
+</script>
+
+</body>
+</html>
