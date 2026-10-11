@@ -1,0 +1,457 @@
+<!doctype html>
+<html lang="hi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<meta name="theme-color" content="#0b8f4d">
+<meta name="description" content="Kisan Anaj Bazaar - Live भाव, खरीदें और अपना सामान बेचें">
+<title>Kisan Anaj Bazaar</title>
+
+<style>
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;background:#f4faf6;color:#17221d;
+  font-family:Arial,"Noto Sans Devanagari",sans-serif;
+  padding-bottom:78px
+}
+button,input,select{font:inherit}
+button{cursor:pointer;border:0}
+.top{
+  position:sticky;top:0;z-index:30;background:#fff;
+  box-shadow:0 2px 12px #00000012
+}
+.install{
+  background:#087b49;color:#fff;padding:10px 14px;
+  display:flex;align-items:center;gap:10px;font-size:13px
+}
+.install .grow{flex:1}
+.install button{
+  background:#fff;color:#087b49;border-radius:22px;
+  padding:8px 15px;font-weight:700
+}
+.header{
+  height:68px;display:flex;align-items:center;gap:10px;
+  padding:8px 14px
+}
+.menu{
+  width:42px;height:42px;border-radius:12px;background:#f0f5f2;
+  font-size:24px;color:#31433a
+}
+.logo{flex:1;font-size:21px;font-weight:800;color:#16894d}
+.logo span{color:#e0ad18}
+.cart{
+  width:44px;height:44px;border-radius:13px;background:#18a957;
+  color:#fff;font-size:21px;position:relative
+}
+.badge{
+  position:absolute;right:-3px;top:-5px;background:#e53935;color:#fff;
+  min-width:18px;height:18px;border-radius:10px;font-size:11px;
+  display:none;align-items:center;justify-content:center
+}
+.tabs{
+  display:flex;gap:8px;overflow:auto;padding:8px 12px 11px;
+  border-top:1px solid #edf1ee;white-space:nowrap;background:#fff
+}
+.tabs button{
+  padding:11px 17px;border-radius:25px;background:#f4f7f5;color:#5b6b63;
+  font-weight:700
+}
+.tabs button.active{background:#0c984d;color:#fff;box-shadow:0 4px 10px #0c984d38}
+
+.hero{
+  background:linear-gradient(160deg,#0b9c4f,#087a42);
+  color:#fff;padding:28px 18px 25px;text-align:center
+}
+.hero .small{opacity:.9;font-size:14px}
+.hero h1{font-size:29px;margin:12px 0 8px}
+.hero p{margin:0 auto 18px;line-height:1.55;max-width:550px}
+.update{
+  display:inline-block;background:#ffffff24;padding:10px 18px;
+  border-radius:25px;margin-bottom:20px
+}
+.searchbox{
+  background:#fff;border-radius:24px;padding:14px;
+  max-width:650px;margin:auto;box-shadow:0 8px 25px #005c301c
+}
+.searchbox input{
+  width:100%;border:0;outline:0;font-size:16px;padding:7px 5px;color:#333
+}
+.searchbtn{
+  width:100%;background:#13a852;color:#fff;border-radius:28px;
+  padding:14px;font-weight:800;font-size:17px;margin-top:9px
+}
+
+.stats{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:8px;
+  padding:0 12px;margin-top:-4px
+}
+.stat{
+  background:#fff;border-radius:18px;padding:13px 5px;text-align:center;
+  box-shadow:0 3px 12px #00000012
+}
+.stat b{display:block;color:#15924c;font-size:19px;margin:6px 0 3px}
+.stat span{font-size:12px;color:#6d7772}
+
+.section{padding:25px 14px 5px}
+.title{
+  display:flex;align-items:center;justify-content:space-between;
+  gap:10px;margin-bottom:7px
+}
+.title h2{font-size:21px;margin:0;color:#176e43}
+.title a{font-size:13px;color:#12934c;font-weight:700}
+.sub{color:#77827c;font-size:14px;margin:0 0 15px;line-height:1.5}
+
+.categories{
+  display:flex;gap:10px;overflow:auto;padding:4px 1px 10px
+}
+.cat{
+  min-width:82px;background:#fff;border:1px solid #d8eee1;border-radius:16px;
+  padding:12px 8px;text-align:center;box-shadow:0 2px 8px #00000008
+}
+.cat .ico{font-size:28px}
+.cat b{display:block;font-size:12px;margin-top:7px;color:#31443a}
+
+.rates{
+  display:grid;grid-template-columns:1fr 1fr;gap:10px
+}
+.rate{
+  background:#fff;border:1px solid #b8ebcd;border-radius:17px;
+  padding:14px;position:relative
+}
+.rate .tag{
+  display:inline-block;background:#dcf8e7;color:#18884c;
+  border-radius:14px;padding:5px 9px;font-size:11px;font-weight:700
+}
+.rate h3{margin:9px 0 5px;font-size:17px}
+.rate .price{color:#098c48;font-size:19px;font-weight:800}
+.rate small{color:#7c8580}
+.up{float:right;color:#15924c;font-size:12px;font-weight:700}
+
+.products{
+  display:grid;grid-template-columns:1fr 1fr;gap:11px
+}
+.card{
+  background:#fff;border-radius:18px;overflow:hidden;
+  box-shadow:0 3px 12px #00000012;border:1px solid #e2ece6
+}
+.card img{width:100%;height:125px;object-fit:cover;display:block}
+.cardbody{padding:11px}
+.card h3{font-size:16px;margin:0 0 6px}
+.price{font-size:18px;font-weight:800;color:#078b46}
+.loc{font-size:11px;color:#77817b;margin-top:5px}
+.buy{
+  width:100%;margin-top:9px;background:#0d9c4e;color:#fff;
+  border-radius:10px;padding:9px;font-weight:700
+}
+
+.sell{
+  margin:22px 14px 5px;background:linear-gradient(135deg,#0c944a,#08773e);
+  color:#fff;border-radius:22px;padding:23px 19px
+}
+.sell h2{margin:0 0 8px;font-size:21px}
+.sell p{margin:0 0 16px;line-height:1.5;opacity:.92}
+.sell button{background:#fff;color:#087c42;border-radius:24px;padding:12px 18px;font-weight:800}
+
+.info{
+  margin:14px;background:#fff;border-radius:18px;padding:18px;
+  box-shadow:0 3px 12px #0000000c
+}
+.info p{margin:7px 0;color:#64706a;font-size:14px}
+
+.bottom{
+  position:fixed;bottom:0;left:0;right:0;height:74px;background:#fff;
+  border-top:1px solid #dce6df;z-index:50;
+  display:grid;grid-template-columns:repeat(5,1fr)
+}
+.nav{
+  background:none;color:#697771;font-size:11px;font-weight:700;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px
+}
+.nav .nicon{font-size:24px;line-height:24px}
+.nav.active{color:#09984b}
+.nav.center .nicon{
+  width:58px;height:58px;border-radius:50%;background:#12a955;color:#fff;
+  display:flex;align-items:center;justify-content:center;
+  margin-top:-29px;border:6px solid #f4faf6;box-shadow:0 4px 14px #0002
+}
+
+.modal{
+  position:fixed;inset:0;background:#0008;z-index:100;display:none;
+  align-items:flex-end
+}
+.modal.show{display:flex}
+.sheet{
+  width:100%;background:#fff;border-radius:25px 25px 0 0;
+  padding:20px;max-height:88vh;overflow:auto
+}
+.sheethead{display:flex;justify-content:space-between;align-items:center}
+.sheet h2{margin:0;color:#176e43}
+.close{background:#edf3ef;border-radius:50%;width:36px;height:36px;font-size:20px}
+.field{margin:12px 0}
+.field label{display:block;font-size:13px;font-weight:700;margin-bottom:6px}
+.field input,.field select,.field textarea{
+  width:100%;border:1px solid #d5e0d9;border-radius:12px;padding:12px;outline:none
+}
+.primary{
+  width:100%;padding:13px;background:#0d9c4e;color:#fff;border-radius:13px;
+  font-weight:800;margin-top:7px
+}
+.detailimg{width:100%;height:210px;object-fit:cover;border-radius:17px;margin:14px 0}
+
+@media(min-width:700px){
+  body{max-width:720px;margin:auto;box-shadow:0 0 35px #00000010}
+  .bottom{max-width:720px;margin:auto}
+  .products{grid-template-columns:repeat(3,1fr)}
+  .hero{padding-left:35px;padding-right:35px}
+}
+</style>
+</head>
+
+<body>
+
+<div class="top">
+  <div class="install">
+    <div>🌾</div><div class="grow"><b>Kisan Anaj Bazaar</b><br><small>आज के भाव और सामान एक जगह</small></div>
+    <button onclick="closeInstall()">इंस्टॉल</button>
+  </div>
+
+  <div class="header">
+    <button class="menu" onclick="showInfo('menu')">☰</button>
+    <div class="logo">🌾 <span>Kisan</span> Anaj Bazaar</div>
+    <button class="cart" onclick="openCart()">🛒<span class="badge" id="cartBadge">0</span></button>
+  </div>
+
+  <div class="tabs">
+    <button class="active" onclick="go('home')">🏠 होम</button>
+    <button onclick="go('rates')">📈 लाइव भाव</button>
+    <button onclick="go('products')">🛒 खरीदें/बेचें</button>
+    <button onclick="go('location')">📍 लोकेशन</button>
+    <button onclick="go('profile')">👤 मेरी जानकारी</button>
+  </div>
+</div>
+
+<main id="home">
+
+<section class="hero">
+  <div class="small">होम › आज के भाव</div>
+  <h1>📊 आज के Live भाव</h1>
+  <p>किसान, ग्राहक और विक्रेता — सभी के लिए सामान और आज के भाव एक ही जगह।</p>
+  <div class="update">🔄 अंतिम अपडेट: <b id="today"></b></div>
+
+  <div class="searchbox">
+    <input id="search" placeholder="सामान, फसल या category खोजें..." oninput="filterProducts()">
+    <button class="searchbtn" onclick="filterProducts()">⌕ &nbsp; खोजें</button>
+  </div>
+</section>
+
+<section class="stats">
+  <div class="stat"><div>📦</div><b>500+</b><span>सामान</span></div>
+  <div class="stat"><div>🌾</div><b>50+</b><span>Categories</span></div>
+  <div class="stat"><div>📈</div><b>Live</b><span>भाव</span></div>
+  <div class="stat"><div>👥</div><b>24×7</b><span>Marketplace</span></div>
+</section>
+
+<section class="section">
+  <div class="title"><h2>⭐ Categories</h2><a onclick="showInfo('categories')">सभी देखें →</a></div>
+  <p class="sub">जिस सामान की जरूरत है, सीधे उसकी category चुनें।</p>
+  <div class="categories">
+    <div class="cat" onclick="category('अनाज')"><div class="ico">🌾</div><b>अनाज</b></div>
+    <div class="cat" onclick="category('सब्ज़ियाँ')"><div class="ico">🥔</div><b>सब्ज़ियाँ</b></div>
+    <div class="cat" onclick="category('फल')"><div class="ico">🍎</div><b>फल</b></div>
+    <div class="cat" onclick="category('कपड़े')"><div class="ico">👕</div><b>कपड़े</b></div>
+    <div class="cat" onclick="category('मोबाइल')"><div class="ico">📱</div><b>मोबाइल</b></div>
+    <div class="cat" onclick="category('इलेक्ट्रिकल')"><div class="ico">💡</div><b>इलेक्ट्रिकल</b></div>
+    <div class="cat" onclick="category('कृषि')"><div class="ico">🚜</div><b>कृषि सामान</b></div>
+    <div class="cat" onclick="category('घरेलू')"><div class="ico">🏠</div><b>घरेलू</b></div>
+  </div>
+</section>
+
+<section class="section" id="rates">
+  <div class="title"><h2>📈 आज के Live भाव</h2><a>Live →</a></div>
+  <p class="sub">सामान के वर्तमान भाव यहां छोटे-छोटे cards में दिखेंगे।</p>
+  <div class="rates">
+    <div class="rate"><span class="tag">अनाज</span><span class="up">↗ Live</span><h3>गेहूँ</h3><div class="price">₹2,450 / क्विंटल</div><small>आज का भाव</small></div>
+    <div class="rate"><span class="tag">अनाज</span><span class="up">↗ Live</span><h3>चावल</h3><div class="price">₹3,200 / क्विंटल</div><small>आज का भाव</small></div>
+    <div class="rate"><span class="tag">सब्ज़ी</span><span class="up">↗ Live</span><h3>आलू</h3><div class="price">₹28 / किलो</div><small>आज का भाव</small></div>
+    <div class="rate"><span class="tag">सब्ज़ी</span><span class="up">↗ Live</span><h3>लहसुन</h3><div class="price">₹145 / किलो</div><small>आज का भाव</small></div>
+  </div>
+</section>
+
+<section class="section" id="products">
+  <div class="title"><h2>🔥 आज के सामान</h2><a onclick="showInfo('all')">सभी →</a></div>
+  <p class="sub">फोटो, भाव और location देखकर सीधे सामान चुनें।</p>
+  <div class="products" id="productGrid"></div>
+</section>
+
+<div class="sell">
+  <h2>🌾 अपना सामान बेचें</h2>
+  <p>किसान या कोई भी विक्रेता अपना सामान फोटो, भाव, मात्रा और location के साथ डाल सकता है। Admin approval के बाद listing दिखाई जाएगी।</p>
+  <button onclick="openSell()">+ सामान बेचने के लिए डालें</button>
+</div>
+
+<section class="info" id="location">
+  <div class="title"><h2>📍 मेरी Location</h2><a onclick="showInfo('location')">बदलें</a></div>
+  <p>आपकी location के आसपास उपलब्ध सामान यहां दिखाया जाएगा।</p>
+  <button class="primary" onclick="showInfo('location')">📍 Location चुनें</button>
+</section>
+
+<section class="info" id="profile">
+  <div class="title"><h2>👤 मेरी जानकारी</h2><a onclick="openProfile()">खोलें</a></div>
+  <p>Login करके अपने orders, wallet, cashback और profile की जानकारी देखें।</p>
+  <button class="primary" onclick="openProfile()">Login / Register</button>
+</section>
+
+<section class="info">
+  <h2 style="color:#176e43;margin-top:0">💰 UPI + Cashback</h2>
+  <p>Verified payment के बाद eligible cashback wallet में दिखाई देगा।</p>
+  <p>Cashback और payment verification Admin/Firebase system से नियंत्रित किया जाएगा।</p>
+</section>
+
+</main>
+
+<nav class="bottom">
+  <button class="nav active" onclick="go('home')"><span class="nicon">⌂</span>होम</button>
+  <button class="nav" onclick="go('rates')"><span class="nicon">↗</span>लाइव भाव</button>
+  <button class="nav center" onclick="go('products')"><span class="nicon">🛒</span><span>खरीदें/बेचें</span></button>
+  <button class="nav" onclick="go('location')"><span class="nicon">⌖</span>लोकेशन</button>
+  <button class="nav" onclick="openProfile()"><span class="nicon">♙</span>मेरी जानकारी</button>
+</nav>
+
+<!-- Product detail -->
+<div class="modal" id="detailModal">
+  <div class="sheet">
+    <div class="sheethead"><h2 id="detailTitle">सामान</h2><button class="close" onclick="closeModal('detailModal')">×</button></div>
+    <img id="detailImg" class="detailimg">
+    <h3 id="detailPrice"></h3>
+    <p id="detailLoc"></p>
+    <p id="detailDesc"></p>
+    <button class="primary" onclick="addToCart()">🛒 खरीदें / Order करें</button>
+  </div>
+</div>
+
+<!-- Sell -->
+<div class="modal" id="sellModal">
+  <div class="sheet">
+    <div class="sheethead"><h2>🌾 सामान बेचें</h2><button class="close" onclick="closeModal('sellModal')">×</button></div>
+    <div class="field"><label>सामान का नाम</label><input id="sellName" placeholder="जैसे गेहूँ, आलू, मोबाइल..."></div>
+    <div class="field"><label>Category</label><select id="sellCat"><option>अनाज</option><option>सब्ज़ियाँ</option><option>फल</option><option>कपड़े</option><option>मोबाइल</option><option>इलेक्ट्रिकल</option><option>कृषि सामान</option><option>घरेलू सामान</option><option>अन्य</option></select></div>
+    <div class="field"><label>भाव / Price</label><input id="sellPrice" type="number" placeholder="₹"></div>
+    <div class="field"><label>मात्रा</label><input id="sellQty" placeholder="जैसे 100 किलो"></div>
+    <div class="field"><label>Location</label><input id="sellLoc" placeholder="गाँव / शहर / जिला"></div>
+    <div class="field"><label>विवरण</label><textarea id="sellDesc" rows="3" placeholder="सामान की quality आदि"></textarea></div>
+    <div class="field"><label>फोटो</label><input id="sellPhoto" type="file" accept="image/*"></div>
+    <button class="primary" onclick="submitSell()">Admin को भेजें</button>
+  </div>
+</div>
+
+<!-- Profile -->
+<div class="modal" id="profileModal">
+  <div class="sheet">
+    <div class="sheethead"><h2>👤 मेरी जानकारी</h2><button class="close" onclick="closeModal('profileModal')">×</button></div>
+    <div class="field"><label>नाम</label><input id="pname" placeholder="आपका नाम"></div>
+    <div class="field"><label>मोबाइल</label><input id="pmobile" placeholder="10 digit mobile"></div>
+    <div class="field"><label>UPI ID</label><input id="pupi" placeholder="name@upi"></div>
+    <button class="primary" onclick="saveProfile()">Save Profile</button>
+    <button class="primary" style="background:#eef6f1;color:#087c42" onclick="showInfo('orders')">📦 मेरे Orders / Cashback</button>
+  </div>
+</div>
+
+<script>
+const products=[
+ {id:1,name:"गेहूँ",cat:"अनाज",price:"₹2,450 / क्विंटल",loc:"मोतिहारी, बिहार",desc:"अच्छी quality का गेहूँ।",img:"https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?auto=format&fit=crop&w=900&q=80"},
+ {id:2,name:"चावल",cat:"अनाज",price:"₹3,200 / क्विंटल",loc:"पटना, बिहार",desc:"साफ और अच्छी quality का चावल।",img:"https://images.unsplash.com/photo-1536304993881-ff6e9eefa2a6?auto=format&fit=crop&w=900&q=80"},
+ {id:3,name:"आलू",cat:"सब्ज़ियाँ",price:"₹28 / किलो",loc:"मोतिहारी, बिहार",desc:"ताजा आलू।",img:"https://images.unsplash.com/photo-1518977676601-b53f82aba655?auto=format&fit=crop&w=900&q=80"},
+ {id:4,name:"लहसुन",cat:"सब्ज़ियाँ",price:"₹145 / किलो",loc:"मुजफ्फरपुर, बिहार",desc:"ताजा लहसुन।",img:"https://images.unsplash.com/photo-1540148426945-6cf22a6b2383?auto=format&fit=crop&w=900&q=80"},
+ {id:5,name:"कॉटन शर्ट",cat:"कपड़े",price:"₹499 / पीस",loc:"दिल्ली",desc:"कॉटन शर्ट।",img:"https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?auto=format&fit=crop&w=900&q=80"},
+ {id:6,name:"मोबाइल फोन",cat:"मोबाइल",price:"₹8,999 / पीस",loc:"दिल्ली",desc:"Marketplace listing।",img:"https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=900&q=80"},
+ {id:7,name:"LED बल्ब",cat:"इलेक्ट्रिकल",price:"₹120 / पीस",loc:"मोतिहारी, बिहार",desc:"घर के उपयोग के लिए LED बल्ब।",img:"https://images.unsplash.com/photo-1509391366360-2e959784a276?auto=format&fit=crop&w=900&q=80"},
+ {id:8,name:"कृषि पंप",cat:"कृषि",price:"₹6,500 / पीस",loc:"बिहार",desc:"कृषि उपयोग के लिए।",img:"https://images.unsplash.com/photo-1592982537447-6f2a6a0a2b7a?auto=format&fit=crop&w=900&q=80"}
+];
+
+let currentProduct=null,cartCount=0;
+
+function renderProducts(list=products){
+ const grid=document.getElementById("productGrid");
+ if(!list.length){grid.innerHTML='<p style="grid-column:1/-1;text-align:center;color:#777">सामान नहीं मिला।</p>';return}
+ grid.innerHTML=list.map(p=>`
+ <article class="card" onclick="openProduct(${p.id})">
+  <img src="${p.img}" alt="${p.name}" loading="lazy">
+  <div class="cardbody">
+   <h3>${p.name}</h3>
+   <div class="price">${p.price}</div>
+   <div class="loc">📍 ${p.loc}</div>
+   <button class="buy" onclick="event.stopPropagation();openProduct(${p.id})">खरीदें</button>
+  </div>
+ </article>`).join("");
+}
+
+function openProduct(id){
+ currentProduct=products.find(p=>p.id===id);
+ document.getElementById("detailTitle").textContent=currentProduct.name;
+ document.getElementById("detailImg").src=currentProduct.img;
+ document.getElementById("detailPrice").textContent=currentProduct.price;
+ document.getElementById("detailLoc").textContent="📍 "+currentProduct.loc;
+ document.getElementById("detailDesc").textContent=currentProduct.desc;
+ document.getElementById("detailModal").classList.add("show");
+}
+function addToCart(){
+ cartCount++;
+ const b=document.getElementById("cartBadge");b.textContent=cartCount;b.style.display="flex";
+ closeModal("detailModal");
+ alert("सामान cart में जोड़ दिया गया।");
+}
+function openCart(){alert(cartCount?`आपके cart में ${cartCount} सामान है।`:"Cart अभी खाली है।")}
+function openSell(){document.getElementById("sellModal").classList.add("show")}
+function openProfile(){document.getElementById("profileModal").classList.add("show")}
+function closeModal(id){document.getElementById(id).classList.remove("show")}
+function closeInstall(){document.querySelector(".install").style.display="none"}
+
+function submitSell(){
+ const name=document.getElementById("sellName").value.trim();
+ if(!name){alert("सामान का नाम भरें।");return}
+ alert("आपकी listing Admin approval के लिए भेजी गई है। Firebase जोड़ने पर यह request सीधे Admin Panel में जाएगी।");
+ closeModal("sellModal");
+}
+function saveProfile(){
+ localStorage.setItem("kab_profile",JSON.stringify({
+  name:document.getElementById("pname").value,
+  mobile:document.getElementById("pmobile").value,
+  upi:document.getElementById("pupi").value
+ }));
+ alert("Profile save हो गई।");
+ closeModal("profileModal");
+}
+function filterProducts(){
+ const q=document.getElementById("search").value.trim().toLowerCase();
+ renderProducts(products.filter(p=>
+  (p.name+" "+p.cat+" "+p.loc).toLowerCase().includes(q)
+ ));
+ document.getElementById("products").scrollIntoView({behavior:"smooth"});
+}
+function category(cat){
+ document.getElementById("search").value=cat;
+ renderProducts(products.filter(p=>p.cat===cat));
+ document.getElementById("products").scrollIntoView({behavior:"smooth"});
+}
+function go(id){
+ document.getElementById(id).scrollIntoView({behavior:"smooth"});
+ document.querySelectorAll(".nav").forEach(x=>x.classList.remove("active"));
+}
+function showInfo(type){
+ if(type==="location"){
+   alert("यहाँ आगे Firebase/Location service से user की चुनी हुई location और आसपास के सामान दिखेंगे।");
+ }else if(type==="orders"){
+   alert("Login के बाद यहाँ Orders, payment status और cashback wallet दिखेगा।");
+ }else if(type==="menu"){
+   alert("Menu: Home • Live भाव • खरीदें/बेचें • Orders • Profile • Admin");
+ }else{
+   alert("यह section आगे सभी categories और listings के लिए खुलेगा।");
+ }
+}
+const d=new Date();
+document.getElementById("today").textContent=d.toLocaleDateString("hi-IN",{day:"2-digit",month:"long",year:"numeric"});
+renderProducts();
+</script>
+</body>
+</html>
