@@ -1,0 +1,286 @@
+<!doctype html>
+<html lang="hi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#176b3a">
+<title>किसान अनाज बाजार | Kisan Anaj Bazaar</title>
+<meta name="description" content="किसानों से सीधे अनाज और कृषि उत्पाद खरीदें और बेचें।">
+<style>
+:root{--green:#176b3a;--green2:#22884c;--pale:#eff8f0;--gold:#f5c451;--ink:#17251b;--muted:#657269;--line:#dce7de;--white:#fff;--red:#b42318}
+*{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,"Noto Sans Devanagari",Arial,sans-serif;background:#f7faf7;color:var(--ink)}
+header{background:linear-gradient(120deg,#11552d,#23864b);color:#fff;padding:18px 16px 24px}
+.top{max-width:1100px;margin:auto;display:flex;gap:14px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:10px}.logo{font-size:34px}.brand h1{font-size:22px;margin:0}.brand p{margin:2px 0 0;color:#e0f2e5;font-size:13px}
+nav{display:flex;gap:8px;flex-wrap:wrap}button,.btn{border:0;border-radius:10px;padding:10px 14px;font:inherit;font-weight:650;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:6px}
+nav button{background:#ffffff1c;color:white;border:1px solid #ffffff45}.primary{background:var(--green);color:#fff}.secondary{background:#e7f3e9;color:var(--green)}.outline{background:white;border:1px solid var(--line);color:var(--ink)}.danger{background:#fee4e2;color:var(--red)}button:disabled{opacity:.5;cursor:not-allowed}
+.hero{max-width:1100px;margin:20px auto 0;display:grid;grid-template-columns:1.4fr .8fr;gap:20px;align-items:center}.hero h2{font-size:clamp(25px,4vw,38px);margin:0 0 8px}.hero p{color:#e3f4e8;line-height:1.6}.hero-card{background:#ffffff18;border:1px solid #ffffff38;border-radius:18px;padding:16px}.hero-card strong{font-size:22px}.hero-card div{margin:8px 0}
+main{max-width:1100px;margin:20px auto;padding:0 14px 40px}.notice{border-radius:12px;padding:12px 14px;background:#fff5d6;border:1px solid #f0d987;margin-bottom:16px;font-size:14px;line-height:1.5}.notice.error{background:#fff0ef;border-color:#f2b6b1;color:#8a1c14}.notice.good{background:#eaf7ec;border-color:#b8dfbf;color:#176b3a}
+.grid{display:grid;grid-template-columns:repeat(12,1fr);gap:16px}.panel{background:white;border:1px solid var(--line);border-radius:16px;padding:18px;box-shadow:0 4px 18px #173b2010}.span-12{grid-column:span 12}.span-8{grid-column:span 8}.span-4{grid-column:span 4}
+h2.section-title{font-size:21px;margin:0 0 14px}.muted{color:var(--muted);font-size:14px}.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}.field{display:flex;flex-direction:column;gap:6px;margin:0 0 12px;min-width:0}.field label{font-weight:650;font-size:14px}.field input,.field select,.field textarea,input,select,textarea{width:100%;padding:11px 12px;border:1px solid #cbd9ce;border-radius:10px;font:inherit;background:white;color:var(--ink)}textarea{min-height:80px;resize:vertical}.form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 12px}.full{grid-column:1/-1}
+.searchbar{display:grid;grid-template-columns:1fr 190px auto;gap:10px;margin-bottom:14px}.products{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}.product-card{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:#fff}.product-head{background:var(--pale);padding:14px;display:flex;align-items:center;justify-content:space-between;gap:8px}.product-head h3{margin:0;font-size:18px}.badge{display:inline-flex;align-items:center;border-radius:999px;padding:4px 9px;background:#e7f3e9;color:#176b3a;font-size:12px;font-weight:750}.badge.pending{background:#fff2c9;color:#775900}.badge.rejected{background:#fee4e2;color:#a52218}.product-body{padding:14px}.price{font-size:24px;font-weight:800;color:var(--green)}.product-body p{margin:7px 0;font-size:14px}.product-actions{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}.product-actions button{flex:1}
+.empty{padding:25px;text-align:center;color:var(--muted);border:1px dashed #cbd9ce;border-radius:12px}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}.tab{background:#edf3ee;color:#344b39}.tab.active{background:var(--green);color:white}.hidden{display:none!important}.status-line{font-size:13px;color:var(--muted);margin-top:8px}
+footer{background:#103f24;color:#e8f4eb;padding:24px 16px;text-align:center}footer a{color:white}
+.modal{position:fixed;inset:0;background:#102416a8;display:none;align-items:center;justify-content:center;padding:16px;z-index:99}.modal.open{display:flex}.modal-box{background:white;border-radius:18px;padding:20px;max-width:520px;width:100%;max-height:90vh;overflow:auto}.modal-head{display:flex;align-items:center;justify-content:space-between;gap:12px}.modal-head h2{margin:0 0 14px}.close{background:#edf3ee;color:#26372b;padding:7px 11px}
+.stat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px}.stat{background:var(--pale);border-radius:12px;padding:12px}.stat strong{display:block;font-size:22px;color:var(--green)}.stat span{font-size:12px;color:var(--muted)}
+table{border-collapse:collapse;width:100%;font-size:14px}th,td{text-align:left;padding:10px;border-bottom:1px solid var(--line);vertical-align:top}th{background:#f3f8f3}.table-wrap{overflow:auto}
+.small{font-size:12px}.upi-box{background:#f5faf5;border:1px dashed #9ac5a3;padding:14px;border-radius:12px;overflow-wrap:anywhere}
+@media(max-width:780px){.hero{grid-template-columns:1fr}.span-8,.span-4{grid-column:span 12}.products{grid-template-columns:repeat(2,minmax(0,1fr))}.searchbar{grid-template-columns:1fr}.stat-grid{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:480px){.products{grid-template-columns:1fr}.form-grid{grid-template-columns:1fr}.full{grid-column:auto}.brand h1{font-size:18px}.stat{padding:9px}.stat strong{font-size:18px}nav button{padding:8px 10px;font-size:13px}}
+</style>
+</head>
+<body>
+<header>
+  <div class="top">
+    <div class="brand"><div class="logo">🌾</div><div><h1>किसान अनाज बाजार</h1><p>Kisan Anaj Bazaar · किसानों से सीधे खरीदें और बेचें</p></div></div>
+    <nav>
+      <button onclick="goTo('market')">🛒 बाजार</button><button onclick="goTo('sell')">➕ सामान बेचें</button><button onclick="showMyOrders()">📦 मेरे ऑर्डर</button><button onclick="openAuth()">👤 लॉगिन</button><button onclick="openAdmin()">🛡️ एडमिन</button>
+    </nav>
+  </div>
+  <div class="hero">
+    <div><h2>किसान की फसल, सीधे खरीदार तक</h2><p>धान, गेहूं, मक्का, दलहन और अन्य कृषि उत्पादों के लिए आसान ऑनलाइन बाजार। सामान की पोस्ट एडमिन की मंजूरी के बाद ही सबको दिखाई जाएगी।</p><div class="row"><button class="outline" onclick="goTo('market')">बाजार देखें</button><button style="background:var(--gold);color:#2b291b" onclick="goTo('sell')">अपना सामान पोस्ट करें</button></div></div>
+    <div class="hero-card"><div>🌱 <strong>किसान और खरीदार एक जगह</strong></div><div>✔️ एडमिन अप्रूवल</div><div>✔️ कैश और UPI विकल्प</div><div>☎️ हेल्पलाइन: <strong>7042894282</strong></div></div>
+  </div>
+</header>
+<main>
+  <div id="firebaseNotice" class="notice error">वेबसाइट शुरू हो रही है…</div>
+  <div id="accountNotice" class="notice hidden"></div>
+  <section id="market" class="panel" style="margin-bottom:16px">
+    <h2 class="section-title">🔎 कृषि सामान खोजें</h2>
+    <div class="searchbar"><input id="searchInput" placeholder="धान, गेहूं, किसान या जगह खोजें…" oninput="renderProducts()"><select id="categoryFilter" onchange="renderProducts()"><option value="">सभी सामान</option><option>धान</option><option>गेहूं</option><option>मक्का</option><option>दलहन</option><option>सब्जी</option><option>अन्य</option></select><button class="primary" onclick="renderProducts()">खोजें</button></div>
+    <div id="productList" class="products"><div class="empty">सामान लोड हो रहा है…</div></div>
+  </section>
+  <div class="grid">
+    <section id="sell" class="panel span-8">
+      <h2 class="section-title">➕ अपना सामान बेचने के लिए पोस्ट करें</h2>
+      <p class="muted">पहले लॉगिन करें। नया खाता एडमिन की मंजूरी तक प्रतीक्षा में रहेगा। मंजूरी मिलने पर खरीदना और बेचना दोनों चालू हो जाएंगे। हर नई पोस्ट भी एडमिन की मंजूरी के बाद बाजार में दिखेगी।</p>
+      <form id="productForm" onsubmit="submitProduct(event)">
+        <div class="form-grid">
+          <div class="field"><label for="pName">सामान का नाम *</label><input id="pName" required placeholder="जैसे धान"></div>
+          <div class="field"><label for="pCategory">कैटेगरी *</label><select id="pCategory" required><option value="">चुनें</option><option>धान</option><option>गेहूं</option><option>मक्का</option><option>दलहन</option><option>सब्जी</option><option>अन्य</option></select></div>
+          <div class="field"><label for="pPrice">कीमत (₹ प्रति किलो) *</label><input id="pPrice" type="number" min="0.01" step="0.01" required placeholder="जैसे 32"></div>
+          <div class="field"><label for="pQty">मात्रा (किलो) *</label><input id="pQty" type="number" min="1" step="1" required placeholder="जैसे 500"></div>
+          <div class="field"><label for="pFarmer">किसान / विक्रेता का नाम *</label><input id="pFarmer" required placeholder="पूरा नाम"></div>
+          <div class="field"><label for="pPhone">मोबाइल नंबर *</label><input id="pPhone" type="tel" pattern="[0-9]{10}" maxlength="10" required placeholder="10 अंकों का नंबर"></div>
+          <div class="field full"><label for="pLocation">गांव / शहर / जिला *</label><input id="pLocation" required placeholder="जैसे गांव, जिला, बिहार"></div>
+          <div class="field full"><label for="pDesc">सामान की जानकारी</label><textarea id="pDesc" placeholder="फसल की किस्म, गुणवत्ता आदि"></textarea></div>
+        </div>
+        <button class="primary" type="submit">पोस्ट करें (एडमिन मंजूरी के लिए)</button><p id="postMessage" class="status-line"></p>
+      </form>
+    </section>
+    <section class="panel span-4"><h2 class="section-title">📌 कैसे काम करता है?</h2><p>1. ईमेल से रजिस्टर / लॉगिन करें।</p><p>2. एडमिन आपके खाते को मंजूरी देगा।</p><p>3. मंजूरी के बाद आप सामान खरीद और बेच सकते हैं।</p><p>4. आपकी हर नई पोस्ट अलग से जांची जाएगी।</p><hr style="border:0;border-top:1px solid var(--line)"><h2 class="section-title">💳 भुगतान</h2><p>ऑर्डर पर कैश या UPI विकल्प चुनें। UPI ऐप में रकम पहले से भरी जा सकती है। भुगतान की असली पुष्टि एडमिन / पेमेंट गेटवे से करनी होगी।</p><div class="upi-box"><b>UPI ID:</b> niteshkk4345@naviaxis<br><b>खाता नाम:</b> NITESH KUMAR</div></section>
+  </div>
+  <section id="ordersSection" class="panel hidden" style="margin-top:16px"><h2 class="section-title">📦 मेरे ऑर्डर</h2><div id="myOrders"></div></section>
+  <section id="adminSection" class="panel hidden" style="margin-top:16px"><h2 class="section-title">🛡️ एडमिन पैनल</h2><div id="adminContent"></div></section>
+</main>
+<footer><b>🌾 किसान अनाज बाजार</b><p>किसानों से सीधे कृषि सामान खरीदें और बेचें</p><p>हेल्पलाइन: 7042894282</p><small>© 2026 Kisan Anaj Bazaar</small></footer>
+
+<div class="modal" id="authModal" role="dialog" aria-modal="true"><div class="modal-box"><div class="modal-head"><h2 id="authTitle">लॉगिन / रजिस्टर</h2><button class="close" onclick="closeModal('authModal')">✕</button></div><div class="tabs"><button id="loginTab" class="tab active" onclick="setAuthMode('login')">लॉगिन</button><button id="registerTab" class="tab" onclick="setAuthMode('register')">नया खाता</button></div><form id="authForm" onsubmit="submitAuth(event)"><div id="nameField" class="field hidden"><label for="authName">पूरा नाम</label><input id="authName" autocomplete="name"></div><div class="field"><label for="authEmail">ईमेल</label><input id="authEmail" type="email" required autocomplete="email"></div><div class="field"><label for="authPassword">पासवर्ड</label><input id="authPassword" type="password" required minlength="6" autocomplete="current-password"></div><button class="primary" id="authSubmit" type="submit">लॉगिन</button><button class="secondary" type="button" onclick="resetPassword()">पासवर्ड भूल गए?</button><p id="authMessage" class="status-line"></p></form></div></div>
+<div class="modal" id="orderModal" role="dialog" aria-modal="true"><div class="modal-box"><div class="modal-head"><h2>ऑर्डर करें</h2><button class="close" onclick="closeModal('orderModal')">✕</button></div><form id="orderForm" onsubmit="submitOrder(event)"><input id="orderProductId" type="hidden"><div class="field"><label>सामान</label><input id="orderProductName" readonly></div><div class="field"><label>कितनी मात्रा (किलो)?</label><input id="orderQty" type="number" min="1" step="1" value="1" required oninput="updateOrderTotal()"></div><div class="field"><label>आपका नाम</label><input id="buyerName" required></div><div class="field"><label>मोबाइल नंबर</label><input id="buyerPhone" type="tel" pattern="[0-9]{10}" maxlength="10" required></div><div class="field"><label>डिलीवरी का पूरा पता</label><textarea id="buyerAddress" required></textarea></div><div class="field"><label>भुगतान का तरीका</label><select id="paymentMethod" onchange="updateOrderTotal()"><option value="cash">कैश / डिलीवरी पर</option><option value="upi">UPI</option></select></div><div class="upi-box"><div>ऑर्डर की रकम: <strong id="orderTotal">₹0</strong></div><p id="upiInfo" class="small">UPI चुनने पर ऑर्डर जमा करने के बाद UPI ऐप खुलेगा।</p></div><button class="primary" type="submit">ऑर्डर दर्ज करें</button><p id="orderMessage" class="status-line"></p></form></div></div>
+<div class="modal" id="upiModal" role="dialog" aria-modal="true"><div class="modal-box"><div class="modal-head"><h2>UPI भुगतान</h2><button class="close" onclick="closeModal('upiModal')">✕</button></div><p>UPI ऐप में नीचे दी गई रकम भरी जा सकती है। भुगतान पूरा होने के बाद भी ऐप लौटना भुगतान की पुष्टि नहीं है।</p><div class="upi-box"><p>UPI ID: <b>niteshkk4345@naviaxis</b></p><p>खाता नाम: <b>NITESH KUMAR</b></p><p>रकम: <b id="upiAmount">₹0</b></p></div><div class="row" style="margin-top:12px"><a id="upiLink" class="btn primary" href="#">UPI ऐप खोलें</a><button class="secondary" onclick="closeModal('upiModal')">बंद करें</button></div><p class="small muted">भुगतान स्थिति ऑर्डर में “पुष्टि बाकी” रहेगी, जब तक एडमिन पुष्टि न करे।</p></div></div>
+<div class="modal" id="adminLoginModal" role="dialog" aria-modal="true"><div class="modal-box"><div class="modal-head"><h2>एडमिन लॉगिन</h2><button class="close" onclick="closeModal('adminLoginModal')">✕</button></div><p class="muted">एडमिन ईमेल और पासवर्ड से लॉगिन करें। PIN केवल अतिरिक्त स्क्रीन लॉक है; असली सुरक्षा Firebase में admin role से होगी।</p><form onsubmit="adminLogin(event)"><div class="field"><label>एडमिन ईमेल</label><input id="adminEmail" type="email" required></div><div class="field"><label>एडमिन पासवर्ड</label><input id="adminPassword" type="password" required></div><div class="field"><label>एडमिन PIN</label><input id="adminPin" type="password" required></div><button class="primary" type="submit">एडमिन पैनल खोलें</button><p id="adminLoginMessage" class="status-line"></p></form></div></div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-app.js";
+import { getAuth, onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, sendPasswordResetEmail, updateProfile } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-auth.js";
+import { getFirestore, collection, doc, getDoc, getDocs, addDoc, setDoc, updateDoc, query, where, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyDxjigog6ctxY25UFGrH7M3pYx1IN2RWSw",
+  authDomain: "kissan-bajar.firebaseapp.com",
+  databaseURL: "https://kissan-bajar-default-rtdb.firebaseio.com",
+  projectId: "kissan-bajar",
+  storageBucket: "kissan-bajar.firebasestorage.app",
+  messagingSenderId: "629043004551",
+  appId: "1:629043004551:web:f484c026c838399cff6422",
+  measurementId: "G-TE6ZLGS1KF"
+};
+const HELPLINE = "7042894282";
+const UPI_ID = "niteshkk4345@naviaxis";
+const ADMIN_PIN = "kisan2026"; // केवल अतिरिक्त स्क्रीन लॉक; admin role Firestore में सेट होना जरूरी है
+let app, auth, db, currentUser = null, profile = null, authMode = "login", allProducts = [], isAdmin = false, latestOrders = [];
+
+const el = id => document.getElementById(id);
+const safe = value => String(value ?? "").replace(/[&<>"']/g, ch => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[ch]));
+const money = value => "₹" + Number(value || 0).toLocaleString("en-IN",{maximumFractionDigits:2});
+const showNotice = (message, kind="") => { const n=el("firebaseNotice"); n.textContent=message; n.className="notice"+(kind?" "+kind:""); };
+window.goTo = id => { const target=el(id); if(target){target.classList.remove("hidden");target.scrollIntoView({behavior:"smooth",block:"start"});} };
+window.closeModal = id => el(id).classList.remove("open");
+window.openAuth = () => { el("authModal").classList.add("open"); };
+window.setAuthMode = mode => { authMode=mode; el("loginTab").classList.toggle("active",mode==="login");el("registerTab").classList.toggle("active",mode==="register");el("nameField").classList.toggle("hidden",mode!=="register");el("authName").required=mode==="register";el("authTitle").textContent=mode==="login"?"लॉगिन":"नया खाता बनाएं";el("authSubmit").textContent=mode==="login"?"लॉगिन करें":"रजिस्टर करें";el("authMessage").textContent=""; };
+window.submitAuth = async event => {
+  event.preventDefault(); if(!auth){el("authMessage").textContent="Firebase अभी उपलब्ध नहीं है।";return;}
+  const email=el("authEmail").value.trim(), password=el("authPassword").value, name=el("authName").value.trim();
+  el("authSubmit").disabled=true; el("authMessage").textContent="कृपया प्रतीक्षा करें…";
+  try {
+    if(authMode==="register"){
+      const cred=await createUserWithEmailAndPassword(auth,email,password);
+      if(name) await updateProfile(cred.user,{displayName:name});
+      await setDoc(doc(db,"users",cred.user.uid),{uid:cred.user.uid,email,name:name||cred.user.displayName||"",role:"seller",approved:false,admin:false,blocked:false,createdAt:serverTimestamp()});
+      el("authMessage").textContent="खाता बन गया। खरीदने और बेचने के लिए एडमिन की मंजूरी का इंतजार करें।";
+    } else {
+      await signInWithEmailAndPassword(auth,email,password);
+      el("authMessage").textContent="लॉगिन सफल।";
+      setTimeout(()=>closeModal("authModal"),700);
+    }
+  } catch(error){el("authMessage").textContent=friendly(error);}
+  finally{el("authSubmit").disabled=false;}
+};
+window.resetPassword = async () => {
+  const email=el("authEmail").value.trim(); if(!email){el("authMessage").textContent="पहले अपना ईमेल लिखें।";return;}
+  try{await sendPasswordResetEmail(auth,email);el("authMessage").textContent="पासवर्ड रीसेट लिंक ईमेल पर भेज दिया गया है।";}catch(e){el("authMessage").textContent=friendly(e);}
+};
+function friendly(error){
+ const code=error?.code||"";
+ const map={"auth/email-already-in-use":"यह ईमेल पहले से रजिस्टर है।","auth/invalid-email":"ईमेल सही नहीं है।","auth/weak-password":"पासवर्ड कम से कम 6 अक्षर का रखें।","auth/invalid-credential":"ईमेल या पासवर्ड गलत है।","auth/user-not-found":"इस ईमेल का खाता नहीं मिला।","auth/network-request-failed":"इंटरनेट कनेक्शन जांचें।","permission-denied":"Firebase Rules ने अनुमति नहीं दी।","firestore/permission-denied":"Firestore Rules ने अनुमति नहीं दी।"};
+ return map[code]||error?.message||"कुछ गड़बड़ हुई। Firebase settings और Rules जांचें।";
+}
+onAuthStateChangedSafe();
+async function onAuthStateChangedSafe(){
+ try {
+   app=initializeApp(firebaseConfig); auth=getAuth(app); db=getFirestore(app);
+   onAuthStateChanged(auth,async user=>{
+     currentUser=user;profile=null;isAdmin=false;
+     if(user){
+       try{const snap=await getDoc(doc(db,"users",user.uid)); if(snap.exists()) profile=snap.data();}catch(e){console.warn(e);}
+       isAdmin=!!profile?.admin;
+       el("accountNotice").classList.remove("hidden");
+       if(profile?.blocked){el("accountNotice").className="notice error";el("accountNotice").textContent="आपका खाता ब्लॉक है। हेल्पलाइif (profile?.blocked) {
+  el("accountNotice").className = "notice error";
+  el("accountNotice").textContent =
+    "आपका खाता ब्लॉक है। हेल्पलाइन 7042894282 पर संपर्क करें।";
+} else if (profile?.approved) {
+  el("accountNotice").className = "notice good";
+  el("accountNotice").textContent =
+    `लॉगिन: ${profile.name || user.email} · आपका खाता मंजूर है। आप खरीद और बिक्री कर सकते हैं।`;
+} else {
+  el("accountNotice").className = "notice";
+  el("accountNotice").textContent =
+    `लॉगिन: ${user.email} · आपका खाता एडमिन मंजूरी की प्रतीक्षा में है।`;
+}
+} else {
+  el("accountNotice").classList.add("hidden");
+}
+
+await loadProducts();
+});
+showNotice("Firebase जुड़ गया। बाजार का सामान लोड किया जा रहा है।", "good");
+} catch (e) {
+  showNotice(
+    "Firebase शुरू नहीं हो पाया: " + friendly(e) +
+    " Firebase Console में Email/Password Authentication और config जांचें।",
+    "error"
+  );
+}
+}
+
+async function loadProducts() {
+  try {
+    const snap = await getDocs(collection(db, "products"));
+    allProducts = snap.docs.map(d => ({
+      id: d.id,
+      ...d.data()
+    }));
+    renderProducts();
+  } catch (e) {
+    allProducts = [];
+    renderProducts();
+    showNotice("सामान लोड नहीं हुआ: " + friendly(e), "error");
+  }
+}
+
+window.renderProducts = () => {
+  const term = (el("searchInput").value || "").trim().toLowerCase();
+  const cat = el("categoryFilter").value;
+
+  const visible = allProducts.filter(p =>
+    (
+      p.status === "approved" ||
+      (currentUser && p.sellerId === currentUser.uid &&
+       p.status === "pending") ||
+      isAdmin
+    ) &&
+    (!cat || p.category === cat) &&
+    (!term || [
+      p.name, p.category, p.farmer,
+      p.location, p.description
+    ].some(v => String(v || "").toLowerCase().includes(term)))
+  );
+
+  const list = el("productList");
+
+  if (!visible.length) {
+    list.innerHTML =
+      '<div class="empty" style="grid-column:1/-1">' +
+      'अभी कोई मंजूर सामान नहीं मिला।</div>';
+    return;
+  }
+
+  list.innerHTML = visible.map(p => `
+    <article class="product-card">
+      <div class="product-head">
+        <h3>${safe(p.name)}</h3>
+        <span class="badge">
+          ${p.status === "pending" ? "मंजूरी बाकी" : "मंजूर"}
+        </span>
+      </div>
+      <div class="product-body">
+        <div class="price">${money(p.price)} <span>/ किलो या यूनिट</span></div>
+        <p>📦 मात्रा: ${safe(p.quantity)}</p>
+        <p>👨‍🌾 ${safe(p.farmer || "विक्रेता")}</p>
+        <p>📍 ${safe(p.location || "")}</p>
+        <p>${safe(p.description || "")}</p>
+        ${p.status === "approved"
+          ? `<button class="primary"
+               onclick="buyProduct('${p.id}')">खरीदें</button>`
+          : ""}
+        ${isAdmin && p.status !== "approved"
+          ? `<button class="secondary"
+               onclick="approveProduct('${p.id}')">मंजूर करें</button>`
+          : ""}
+      </div>
+    </article>
+  `).join("");
+};
+
+window.submitProduct = async event => {
+  event.preventDefault();
+
+  if (!currentUser) {
+    openAuth();
+    return;
+  }
+
+  if (!profile?.approved || profile?.blocked) {
+    el("postMessage").textContent =
+      "सामान पोस्ट करने के लिए एडमिन की मंजूरी जरूरी है।";
+    return;
+  }
+
+  const data = {
+    name: el("pName").value.trim(),
+    category: el("pCategory").value,
+    price: Number(el("pPrice").value),
+    quantity: Number(el("pQty").value),
+    farmer: el("pFarmer").value.trim(),
+    phone: el("pPhone").value.trim(),
+    location: el("pLocation").value.trim(),
+    description: el("pDesc").value.trim(),
+    sellerId: currentUser.uid,
+    sellerEmail: currentUser.email,
+    status: "pending",
+    createdAt: serverTimestamp()
+  };
+
+  try {
+    await addDoc(collection(db, "products"), data);
+    el("postMessage").textContent =
+      "आपकी पोस्ट एडमिन की मंजूरी के लिए भेज दी गई है।";
+    el("productForm").reset();
+    await loadProducts();
+  } catch (e) {
+    el("postMessage").textContent =
+      "पोस्ट नहीं हुई: " + friendly(e);
+  }
+};
