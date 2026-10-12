@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Kisan Anaj Bazar | किसान अनाज बाजार</title>
+<style>
+:root{--green:#176b3b;--green2:#21834d;--pale:#f2f7f1;--line:#dce7dd;--gold:#ffe28a;--ink:#183b29}*{box-sizing:border-box}body{margin:0;background:var(--pale);font-family:Arial,'Noto Sans Devanagari',sans-serif;color:#17251c;padding-bottom:82px}button,input,select,textarea{font:inherit}button{cursor:pointer;border:0;border-radius:12px;padding:12px 15px;font-weight:700}.hero{background:linear-gradient(115deg,var(--green),var(--green2));color:white;padding:24px 18px 28px;border-radius:0 0 30px 30px}.brandrow{display:flex;justify-content:space-between;gap:10px;align-items:center}.brand{font-size:25px;font-weight:800}.tagline{margin-top:5px;font-size:16px}.locbtn{background:transparent;color:white;border:1px solid #ffffff99;border-radius:30px;white-space:nowrap}.search{display:flex;gap:10px;margin-top:24px}.search input{min-width:0;flex:1;border:0;border-radius:18px;padding:17px 18px;font-size:18px}.gold{background:var(--gold);color:#4b3c05;font-size:18px}.wrap{max-width:900px;margin:auto;padding:18px 16px}.card{background:white;border:2px solid var(--line);border-radius:26px;padding:20px;margin-bottom:18px}.welcome h1{font-size:27px;margin:0 0 12px;color:#1c3024}.muted{color:#6d796f;line-height:1.5}.actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:16px}.primary{background:var(--green);color:white}.soft{background:#e4f1e6;color:var(--green)}.sectionhead{display:flex;justify-content:space-between;align-items:center;margin:22px 2px 14px;gap:8px}.sectionhead h2{margin:0;font-size:23px;color:#1c3024}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.category{background:white;border:2px solid var(--line);border-radius:22px;padding:18px 12px;display:flex;gap:12px;align-items:center;text-align:left;min-height:96px}.emoji{font-size:38px}.category strong{display:block;font-size:19px}.category small{display:block;color:#758076;margin-top:8px;font-size:15px}.product{background:white;border:1px solid var(--line);border-radius:18px;padding:15px;margin-bottom:12px}.product h3{margin:0 0 7px}.price{color:var(--green);font-weight:800;font-size:19px}.bottom{position:fixed;z-index:10;bottom:0;left:0;right:0;background:#fff;border-top:1px solid var(--line);display:flex;justify-content:space-around;padding:8px 3px calc(8px + env(safe-area-inset-bottom));box-shadow:0 -5px 20px #00000008}.bottom button{background:transparent;color:#657168;padding:5px 4px;flex:1;font-weight:500;font-size:12px}.bottom button span{display:block;font-size:25px;margin-bottom:2px}.bottom button.active{color:var(--green);font-weight:800}.field{margin:12px 0}.field label{display:block;font-weight:700;margin-bottom:6px}.field input,.field select,.field textarea{width:100%;padding:12px;border:1px solid #cbd8ce;border-radius:10px;background:white}.hidden{display:none!important}.notice{background:#fff4d7;border:1px solid #ead28b;padding:12px;border-radius:12px;margin:12px 0}.row{display:flex;gap:10px;flex-wrap:wrap}.row>*{flex:1;min-width:130px}.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}.tabs button{background:#e4f1e6;color:var(--green)}.tabs button.active{background:var(--green);color:white}.status{font-size:13px;padding:4px 8px;border-radius:20px;background:#edf3ee;display:inline-block}.danger{background:#a72b2b;color:#fff}.tiny{font-size:13px;color:#68756c}a{color:var(--green)}@media(min-width:700px){.grid{grid-template-columns:repeat(3,minmax(0,1fr))}.hero{padding-left:max(24px,calc((100% - 850px)/2));padding-right:max(24px,calc((100% - 850px)/2))}}
+</style>
+</head><body>
+<header class="hero"><div class="brandrow"><div><div class="brand">🌾 Kisan Anaj Bazar</div><div class="tagline">किसानों और खरीदारों का अपना बाजार</div></div><button class="locbtn" onclick="getLocation()">📍 लोकेशन</button></div><div class="search"><input id="searchText" placeholder="गेहूँ, धान, आलू खोजें..."><button class="gold" onclick="searchProducts()">खोजें</button></div></header>
+<main class="wrap">
+<section id="homePage"><div class="card welcome"><h1>नमस्ते! किसान अनाज बाजार में आपका स्वागत है 🌱</h1><p class="muted">सामान खरीदें, अपना सामान बेचें और ऑर्डर की जानकारी देखें।</p><div class="actions"><button class="primary" onclick="showPage('buyPage')">🛒 सामान खरीदें</button><button class="soft" onclick="showPage('sellPage')">📦 सामान बेचें</button><button class="soft" onclick="showPage('foodPage')">🍕 खाने-मिठाई</button></div></div>
+<div class="sectionhead"><h2>🧺 श्रेणियाँ</h2><span class="muted">अपनी पसंद चुनें</span></div><div class="grid" id="categoryGrid"></div><div class="sectionhead"><h2>🌾 उपलब्ध सामान</h2><button class="soft" onclick="showPage('buyPage')">सभी देखें</button></div><div id="homeProducts"><p class="muted">उत्पाद देखने के लिए लॉगिन करें या बाद में फिर देखें।</p></div></section>
+<section id="authPage" class="hidden"><div class="card"><h2>🔐 लॉगिन / नया अकाउंट</h2><p class="muted">ईमेल और पासवर्ड से अपना अकाउंट बनाएँ या लॉगिन करें।</p><div class="tabs"><button id="loginTab" class="active" onclick="authMode('login')">लॉगिन</button><button id="registerTab" onclick="authMode('register')">रजिस्ट्रेशन</button></div><form id="authForm"><div id="authName" class="field hidden"><label>पूरा नाम</label><input id="nameInput" autocomplete="name"></div><div class="field"><label>ईमेल</label><input id="emailInput" type="email" required autocomplete="email"></div><div class="field"><label>पासवर्ड (कम से कम 8 अक्षर)</label><input id="passwordInput" type="password" minlength="8" required autocomplete="current-password"></div><button class="primary" type="submit" id="authSubmit">लॉगिन</button><button type="button" class="soft" onclick="resetPassword()">पासवर्ड भूल गए?</button></form><p id="authMsg" class="muted"></p></div></section>
+<section id="profilePage" class="hidden"><div class="card"><h2>👤 मेरी प्रोफाइल</h2><p id="uidText" class="tiny"></p><form id="profileForm"><div class="field"><label>पूरा नाम</label><input id="pName" required></div><div class="row"><div class="field"><label>मोबाइल नंबर</label><input id="pPhone" inputmode="tel" required></div><div class="field"><label>राज्य</label><input id="pState" required></div></div><div class="row"><div class="field"><label>जिला</label><input id="pDistrict" required></div><div class="field"><label>गाँव / शहर</label><input id="pVillage" required></div></div><div class="row"><div class="field"><label>पिन कोड</label><input id="pPin" inputmode="numeric" required></div><div class="field"><label>मकान / गली / पूरा पता</label><input id="pAddress" required></div></div><button class="primary">प्रोफाइल सेव करें</button></form><div class="actions"><button class="danger" onclick="logout()">लॉगआउट</button></div><p id="profileMsg" class="muted"></p></div></section>
+<section id="buyPage" class="hidden"><div class="sectionhead"><h2>🛒 सामान खरीदें</h2><button class="soft" onclick="loadProducts()">रिफ्रेश</button></div><div id="productsList"></div></section>
+<section id="foodPage" class="hidden"><div class="card"><h2>🍕 खाने-मिठाई</h2><p class="muted">पिज्जा, बर्गर, मिठाई, केक, समोसे, मोमोज और अन्य खाद्य उत्पाद। केवल अप्रूव किए गए उत्पाद दिखेंगे।</p><div class="grid" id="foodQuick"></div></div><div id="foodProducts"></div></section>
+<section id="sellPage" class="hidden"><div class="card"><h2>📦 सामान बेचने के लिए दर्ज करें</h2><p class="muted">सबमिट करने के बाद एडमिन अप्रूव करेगा। अनाज/कृषि सामान में केवल इमोजी है, फोटो/वीडियो अपलोड नहीं। खाने-मिठाई में फोटो/वीडियो वैकल्पिक हैं।</p><form id="sellForm"><div class="field"><label>किस श्रेणी में?</label><select id="sellType"><option value="grain">🌾 अनाज / कृषि / किराना</option><option value="food">🍕 खाने-मिठाई</option></select></div><div class="field"><label>इमोजी चुनें</label><select id="sellEmoji"><option>🌾</option><option>🍚</option><option>🌽</option><option>🥔</option><option>🧅</option><option>🍎</option><option>🫘</option><option>🥜</option><option>🌶️</option><option>🍕</option><option>🍔</option><option>🍰</option><option>🍬</option><option>🥟</option><option>🍯</option><option>🥛</option><option>📦</option></select></div><div class="field"><label>सामान का नाम</label><input id="sName" required></div><div class="row"><div class="field"><label>कीमत (₹)</label><input id="sPrice" type="number" min="0.01" step="0.01" required></div><div class="field"><label>मात्रा</label><input id="sQty" type="number" min="0.01" step="0.01" required></div><div class="field"><label>इकाई</label><select id="sUnit"><option>किलो</option><option>क्विंटल</option><option>पीस</option><option>पैक</option><option>लीटर</option></select></div></div><div class="field"><label>दुकान / विक्रेता का नाम</label><input id="sShop"></div><div class="field"><label>विवरण</label><textarea id="sDesc" rows="3"></textarea></div><div id="foodMedia" class="hidden"><div class="field"><label>खाने की फोटो (वैकल्पिक)</label><input id="sPhoto" type="url" placeholder="फोटो URL (Firebase Storage जोड़ने पर फाइल अपलोड होगा)"></div><div class="field"><label>खाने का वीडियो (वैकल्पिक)</label><input id="sVideo" type="url" placeholder="वीडियो URL"></div></div><button class="primary">एडमिन अप्रूवल के लिए भेजें</button></form><p id="sellMsg" class="muted"></p></div><div class="card"><h3>📋 मेरी बिक्री रिक्वेस्ट</h3><div id="mySellRequests"></div></div></section>
+<section id="ordersPage" class="hidden"><div class="sectionhead"><h2>📋 मेरे ऑर्डर</h2><button class="soft" onclick="loadMyOrders()">रिफ्रेश</button></div><div id="myOrders"></div></section>
+<section id="locationPage" class="hidden"><div class="card"><h2>📍 लोकेशन</h2><p class="muted">आपकी अनुमति के बाद ही वर्तमान लोकेशन प्राप्त होगी।</p><button class="primary" onclick="getLocation()">वर्तमान लोकेशन साझा करें</button><p id="locationResult"></p></div></section>
+<section id="adminPage" class="hidden"><div class="card"><h2>🛡️ एडमिन पैनल</h2><div id="adminGate"><p class="muted">एडमिन पैनल खोलने के लिए अधिकृत अकाउंट से लॉगिन और PIN आवश्यक है।</p><div class="field"><label>एडमिन PIN</label><input id="adminPin" type="password" autocomplete="off"></div><button class="primary" onclick="openAdmin()">एडमिन पैनल खोलें</button><p id="adminMsg" class="muted"></p></div><div id="adminContent" class="hidden"><div class="tabs"><button class="active" onclick="adminTab('users')">👥 यूजर</button><button onclick="adminTab('requests')">📦 अप्रूवल</button><button onclick="adminTab('orders')">🛒 ऑर्डर</button><button onclick="adminTab('products')">🌾 उत्पाद</button></div><div id="adminData"></div><button class="soft" onclick="loadAdminTab()">डेटा रिफ्रेश करें</button></div></div></section>
+</main>
+<nav class="bottom"><button class="active" data-page="homePage" onclick="showPage('homePage',this)"><span>🏠</span>होम</button><button onclick="showPage('pricesPage',this)"><span>📈</span>Live भाव</button><button data-page="buyPage" onclick="showPage('buyPage',this)"><span>🛒</span>Buy/Sell</button><button data-page="locationPage" onclick="showPage('locationPage',this)"><span>📍</span>Location</button><button data-page="profilePage" onclick="showPage('profilePage',this)"><span>👤</span>My Info</button></nav>
+<script type="module">
+import {initializeApp} from 'https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js';
+import {getAuth,createUserWithEmailAndPassword,signInWithEmailAndPassword,sendPasswordResetEmail,onAuthStateChanged,signOut,updateProfile} from 'https://www.gstatic.com/firebasejs/12.19.0/firebase-auth.js';
+import {getFirestore,collection,doc,setDoc,addDoc,getDoc,getDocs,query,where,orderBy,serverTimestamp,updateDoc} from 'https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js';
+// Firebase Console > Project settings > Your apps से अपने वास्तविक values डालें।
+const firebaseConfig={apiKey:'YOUR_API_KEY',authDomain:'kissan-bajar.firebaseapp.com',projectId:'kissan-bajar',storageBucket:'kissan-bajar.firebasestorage.app',messagingSenderId:'YOUR_MESSAGING_SENDER_ID',appId:'YOUR_APP_ID'};
+const ready=!Object.values(firebaseConfig).some(v=>String(v).startsWith('YOUR_'));
+let app,auth,db,currentUser=null,userProfile=null,adminSection='users',authCurrentMode='login';
+if(ready){app=initializeApp(firebaseConfig);auth=getAuth(app);db=getFirestore(app);onAuthStateChanged(auth,async u=>{currentUser=u; if(u){await loadProfile();await loadProducts();await loadMyOrders();await loadMySellRequests()}else{userProfile=null;document.getElementById('homeProducts').innerHTML='<p class="muted">उत्पाद देखने के लिए लॉगिन करें या बाद में फिर देखें।</p>';} });}
+else {document.getElementById('homeProducts').innerHTML='<div class="notice">Firebase सेटअप बाकी है। नीचे दिए गए कोड में apiKey, messagingSenderId और appId भरने के बाद लॉगिन व ऑनलाइन डेटा चालू होगा।</div>';}
+const categories=[['🌾','अनाज','grain'],['🥔','सब्जियाँ','grain'],['🫘','दालें','grain'],['🌻','तेलहन','grain'],['🌶️','मसाले','grain'],['📦','अन्य','grain'],['🍎','फल','grain'],['🥛','दूध और डेयरी','food'],['🍕','खाने-मिठाई','food']];
+const foods=[['🍕','पिज्जा'],['🍔','बर्गर'],['🍟','फ्रेंच फ्राइज'],['🥟','मोमोज'],['🍜','चाउमीन'],['🍰','केक'],['🍬','मिठाई'],['🍯','जलेबी'],['🥮','लड्डू'],['🍩','डोनट'],['🥪','सैंडविच'],['🥤','पेय पदार्थ']];
+document.getElementById('categoryGrid').innerHTML=categories.map(c=>`<button class="category" onclick="${c[2]==='food'?"showPage('foodPage')":"filterCategory('"+c[1]+"')"}"><span class="emoji">${c[0]}</span><span><strong>${c[1]}</strong><small>सामान देखें</small></span></button>`).join('');
+document.getElementById('foodQuick').innerHTML=foods.map(f=>`<button class="category" onclick="document.getElementById('searchText').value='${f[1]}';searchProducts()"><span class="emoji">${f[0]}</span><span><strong>${f[1]}</strong><small>उत्पाद देखें</small></span></button>`).join('');
+window.showPage=(id,btn)=>{document.querySelectorAll('main section').forEach(s=>s.classList.add('hidden'));let target=document.getElementById(id);if(!target){alert('यह सुविधा अभी Live भाव डेटा से नहीं जुड़ी है।');return;}target.classList.remove('hidden');document.querySelectorAll('.bottom button').forEach(b=>b.classList.remove('active'));if(btn)btn.classList.add('active');else {let b=document.querySelector(`.bottom button[data-page="${id}"]`);if(b)b.classList.add('active')}if(id==='profilePage'){if(!currentUser){showPage('authPage');return;}fillProfile()}if(id==='buyPage'||id==='foodPage')loadProducts();if(id==='adminPage')document.getElementById('adminMsg').textContent=currentUser?'पहचान और PIN जाँचना आवश्यक है।':'पहले अपने अकाउंट से लॉगिन करें।';};
+window.authMode=m=>{authCurrentMode=m;document.getElementById('authName').classList.toggle('hidden',m!=='register');document.getElementById('authSubmit').textContent=m==='register'?'अकाउंट बनाएँ':'लॉगिन';document.getElementById('loginTab').classList.toggle('active',m==='login');document.getElementById('registerTab').classList.toggle('active',m==='register');};
+document.getElementById('authForm').addEventListener('submit',async e=>{e.preventDefault();if(!ready)return alert('पहले Firebase Config में वास्तविक apiKey, messagingSenderId और appId भरें।');const email=document.getElementById('emailInput').value.trim(),password=document.getElementById('passwordInput').value;const msg=document.getElementById('authMsg');try{if(authCurrentMode==='register'){const name=document.getElementById('nameInput').value.trim();if(!name)throw Error('अपना नाम भरें।');const cred=await createUserWithEmailAndPassword(auth,email,password);await updateProfile(cred.user,{displayName:name});await setDoc(doc(db,'users',cred.user.uid),{uid:cred.user.uid,name,email,phone:'',state:'',district:'',village:'',pinCode:'',address:'',role:'user',createdAt:serverTimestamp()});msg.textContent='अकाउंट बन गया। अब प्रोफाइल में बाकी जानकारी भरें।';}else{await signInWithEmailAndPassword(auth,email,password);msg.textContent='लॉगिन सफल हुआ।';showPage('homePage');}}catch(err){msg.textContent=friendly(err);}});
+window.resetPassword=async()=>{if(!ready)return alert('पहले Firebase Config भरें।');const email=document.getElementById('emailInput').value.trim();if(!email)return alert('पहले ईमेल लिखें।');try{await sendPasswordResetEmail(auth,email);alert('पासवर्ड रीसेट ईमेल भेजा गया।')}catch(e){alert(friendly(e))}};
+window.logout=async()=>{if(auth)await signOut(auth);showPage('homePage');};
+async function loadProfile(){try{const s=await getDoc(doc(db,'users',currentUser.uid));userProfile=s.exists()?s.data():{uid:currentUser.uid,name:currentUser.displayName||'',email:currentUser.email};if(!s.exists())await setDoc(doc(db,'users',currentUser.uid),{...userProfile,role:'user',createdAt:serverTimestamp()});fillProfile()}catch(e){console.error(e)}}
+function fillProfile(){if(!currentUser)return;document.getElementById('uidText').textContent='यूजर UID: '+currentUser.uid;const p=userProfile||{};for(const [id,key] of [['pName','name'],['pPhone','phone'],['pState','state'],['pDistrict','district'],['pVillage','village'],['pPin','pinCode'],['pAddress','address']])document.getElementById(id).value=p[key]||'';}
+document.getElementById('profileForm').addEventListener('submit',async e=>{e.preventDefault();if(!needLogin())return;const data={uid:currentUser.uid,name:v('pName'),email:currentUser.email,phone:v('pPhone'),state:v('pState'),district:v('pDistrict'),village:v('pVillage'),pinCode:v('pPin'),address:v('pAddress'),role:'user',updatedAt:serverTimestamp()};try{await setDoc(doc(db,'users',currentUser.uid),data,{merge:true});userProfile=data;document.getElementById('profileMsg').textContent='प्रोफाइल सेव हो गई।'}catch(err){document.getElementById('profileMsg').textContent=friendly(err)}});
+document.getElementById('sellType').addEventListener('change',e=>document.getElementById('foodMedia').classList.toggle('hidden',e.target.value!=='food'));
+document.getElementById('sellForm').addEventListener('submit',async e=>{e.preventDefault();if(!needLogin())return;const data={sellerUid:currentUser.uid,sellerName:userProfile?.name||currentUser.displayName||'',sellerEmail:currentUser.email,type:v('sellType'),emoji:v('sellEmoji'),name:v('sName').trim(),price:Number(v('sPrice')),quantity:Number(v('sQty')),unit:v('sUnit'),shop:v('sShop'),description:v('sDesc'),photoUrl:v('sPhoto'),videoUrl:v('sVideo'),status:'pending',createdAt:serverTimestamp()};if(data.price<=0||data.quantity<=0)return alert('कीमत और मात्रा शून्य से ज्यादा रखें।');try{await addDoc(collection(db,'sellRequests'),data);document.getElementById('sellMsg').textContent='रिक्वेस्ट एडमिन को भेज दी गई है। अप्रूवल के बाद ही सामान दिखेगा।';e.target.reset();document.getElementById('foodMedia').classList.add('hidden');await loadMySellRequests()}catch(err){document.getElementById('sellMsg').textContent=friendly(err)}});
+async function loadMySellRequests(){if(!ready||!currentUser)return;try{const snap=await getDocs(query(collection(db,'sellRequests'),where('sellerUid','==',currentUser.uid)));document.getElementById('mySellRequests').innerHTML=snap.empty?'<p class="muted">अभी कोई रिक्वेस्ट नहीं।</p>':snap.docs.map(d=>{let x=d.data();return `<div class="product"><b>${esc(x.emoji)} ${esc(x.name)}</b> — ₹${x.price}/${esc(x.unit)}<p><span class="status">${esc(x.status||'pending')}</span></p></div>`}).join('')}catch(e){document.getElementById('mySellRequests').textContent=friendly(e)}}
+async function loadProducts(){if(!ready)return;try{const snap=await getDocs(query(collection(db,'products'),where('approved','==',true)));const items=snap.docs.map(d=>({id:d.id,...d.data()}));renderProducts(items);document.getElementById('homeProducts').innerHTML=items.slice(0,4).map(productCard).join('')||'<p class="muted">अभी कोई अप्रूव किया हुआ सामान उपलब्ध नहीं है।</p>';}catch(e){console.error(e);}}
+function renderProducts(items){const cards=items.map(productCard).join('')||'<p class="muted">अभी कोई अप्रूव किया हुआ सामान उपलब्ध नहीं है।</p>';document.getElementById('productsList').innerHTML=cards;document.getElementById('foodProducts').innerHTML=items.filter(x=> (x.category === 'food' || x.category === ' मिठाई')
+).map(productCard).join('');
+
+}
+
+function productCard(p) {
+  return `
+    <div class="product-card">
+      <div class="product-emoji">
+        ${p.emoji || '📦'}
+      </div>
+      <h3>${p.name || 'सामान'}</h3>
+      <p>कीमत: ₹${p.price || 0}</p>
+      <p>मात्रा: ${p.quantity || 0} ${p.unit || 'किलो'}</p>
+      <button onclick="buyProduct('${p.id}')">
+        🛒 खरीदें
+      </button>
+    </div>
+  `;
+}
+
+window.buyProduct = async function(id) {
+  if (!auth.currentUser) {
+    alert('कृपया पहले लॉगिन करें।');
+    return;
+  }
+
+  const productRef = doc(db, 'products', id);
+  const productSnap = await getDoc(productRef);
+
+  if (!productSnap.exists()) {
+    alert('यह सामान अब उपलब्ध नहीं है।');
+    return;
+  }
+
+  const product = productSnap.data();
+
+  const quantity = prompt('कितनी मात्रा चाहिए?');
+  if (!quantity || Number(quantity) <= 0) return;
+
+  const total = Number(quantity) * Number(product.price);
+
+  const phone = prompt('अपना मोबाइल नंबर दर्ज करें:');
+  if (!phone) return;
+
+  const village = prompt('गाँव/शहर दर्ज करें:');
+  if (!village) return;
+
+  const district = prompt('जिला दर्ज करें:');
+  if (!district) return;
+
+  const pinCode = prompt('पिन कोड दर्ज करें:');
+  if (!pinCode) return;
+
+  await addDoc(collection(db, 'orders'), {
+    customerUid: auth.currentUser.uid,
+    customerEmail: auth.currentUser.email,
+    phone: phone,
+    village: village,
+    district: district,
+    pinCode: pinCode,
+    productId: id,
+    productName: product.name,
+    quantity: Number(quantity),
+    total: total,
+    paymentStatus: 'pending',
+    orderStatus: 'pending',
+    createdAt: serverTimestamp()
+  });
+
+  alert('आपका ऑर्डर दर्ज हो गया है। एडमिन की पुष्टि का इंतजार करें।');
+};
+
+async function loadMyOrders() {
+  if (!auth.currentUser) return;
+
+  const snap = await getDocs(
+    query(
+      collection(db, 'orders'),
+      where('customerUid', '==', auth.currentUser.uid)
+    )
+  );
+
+  const html = snap.docs.map(d => {
+    const o = d.data();
+
+    return `
+      <div class="product-card">
+        <h3>${o.productName || 'सामान'}</h3>
+        <p>मात्रा: ${o.quantity}</p>
+        <p>कुल कीमत: ₹${o.total}</p>
+        <p>स्थिति: ${o.orderStatus || 'pending'}</p>
+      </div>
+    `;
+  }).join('');
+
+  const box = document.getElementById('myOrders');
+
+  if (box) {
+    box.innerHTML = html || '<p>अभी कोई ऑर्डर नहीं है।</p>';
+  }
+}
