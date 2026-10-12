@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#176b3a">
+<title>Kisan Anaj Bazar | किसान अनाज बाजार</title>
+
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,sans-serif;background:#f2f8f1;color:#183321;padding-bottom:75px}
+header{background:#176b3a;color:white;padding:20px 15px 25px;border-radius:0 0 25px 25px}
+.brand{font-size:25px;font-weight:bold}
+.tag{margin-top:6px}
+.search{display:flex;gap:8px;margin-top:20px}
+input,select,textarea{width:100%;padding:12px;border:1px solid #cbd9cd;border-radius:10px;font-size:16px}
+.search input{flex:1;min-width:0}
+button{border:0;border-radius:10px;padding:12px 15px;font-size:15px;font-weight:bold;cursor:pointer}
+.green{background:#176b3a;color:white}
+.light{background:#e3f1e5;color:#176b3a}
+.yellow{background:#ffe28a;color:#3c3210}
+.red{background:#a52d2d;color:white}
+main{max-width:850px;margin:auto;padding:15px}
+.page{display:none}
+.page.active{display:block}
+.box{background:white;padding:18px;border:1px solid #dce7dd;border-radius:18px;margin-bottom:16px}
+h2{font-size:22px;margin:0 0 15px}
+h3{margin:8px 0}
+.welcome h1{font-size:27px;margin:0 0 10px}
+.welcome p{font-size:17px;line-height:1.5;color:#66766b}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.category,.product{background:white;border:1px solid #dce7dd;border-radius:15px;overflow:hidden}
+.category{padding:18px 10px;text-align:center;font-size:18px}
+.emoji{font-size:42px;display:block;margin-bottom:7px}
+.product .photo{height:100px;display:grid;place-items:center;background:#eaf4e8;font-size:55px}
+.details{padding:12px}
+.price{font-size:20px;color:#176b3a;font-weight:bold;margin:8px 0}
+.small{font-size:13px;color:#69796d;line-height:1.5}
+.full{width:100%;margin-top:9px}
+.field{margin:12px 0}
+.field label{display:block;font-weight:bold;margin-bottom:6px}
+.bottom{position:fixed;bottom:0;left:0;right:0;background:white;display:flex;justify-content:space-around;border-top:1px solid #ddd;padding:8px 2px}
+.bottom button{background:white;color:#176b3a;padding:5px 3px;font-size:12px}
+.bottom span{display:block;font-size:22px;margin-bottom:3px}
+.list{padding:12px;border:1px solid #dce7dd;border-radius:12px;margin:10px 0;background:white}
+.notice{background:#fff4d0;border-radius:10px;padding:12px;font-size:14px;line-height:1.5}
+.hide{display:none!important}
+.row{display:flex;gap:8px}
+.row>*{flex:1;min-width:0}
+@media(min-width:650px){.grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+</style>
+</head>
+
+<body>
+<header>
+ <div class="brand">🌾 Kisan Anaj Bazar</div>
+ <div class="tag">किसानों और खरीदारों का अपना बाजार</div>
+ <div class="search">
+  <input id="search" placeholder="गेहूँ, धान, आलू खोजें..." oninput="renderProducts()">
+  <button class="yellow" onclick="show('buy')">खोजें</button>
+ </div>
+</header>
+
+<main>
+
+<section id="home" class="page active">
+ <div class="box welcome">
+  <h1>नमस्ते! किसान अनाज बाजार में आपका स्वागत है 🌱</h1>
+  <p>सामान खरीदें, अपना सामान बेचें और अपने ऑर्डर की जानकारी देखें।</p>
+  <button class="green" onclick="show('buy')">🛒 सामान खरीदें</button>
+  <button class="light" onclick="show('sell')">📦 सामान बेचें</button>
+ </div>
+
+ <div class="box">
+  <h2>🧺 सामान की श्रेणियाँ</h2>
+  <div class="grid">
+   <button class="category" onclick="filter('अनाज')">🌾<br>अनाज</button>
+   <button class="category" onclick="filter('सब्जियाँ')">🥔<br>सब्जियाँ</button>
+   <button class="category" onclick="filter('दालें')">🫘<br>दालें</button>
+   <button class="category" onclick="filter('तेलहन')">🌻<br>तेलहन</button>
+   <button class="category" onclick="filter('मसाले')">🌶️<br>मसाले</button>
+   <button class="category" onclick="filter('अन्य')">📦<br>अन्य</button>
+  </div>
+ </div>
+
+ <div class="box">
+  <h2>🌾 उपलब्ध सामान</h2>
+  <div id="homeProducts" class="grid"></div>
+ </div>
+
+ <div class="box">
+  <h2>📈 आज के भाव</h2>
+  <p class="small">दिखाए गए शुरुआती भाव उदाहरण हैं। खरीदने से पहले विक्रेता से पुष्टि करें।</p>
+  <button class="green" onclick="show('rates')">सभी भाव देखें</button>
+ </div>
+</section>
+
+<section id="buy" class="page">
+ <div class="box">
+  <h2>🛒 सामान खरीदें</h2>
+  <div id="buyProducts" class="grid"></div>
+ </div>
+</section>
+
+<section id="sell" class="page">
+ <div class="box">
+  <h2>📦 अपना सामान बेचें</h2>
+  <div class="notice">सामान की जानकारी भेजें। सामान सार्वजनिक होने से पहले एडमिन की मंजूरी आवश्यक है।</div>
+  <form id="sellForm">
+   <div class="field"><label>आपका नाम</label><input id="sellerName" required></div>
+   <div class="field"><label>मोबाइल नंबर</label><input id="sellerPhone" inputmode="numeric" pattern="[0-9]{10}" maxlength="10" required></div>
+   <div class="field"><label>सामान का नाम</label><input id="itemName" required></div>
+   <div class="field"><label>श्रेणी</label>
+    <select id="itemCategory">
+     <option>अनाज</option><option>सब्जियाँ</option><option>दालें</option>
+     <option>तेलहन</option><option>मसाले</option><option>अन्य</option>
+    </select>
+   </div>
+   <div class="field"><label>भाव (₹ प्रति किलो)</label><input id="itemPrice" type="number" min="1" required></div>
+   <div class="field"><label>मात्रा (किलो)</label><input id="itemQty" type="number" min="1" required></div>
+   <div class="field"><label>जिला / स्थान</label><input id="itemLocation" required></div>
+   <div class="field"><label>सामान का विवरण</label><textarea id="itemDesc"></textarea></div>
+   <button class="green full">एडमिन को रिक्वेस्ट भेजें</button>
+  </form>
+ </div>
+</section>
+
+<section id="orders" class="page">
+ <div class="box"><h2>📦 मेरे ऑर्डर</h2><div id="ordersList"></div></div>
+</section>
+
+<section id="rates" class="page">
+ <div class="box"><h2>📈 सामान के भाव</h2><div id="ratesList"></div></div>
+</section>
+
+<section id="info" class="page">
+ <div class="box">
+  <h2>👤 मेरी जानकारी</h2>
+  <div class="field"><label>नाम</label><input id="myName"></div>
+  <div class="field"><label>मोबाइल नंबर</label><input id="myPhone" maxlength="10"></div>
+  <button class="green" onclick="saveInfo()">जानकारी सेव करें</button>
+ </div>
+
+ <div class="box">
+  <h2>📞 ग्राहक सहायता</h2>
+  <p>फोन: 7042894282</p>
+  <button class="green" onclick="location.href='tel:7042894282'">कॉल करें</button>
+  <button class="light" onclick="window.open('https://wa.me/917042894282','_blank')">WhatsApp</button>
+ </div>
+
+ <div class="box">
+  <h2>🔐 Admin Panel</h2>
+  <div class="field"><label>Admin PIN</label><input id="adminPin" type="password" placeholder="Admin PIN डालें"></div>
+  <button class="green full" onclick="adminLogin()">Admin Login</button>
+  <div id="adminArea" class="hide"></div>
+  <p class="small">सुरक्षा के लिए वास्तविक वेबसाइट में Firebase Authentication और Firestore Rules जरूरी हैं।</p>
+ </div>
+</section>
+
+</main>
+
+<nav class="bottom">
+ <button onclick="show('home')"><span>🏡</span>होम</button>
+ <button onclick="show('rates')"><span>📈</span>Live भाव</button>
+ <button onclick="show('buy')"><span>🛒</span>Buy/Sell</button>
+ <button onclick="getLocation()"><span>📍</span>Location</button>
+ <button onclick="show('info')"><span>👤</span>My Info</button>
+</nav>
+
+<script>
+const ADMIN_PIN = "kisan1947";
+const UPI_ID = "niteshkk4345@naviaxis";
+
+const initialProducts = [
+ {id:"p1",name:"आलू",category:"सब्जियाँ",price:25,qty:500,location:"स्थानीय बाजार",emoji:"🥔",approved:true},
+ {id:"p2",name:"धान",category:"अनाज",price:30,qty:500,location:"स्थानीय बाजार",emoji:"🌾",approved:true},
+ {id:"p3",name:"गेहूँ",category:"अनाज",price:28,qty:500,location:"स्थानीय बाजार",emoji:"🌾",approved:true},
+ {id:"p4",name:"मक्का",category:"अनाज",price:24,qty:300,location:"स्थानीय बाजार",emoji:"🌽",approved:true},
+ {id:"p5",name:"चना दाल",category:"दालें",price:60,qty:200,location:"स्थानीय बाजार",emoji:"🫘",approved:true},
+ {id:"p6",name:"सरसों",category:"तेलहन",price:55,qty:200,location:"स्थानीय बाजार",emoji:"🌻",approved:true}
+];
+
+function load(key, fallback){
+ try{return JSON.parse(localStorage.getItem(key)) ?? fallback}
+ catch{return fallback}
+}
+function save(key,value){localStorage.setItem(key,JSON.stringify(value))}
+let products=load("kab_products",initialProducts);
+let requests=load("kab_requests",[]);
+let orders=load("kab_orders",[]);
+let filterCategory="";
+let isAdmin=false;
+
+function show(id){
+ document.querySelectorAll(".page").forEach(p=>p.classList.toggle("active",p.id===id));
+ if(id==="buy")renderProducts();
+ if(id==="orders")renderOrders();
+ if(id==="rates")renderRates();
+ window.scrollTo(0,0);
+}
+function filter(category){filterCategory=category;show("buy");renderProducts()}
+function esc(s){return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+function icon(p){return p.emoji||"📦"}
+
+function card(p){
+ return `<div class="product">
+  <div class="photo">${icon(p)}</div>
+  <div class="details">
+   <h3>${esc(p.name)}</h3>
+   <div class="price">₹${Number(p.price)} / किलो</div>
+   <p class="small">📍 ${esc(p.location)}</p>
+   <p class="small">मात्रा: ${Number(p.qty)} किलो</p>
+   <button class="green full" onclick="buyProduct('${p.id}')">खरीदें</button>
+  </div>
+ </div>`;
+}
+
+function renderProducts(){
+ let q=(document.getElementById("search").value||"").toLowerCase().trim();
+ let list=products.filter(p=>p.approved!==false&&
+  (!q||(p.name+" "+p.category+" "+p.location).toLowerCase().includes(q))&&
+  (!filterCategory||p.category===filterCategory));
+ document.getElementById("homeProducts").innerHTML=list.slice(0,4).map(card).join("")||"<p>अभी कोई सामान नहीं है।</p>";
+ document.getElementById("buyProducts").innerHTML=list.map(card).join("")||"<p>कोई सामान नहीं मिला।</p>";
+}
+
+function buyProduct(id){
+ let p=products.find(x=>x.id===id);
+ if(!p)return;
+ let name=prompt("अपना नाम लिखें");
+ if(!name)return;
+ let phone=prompt("मोबाइल नंबर लिखें");
+ if(!phone)return;
+ let qty=Number(prompt("कितने किलो चाहिए? उपलब्ध: "+p.qty,"1"));
+ if(!qty||qty<1||qty>p.qty){alert("कृपया सही मात्रा डालें");return}
+ let method=prompt("पेमेंट के लिए UPI या COD लिखें","COD");
+ if(!method)return;
+ method=method.toUpperCase().trim();
+ if(method!=="UPI"&&method!=="COD"){alert("UPI या COD लिखें");return}
+ let order={id:"O"+Date.now(),product:p.name,customer:name,phone,qty,total:qty*p.price,method,status:method==="UPI"?"भुगतान की पुष्टि बाकी":"COD पुष्टि बाकी",date:new Date().toLocaleString("hi-IN")};
+ orders.unshift(order);save("kab_orders",orders);
+ if(method==="UPI"){
+  let link="upi://pay?pa="+encodeURIComponent(UPI_ID)+"&pn="+encodeURIComponent("Kisan Anaj Bazar")+"&am="+(order.total.toFixed(2))+"&cu=INR&tn="+encodeURIComponent(order.id);
+  alert("कुल राशि ₹"+order.total.toFixed(2)+" है। अगली स्क्रीन में UPI ऐप खुलेगा। भुगतान की पुष्टि एडमिन करेगा।");
+  location.href=link;
+ }else alert("COD ऑर्डर दर्ज हुआ। विक्रेता की पुष्टि बाकी है।");
+}
+
+document.getElementById("sellForm").addEventListener("submit",function(e){
+ e.preventDefault();
+ let r={
+  id:"R"+Date.now(),
+  seller:document.getElementById("sellerName").value.trim(),
+  phone:document.getElementById("sellerPhone").value.trim(),
+  name:document.getElementById("itemName").value.trim(),
+  category:document.getElementById("itemCategory").value,
+  price:Number(document.getElementById("itemPrice").value),
+  qty:Number(document.getElementById("itemQty").value),
+  location:document.getElementById("itemLocation").value.trim(),
+  desc:document.getElementById("itemDesc").value.trim(),
+  status:"मंजूरी बाकी"
+ };
+ requests.unshift(r);save("kab_requests",requests);
+ this.reset();
+ alert("रिक्वेस्ट इस ब्राउज़र में सेव हुई। एडमिन मंजूरी के बाद सामान दिखेगा।");
+ show("info");
+ if(isAdmin)renderAdmin();
+});
+
+function renderOrders(){
+ document.getElementById("ordersList").innerHTML=orders.map(o=>
+ `<div class="list"><b>${esc(o.product)}</b><p>${o.qty} किलो — ₹${o.total}</p><p>ऑर्डर: ${esc(o.id)}</p><p>पेमेंट: ${esc(o.method)} | ${esc(o.status)}</p></div>`
+ ).join("")||"अभी कोई ऑर्डर नहीं है।";
+}
+function renderRates(){
+ document.getElementById("ratesList").innerHTML=products.filter(p=>p.approved!==false).map(p=>
+ `<div class="list"><b>${icon(p)} ${esc(p.name)}</b><p>₹${p.price} प्रति किलो</p></div>`
+ ).join("")||"भाव उपलब्ध नहीं हैं।";
+}
+function saveInfo(){
+ save("kab_customer",{name:document.getElementById("myName").value,phone:document.getElementById("myPhone").value});
+ alert("जानकारी इस ब्राउज़र में सेव हुई।");
+}
+function getLocation(){
+ if(!navigator.geolocation){alert("इस ब्राउज़र में लोकेशन उपलब्ध नहीं है");return}
+ navigator.geolocation.getCurrentPosition(pos=>alert("लोकेशन: "+pos.coords.latitude.toFixed(5)+", "+pos.coords.longitude.toFixed(5)),()=>alert("लोकेशन अनुमति नहीं मिली।"));
+}
+function adminLogin(){
+ if(document.getElementById("adminPin").value!==ADMIN_PIN){alert("गलत Admin PIN");return}
+ isAdmin=true;
+ document.getElementById("adminArea").classList.remove("hide");
+ renderAdmin();
+}
+function renderAdmin(){
+ let a=document.getElementById("adminArea");
+ a.innerHTML=`<div class="notice">डेमो एडमिन पैनल। यह डेटा केवल इसी ब्राउज़र में सेव है।</div>
+ <h3>विक्रेता रिक्वेस्ट (${requests.length})</h3>
+ ${requests.map(r=>`<div class="list"><b>${esc(r.name)} — ₹${r.price}/किलो</b><p>${esc(r.category)} | ${r.qty} किलो | ${esc(r.location)}</p><p>विक्रेता: ${esc(r.seller)} | ${esc(r.phone)}</p><p>स्थिति: ${esc(r.status)}</p><button class="green" onclick="approve('${r.id}')">मंजूर करें</button> <button class="red" onclick="reject('${r.id}')">अस्वीकार</button></div>`).join("")||"<p>कोई नई रिक्वेस्ट नहीं।</p>"}
+ <h3>सामान और भाव बदलें</h3>
+ ${products.map(p=>`<div class="list"><b>${icon(p)} ${esc(p.name)}</b><div class="field"><label>भाव ₹/किलो</label><input id="price_${p.id}" type="number" value="${p.price}"></div><div class="field"><label>मात्रा</label><input id="qty_${p.id}" type="number" value="${p.qty}"></div><button class="green" onclick="saveProduct('${p.id}')">सेव करें</button> <button class="red" onclick="removeProduct('${p.id}')">हटाएँ</button></div>`).join("")}
+ <h3>ऑर्डर (${orders.length})</h3>
+ ${orders.map(o=>`<div class="list"><b>${esc(o.id)} — ${esc(o.product)}</b><p>${esc(o.customer)} | ${esc(o.phone)} | ₹${o.total}</p><p>${esc(o.method)} — ${esc(o.status)}</p><button class="green" onclick="paid('${o.id}')">भुगतान की पुष्टि</button><button class="light" onclick="complete('${o.id}')">ऑर्डर पूरा</button></div>`).join("")||"<p>कोई ऑर्डर नहीं।</p>"}`;
+}
+function approve(id){
+ let r=requests.find(x=>x.id===id);if(!r)return;
+ products.unshift({id:"p"+Date.now(),name:r.name,category:r.category,price:r.price,qty:r.qty,location:r.location,desc:r.desc,approved:true});
+ r.status="मंजूर";
+ save("kab_products",products);save("kab_requests",requests);renderAdmin();renderProducts();renderRates();
+}
+function reject(id){let r=requests.find(x=>x.id===id);if(r)r.status="अस्वीकार";save("kab_requests",requests);renderAdmin()}
+function saveProduct(id){
+ let p=products.find(x=>x.id===id);if(!p)return;
+ let price=Number(document.getElementById("price_"+id).value);
+ let qty=Number(document.getElementById("qty_"+id).value);
+ if(price<=0||qty<0){alert("सही भाव और मात्रा लिखें");return}
+ p.price=price;p.qty=qty;save("kab_products",products);renderAdmin();renderProducts();renderRates();
+}
+function removeProduct(id){
+ if(!confirm("क्या यह सामान हटाना चाहते हैं?"))return;
+ products=products.filter(p=>p.id!==id);save("kab_products",products);renderAdmin();renderProducts();renderRates();
+}
+function paid(id){
+ let o=orders.find(x=>x.id===id);if(!o)return;
+ if(!confirm("क्या आपने अपने बैंक/UPI ऐप में पैसा प्राप्त होने की पुष्टि की है?"))return;
+ o.status="भुगतान प्राप्त - एडमिन पुष्टि";save("kab_orders",orders);renderAdmin();renderOrders();
+}
+function complete(id){let o=orders.find(x=>x.id===id);if(o)o.status="ऑर्डर पूरा";save("kab_orders",orders);renderAdmin();renderOrders()}
+
+renderProducts();
+renderRates();
+let customer=load("kab_customer",{});
+document.getElementById("myName").value=customer.name||"";
+document.getElementById("myPhone").value=customer.phone||"";
+</script>
+</body>
+</html>
