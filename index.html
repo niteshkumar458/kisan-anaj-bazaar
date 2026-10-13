@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>E MART | Online Shopping</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,sans-serif;background:#eaeded;color:#222}
+header{background:#131921;color:white;padding:14px;position:sticky;top:0;z-index:10}
+.head{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.logo{font-size:27px;font-weight:bold;color:#ffcc45}
+.search{display:flex;flex:1;min-width:180px}
+.search input{margin:0;border-radius:5px 0 0 5px}
+.search button{background:#febd69;border:0;padding:12px}
+button{cursor:pointer}
+input,select,textarea{font:inherit;padding:12px;width:100%;border:1px solid #ccc;border-radius:5px;margin:6px 0 12px}
+nav{display:flex;gap:18px;overflow:auto;background:#232f3e;padding:12px;white-space:nowrap}
+nav button{background:transparent;color:white;border:0;font-weight:bold}
+.hero{margin:15px;background:linear-gradient(120deg,#124e78,#287fa8);color:white;padding:30px 18px;text-align:center;border-radius:10px}
+.hero h1{font-size:28px}
+.section,.panel{padding:16px;margin:14px;background:white;border-radius:9px}
+.categories,.products{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:12px}
+.category,.card{background:white;border-radius:9px;overflow:hidden;box-shadow:0 2px 7px #0001;padding:10px}
+.category{text-align:center;cursor:pointer;padding:0}
+.category img{width:100%;height:105px;object-fit:cover}
+.category p{padding:5px;font-weight:bold}
+.card img{width:100%;height:145px;object-fit:contain;background:#fafafa}
+.card h3{font-size:16px}
+.price{color:#b12704;font-size:20px;font-weight:bold}
+.small{font-size:13px;color:#666}
+.btn{background:#ffd814;border:1px solid #f0c14b;border-radius:20px;padding:10px;width:100%;margin-top:7px}
+.blue{background:#176b87;color:white;border:0;border-radius:5px;padding:12px;width:100%;margin-top:7px}
+.danger{background:#b42318;color:white;border:0;padding:9px;border-radius:5px}
+.item{border:1px solid #ddd;border-radius:7px;padding:12px;margin:9px 0;overflow-wrap:anywhere}
+.hidden{display:none!important}
+footer{background:#131921;color:white;text-align:center;padding:25px;line-height:1.8;margin-top:20px}
+@media(max-width:500px){.logo{font-size:23px}.hero h1{font-size:23px}.section,.panel{padding:11px;margin:8px}.products{grid-template-columns:repeat(2,minmax(0,1fr))}.card img{height:115px}}
+</style>
+</head>
+<body>
+
+<header>
+ <div class="head">
+  <div class="logo">🛒 E MART</div>
+  <div class="search">
+   <input id="search" placeholder="सामान खोजें..." oninput="renderProducts()">
+   <button onclick="renderProducts()">🔍</button>
+  </div>
+  <button class="btn" style="width:auto" onclick="show('cart')">🛒 <span id="cartCount">0</span></button>
+ </div>
+</header>
+
+<nav>
+ <button onclick="show('home')">🏠 होम</button>
+ <button onclick="show('products')">🛍️ सामान</button>
+ <button onclick="show('account')">👤 लॉगिन</button>
+ <button onclick="show('seller')">📦 सामान बेचें</button>
+ <button onclick="show('orders')">📋 ऑर्डर</button>
+ <button onclick="show('admin')">⚙️ एडमिन</button>
+</nav>
+
+<main id="home">
+ <div class="hero">
+  <h1>स्वागत है E MART में! 🎉</h1>
+  <p>एक ही जगह खरीदें और बेचें हजारों तरह के सामान।</p>
+  <button class="btn" onclick="show('products')">अभी खरीदारी करें</button>
+ </div>
+
+ <section class="section">
+  <h2>🛍️ सभी कैटेगरी</h2>
+  <div id="categories" class="categories"></div>
+ </section>
+
+ <section class="section">
+  <h2>🔥 लोकप्रिय सामान</h2>
+  <div id="homeProducts" class="products"></div>
+ </section>
+</main>
+
+<section id="products" class="section hidden">
+ <h2>🛍️ सभी सामान</h2>
+ <p id="categoryTitle">सभी कैटेगरी</p>
+ <div id="productList" class="products"></div>
+</section>
+
+<section id="account" class="panel hidden">
+ <h2>👤 ग्राहक / विक्रेता लॉगिन</h2>
+ <label>ईमेल</label>
+ <input id="email" type="email" placeholder="अपना ईमेल">
+ <label>पासवर्ड</label>
+ <input id="password" type="password" placeholder="कम से कम 6 अक्षर">
+ <button class="blue" onclick="login()">लॉगिन</button>
+ <button class="btn" onclick="register()">नया अकाउंट बनाएँ</button>
+ <button class="btn" onclick="logout()">लॉगआउट</button>
+ <p id="authStatus" class="small"></p>
+</section>
+
+<section id="seller" class="panel hidden">
+ <h2>📦 अपना सामान बेचें</h2>
+ <label>सामान का नाम</label>
+ <input id="pName" placeholder="सामान का नाम">
+ <label>कैटेगरी</label>
+ <select id="pCategory"></select>
+ <label>कीमत (₹)</label>
+ <input id="pPrice" type="number" min="1" placeholder="कीमत">
+ <label>मात्रा</label>
+ <input id="pQty" type="number" min="1" placeholder="मात्रा">
+ <label>फोटो का URL</label>
+ <input id="pImage" type="url" placeholder="https://...">
+ <label>गाँव / शहर</label>
+ <input id="pLocation" placeholder="स्थान">
+ <label>विवरण</label>
+ <textarea id="pDesc" placeholder="सामान की जानकारी"></textarea>
+ <button class="blue" onclick="postProduct()">सामान पोस्ट करें</button>
+ <p id="sellerStatus"></p>
+</section>
+
+<section id="cart" class="panel hidden">
+ <h2>🛒 मेरा कार्ट</h2>
+ <div id="cartItems"></div>
+ <h3 id="total">कुल: ₹0</h3>
+ <label>ग्राहक का नाम</label>
+ <input id="buyerName" placeholder="नाम">
+ <label>मोबाइल नंबर</label>
+ <input id="buyerPhone" type="tel" placeholder="10 अंकों का नंबर">
+ <label>पूरा पता</label>
+ <textarea id="buyerAddress" placeholder="डिलीवरी का पता"></textarea>
+ <label>भुगतान का तरीका</label>
+ <select id="payment">
+  <option value="COD">Cash on Delivery</option>
+  <option value="UPI">UPI (भुगतान सत्यापन अभी उपलब्ध नहीं)</option>
+ </select>
+ <button class="blue" onclick="placeOrder()">ऑर्डर करें</button>
+ <p id="checkoutStatus"></p>
+</section>
+
+<section id="orders" class="panel hidden">
+ <h2>📋 मेरे ऑर्डर</h2>
+ <button class="blue" onclick="loadOrders()">ऑर्डर देखें</button>
+ <div id="orderList"></div>
+</section>
+
+<section id="admin" class="panel hidden">
+ <h2>⚙️ E MART Admin Panel</h2>
+ <p class="small">एडमिन ईमेल से लॉगिन करना आवश्यक है।</p>
+ <button class="blue" onclick="loadAdmin()">एडमिन डेटा लोड करें</button>
+ <h3>⏳ मंजूरी के लिए सामान</h3>
+ <div id="pending"></div>
+ <h3>🛍️ सभी सामान</h3>
+ <div id="allProducts"></div>
+ <h3>🚚 ऑर्डर मैनेजमेंट</h3>
+ <div id="adminOrders"></div>
+</section>
+
+<footer>
+ <h2>🛒 E MART</h2>
+ <p>खरीदारी भी, बिक्री भी!</p>
+ <p>हेल्पलाइन: 7042894282</p>
+ <p>© 2026 E MART</p>
+</footer>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+
+<script>
+const firebaseConfig = {
+ apiKey:"AIzaSyDxjigog6ctxY25UFGrH7M3pYx1IN2RWSw",
+ authDomain:"kissan-bajar.firebaseapp.com",
+ projectId:"kissan-bajar",
+ storageBucket:"kissan-bajar.firebasestorage.app",
+ messagingSenderId:"629043004551",
+ appId:"1:629043004551:web:f484c026c838399cff6422"
+};
+
+// अपने Firebase में सत्यापित एडमिन ईमेल का उपयोग करें।
+const ADMIN_EMAIL = "kumarnitesh21336@gmail.com";
+
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+const db = firebase.firestore();
+
+let user = null;
+let products = [];
+let cartItems = [];
+let selectedCategory = "सभी सामान";
+
+const cats = [
+ ["किराना और राशन","🛒","photo-1542838132-92c53300491e"],
+ ["पशुओं का चारा","🐄","photo-1500382017468-9049fed747ef"],
+ ["फल और सब्जियाँ","🍎","photo-1540420773420-3366772f4999"],
+ ["अनाज और दलहन","🌾","photo-1574323347407-f5e1ad6d020b"],
+ ["कपड़े","👕","photo-1445205170230-053b83016050"],
+ ["जूते और चप्पल","👟","photo-1542291026-7eec264c27ff"],
+ ["मोबाइल और इलेक्ट्रॉनिक्स","📱","photo-1511707171634-5f897ff02aa9"],
+ ["फर्नीचर","🛋️","photo-1555041469-a586c61ea9bc"],
+ ["किचन का सामान","🍳","photo-1556911220-e15b29be8c8f"],
+ ["खेती के औजार","🌱","photo-1500382017468-9049fed747ef"],
+ ["खिलौने और स्टेशनरी","🧸","photo-1558060370-d644479cb6f7"],
+ ["घरेलू सामान","🧴","photo-1556228720-195a672e8a03"],
+ ["अन्य सामान","📦","photo-1607082349566-187342175e2f"]
+];
+
+function esc(x){
+ return String(x??"").replace(/[&<>"']/g,c=>({
+ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+ }[c]));
+}
+function money(x){return Number(x||0).toLocaleString("en-IN");}
+function imageUrl(x){
+ return typeof x==="string" && /^https?:\/\//i.test(x)
+ ? x : "https://placehold.co/300x200?text=E+MART";
+}
+
+function show(id){
+ ["home","products","account","seller","cart","orders","admin"].forEach(x=>{
+  document.getElementById(x).classList.toggle("hidden",x!==id);
+ });
+ if(id==="products")renderProducts();
+ if(id==="cart")renderCart();
+ if(id==="orders")loadOrders();
+ if(id==="admin")loadAdmin();
+ window.scrollTo({top:0,behavior:"smooth"});
+}
+
+function renderCategories(){
+ document.getElementById("categories").innerHTML=cats.map(c=>`
+ <div class="category" onclick="filterCategory('${c[0]}')">
+ <img src="https://images.unsplash.com/${c[2]}?auto=format&fit=crop&w=400&q=75"
+ loading="lazy" alt="${c[0]}">
+ <p>${c[1]} ${c[0]}</p></div>`).join("");
+
+ document.getElementById("pCategory").innerHTML=cats.map(c=>
+ `<option>${c[0]}</option>`).join("");
+}
+function filterCategory(c){
+ selectedCategory=c;
+ document.getElementById("categoryTitle").textContent=c;
+ show("products");
+}
+function renderProducts(){
+ const q=document.getElementById("search").value.toLowerCase().trim();
+ const list=products.filter(p=>
+ (selectedCategory==="सभी सामान"||p.category===selectedCategory)&&
+ ((p.name||"").toLowerCase().includes(q)||
+ (p.category||"").toLowerCase().includes(q)||
+ (p.location||"").toLowerCase().includes(q))
+ );
+ const html=list.map(p=>`
+ <div class="card">
+ <img src="${esc(imageUrl(p.imageUrl))}" alt="${esc(p.name)}"
+ onerror="this.src='https://placehold.co/300x200?text=E+MART'">
+ <h3>${esc(p.name)}</h3>
+ <p class="small">${esc(p.category||"")}</p>
+ <p class="price">₹${money(p.price)}</p>
+ <p class="small">मात्रा: ${money(p.quantity)}</p>
+ <p class="small">स्थान: ${esc(p.location||"")}</p>
+ <button class="btn" onclick="addCart('${p.id}')">🛒 कार्ट में डालें</button>
+ </div>`).join("")||"<p>इस कैटेगरी में अभी कोई मंजूर सामान नहीं है।</p>";
+ document.getElementById("productList").innerHTML=html;
+ document.getElementById("homeProducts").innerHTML=list.slice(0,8).map(p=>`
+ <div class="card"><img src="${esc(imageUrl(p.imageUrl))}"
+ onerror="this.src='https://placehold.co/300x200?text=E+MART'">
+ <h3>${esc(p.name)}</h3><p class="price">₹${money(p.price)}</p>
+ <button class="btn" onclick="addCart('${p.id}')">🛒 कार्ट में डालें</button></div>
+ `).join("")||"<p>जल्द ही सामान उपलब्ध होगा।</p>";
+}
+async function reloadProducts(){
+ try{
+  const s=await db.collection("products").where("status","==","approved").get();
+  products=s.docs.map(d=>({id:d.id,...d.data()}));
+  renderProducts();
+ }catch(e){console.error("Product loading:",e.message);}
+}
+
+async function register(){
+ const email=document.getElementById("email").value.trim();
+ const password=document.getElementById("password").value;
+ if(!email||password.length<6){alert("ईमेल और कम से कम 6 अक्षर का पासवर्ड डालें।");return;}
+ try{
+  await auth.createUserWithEmailAndPassword(email,password);
+  document.getElementById("authStatus").textContent="अकाउंट बन गया।";
+ }catch(e){alert("रजिस्ट्रेशन नहीं हुआ: "+e.message);}
+}
+async function login(){
+ try{
+  await auth.signInWithEmailAndPassword(
+   document.getElementById("email").value.trim(),
+   document.getElementById("password").value
+  );
+  document.getElementById("authStatus").textContent="लॉगिन सफल।";
+ }catch(e){alert("लॉगिन नहीं हुआ: "+e.message);}
+}
+async function logout(){await auth.signOut();}
+
+auth.onAuthStateChanged(u=>{
+ user=u;
+ document.getElementById("authStatus").textContent=
+ u?"लॉगिन: "+u.email:"अभी लॉगिन नहीं है।";
+});
+
+async function postProduct(){
+ if(!user){alert("पहले लॉगिन करें।");show("account");return;}
+ const name=document.getElementById("pName").value.trim();
+ const category=document.getElementById("pCategory").value;
+ const price=Number(document.getElementById("pPrice").value);
+ const quantity=Number(document.getElementById("pQty").value);
+ const image=document.getElementById("pImage").value.trim();
+ const location=document.getElementById("pLocation").value.trim();
+ const description=document.getElementById("pDesc").value.trim();
+
+ if(!name||price<=0||quantity<=0||!location){
+  alert("नाम, सही कीमत, मात्रा और स्थान भरें।");return;
+ }
+ try{
+  await db.collection("products").add({
+   name,category,price,quantity,imageUrl:image,location,description,
+   sellerUid:user.uid,sellerEmail:user.email,status:"pending",
+   createdAt:firebase.firestore.FieldValue.serverTimestamp()
+  });
+  document.getElementById("sellerStatus").textContent=
+   "सामान पोस्ट हो गया। एडमिन की मंजूरी के बाद दिखेगा।";
+  ["pName","pPrice","pQty","pImage","pLocation","pDesc"].forEach(id=>
+   document.getElementById(id).value="");
+ }catch(e){alert("सामान पोस्ट नहीं हुआ: "+e.message);}
+}
+
+function addCart(id){
+ const p=products.find(x=>x.id===id);
+ if(!p)return;
+ const found=cartItems.find(x=>x.id===id);
+ if(found)found.count++;
+ else cartItems.push({...p,count:1});
+ renderCart();
+ alert("सामान कार्ट में जोड़ दिया गया।");
+}
+function removeCart(id){
+ cartItems=cartItems.filter(p=>p.id!==id);renderCart();
+}
+function renderCart(){
+ document.getElementById("cartCount").textContent=
+ cartItems.reduce((s,p)=>s+p.count,0);
+ const total=cartItems.reduce((s,p)=>s+Number(p.price)*p.count,0);
+ document.getElementById("total").textContent="कुल: ₹"+money(total);
+ document.getElementById("cartItems").innerHTML=cartItems.map(p=>`
+ <div class="item"><b>${esc(p.name)}</b>
+ <p>₹${money(p.price)} × ${p.count}</p>
+ <button class="btn" onclick="removeCart('${p.id}')">हटाएँ</button></div>
+ `).join("")||"<p>कार्ट खाली है।</p>";
+}
+
+async function placeOrder(){
+ if(!user){alert("ऑर्डर करने के लिए लॉगिन करें।");show("account");return;}
+ if(!cartItems.length){alert("पहले सामान कार्ट में डालें।");return;}
+ const name=document.getElementById("buyerName").value.trim();
+ const phone=document.getElementById("buyerPhone").value.trim();
+ const address=document.getElementById("buyerAddress").value.trim();
+ const payment=document.getElementById("payment").value;
+ if(!name||!/^[0-9]{10}$/.test(phone)||!address){
+  alert("नाम, 10 अंकों का मोबाइल नंबर और पता भरें।");return;
+ }
+ const items=cartItems.map(p=>({
+  productId:p.id,name:p.name,price:Number(p.price),quantity:p.count,
+  sellerUid:p.sellerUid||""
+ }));
+ const total=items.reduce((s,p)=>s+p.price*p.quantity,0);
+ try{
+  const ref=await db.collection("orders").add({
+   buyerUid:user.uid,buyerEmail:user.email,buyerName:name,
+   buyerPhone:phone,buyerAddress:address,items,total,
+   paymentMethod:payment,
+   paymentStatus:payment==="COD"?"unpaid":"pending",
+   orderStatus:"pending",
+   createdAt:firebase.firestore.FieldValue.serverTimestamp()
+  });
+  cartItems=[];renderCart();
+  document.getElementById("checkoutStatus").textContent=
+   "ऑर्डर दर्ज हुआ। ID: "+ref.id;
+ }catch(e){alert("ऑर्डर नहीं हुआ: "+e.message);}
+}
+
+async function loadOrders(){
+ const box=document.getElementById("orderList");
+ if(!user){box.textContent="ऑर्डर देखने के लिए लॉगिन करें।";return;}
+ try{
+  const s=await db.collection("orders").where("buyerUid","==",user.uid).get();
+  box.innerHTML=s.docs.map(d=>{
+   const o=d.data();
+   return `<div class="item"><b>ऑर्डर ID: ${esc(d.id)}</b>
+   <p>कुल: ₹${money(o.total)}</p>
+   <p>भुगतान: ${esc(o.paymentMethod||"")}</p>
+   <p>स्थिति: ${esc(o.orderStatus||"pending")}</p></div>`;
+  }).join("")||"<p>अभी कोई ऑर्डर नहीं।</p>";
+ }catch(e){box.textContent="ऑर्डर नहीं खुले: "+e.message;}
+}
+
+function isAdmin(){
+ return !!user&&(user.email||"").toLowerCase()===ADMIN_EMAIL.toLowerCase();
+}
+async function loadAdmin(){
+ const pending=document.getElementById("pending");
+ const all=document.getElementById("allProducts");
+ const orders=document.getElementById("adminOrders");
+ if(!isAdmin()){
+  pending.textContent="एडमिन पैनल के लिए अधिकृत एडमिन ईमेल से लॉगिन करें।";
+  all.innerHTML="";orders.innerHTML="";return;
+ }
+ try{
+  const [ps,as,os]=await Promise.all([
+   db.collection("products").where("status","==","pending").get(),
+   db.collection("products").get(),
+   db.collection("orders").get()
+  ]);
+  pending.innerHTML=ps.docs.map(d=>{
+   const p=d.data();
+   return `<div class="item"><b>${esc(p.name)}</b>
+   <p>₹${money(p.price)} | ${esc(p.sellerEmail||"")}</p>
+   <button class="btn" onclick="reviewProduct('${d.id}','approved')">मंजूर करें</button>
+   <button class="danger" onclick="reviewProduct('${d.id}','rejected')">अस्वीकार करें</button></div>`;
+  }).join("")||"कोई पेंडिंग सामान नहीं।";
+  all.innerHTML=as.docs.map(d=>{
+   const p=d.data();
+   return `<div class="item"><b>${esc(p.name)}</b>
+   <p>₹${money(p.price)} | स्थिति: ${esc(p.status||"")}</p></div>`;
+  }).join("")||"कोई सामान नहीं।";
+  orders.innerHTML=os.docs.map(d=>{
+   const o=d.data();
+   return `<div class="item"><b>ऑर्डर ${esc(d.id)}</b>
+   <p>${esc(o.buyerName||"")} | ${esc(o.buyerPhone||"")}</p>
+   <p>कुल: ₹${money(o.total)} | ${esc(o.orderStatus||"pending")}</p>
+   <select id="st-${d.id}">
+   ${["pending","confirmed","shipped","delivered","cancelled"].map(s=>
+    `<option value="${s}" ${s===(o.orderStatus||"pending")?"selected":""}>${s}</option>`).join("")}
+   </select>
+   <button class="btn" onclick="updateOrder('${d.id}')">अपडेट करें</button></div>`;
+  }).join("")||"कोई ऑर्डर नहीं।";
+ }catch(e){
+  pending.textContent="डेटा नहीं खुला: "+e.message+
+   ". Firebase Firestore Rules जाँचें।";
+ }
+}
+async function reviewProduct(id,status){
+ if(!isAdmin()){alert("अनुमति नहीं है।");return;}
+ try{
+  await db.collection("products").doc(id).update({status});
+  await loadAdmin();await reloadProducts();
+ }catch(e){alert("अपडेट नहीं हुआ: "+e.message);}
+}
+async function updateOrder(id){
+ if(!isAdmin()){alert("अनुमति नहीं है।");return;}
+ try{
+  const status=document.getElementById("st-"+id).value;
+  await db.collection("orders").doc(id).update({orderStatus:status});
+  await loadAdmin();
+ }catch(e){alert("ऑर्डर अपडेट नहीं हुआ: "+e.message);}
+}
+
+renderCategories();
+renderCart();
+reloadProducts();
+</script>
+</body>
+</html>
