@@ -1,0 +1,631 @@
+
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#e80071">
+<title>किसान अनाज बाजार</title>
+
+<style>
+:root{--pink:#e80071;--light:#fff0f6;--bg:#f7f7f7;--dark:#292929;--green:#16864a}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Arial,sans-serif;background:var(--bg);color:var(--dark)}
+button,input,select,textarea{font:inherit}
+button{cursor:pointer;border:0}
+header{background:var(--pink);color:white;padding:13px;position:sticky;top:0;z-index:10}
+.wrap{max-width:1200px;margin:auto}
+.head{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.logo{font-size:20px;font-weight:bold}
+.logo small{display:block;font-size:11px;font-weight:normal;margin-top:4px}
+.head button{background:white;color:var(--pink);padding:10px;border-radius:7px;font-weight:bold}
+.search{width:100%;padding:12px;border:0;border-radius:7px;margin-top:12px}
+nav{display:flex;gap:19px;overflow:auto;background:white;padding:13px;white-space:nowrap}
+nav a{color:#333;text-decoration:none;font-weight:bold;font-size:14px}
+main{max-width:1200px;margin:auto}
+.hero{margin:13px;padding:27px 20px;border-radius:12px;background:linear-gradient(110deg,#ffe0ef,#fff)}
+.hero h1{color:var(--pink);font-size:25px;margin-bottom:10px}
+.hero p{line-height:1.6}
+.section{padding:13px}
+.section h2{font-size:19px;margin:10px 0 14px}
+.categories{display:grid;grid-template-columns:repeat(4,1fr);gap:9px}
+.cat{background:white;padding:12px 4px;text-align:center;border-radius:9px;font-size:12px;cursor:pointer;border:1px solid #eee}
+.cat img{width:53px;height:53px;object-fit:cover;border-radius:50%;display:block;margin:0 auto 7px}
+.cat.active{border:2px solid var(--pink);background:var(--light)}
+.products{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.product{background:white;border-radius:10px;overflow:hidden}
+.product img{width:100%;height:145px;object-fit:cover;background:#eee}
+.info{padding:10px}
+.info h3{font-size:14px;min-height:35px}
+.price{font-size:18px;font-weight:bold;color:var(--pink);margin-top:6px}
+.muted{font-size:12px;color:#777;margin-top:5px}
+.btn{background:var(--pink);color:white;padding:11px;border-radius:7px;font-weight:bold}
+.add{width:100%;margin-top:9px}
+.panel{background:white;margin:13px;padding:16px;border-radius:10px;box-shadow:0 1px 5px #0001}
+.panel h2{margin-bottom:13px}
+.field{margin:10px 0}
+.field label{display:block;font-size:13px;font-weight:bold;margin-bottom:5px}
+.field input,.field textarea,.field select{width:100%;padding:12px;border:1px solid #ddd;border-radius:7px;background:white}
+.field textarea{min-height:75px}
+.full{width:100%;margin-top:9px}
+.secondary{background:#eee;color:#333}
+.danger{background:#b32626;color:white}
+.green{background:var(--green);color:white}
+.hidden{display:none!important}
+.item{display:flex;justify-content:space-between;align-items:center;gap:8px;border-bottom:1px solid #eee;padding:12px 0}
+.qty{display:flex;gap:8px;align-items:center;margin-top:7px}
+.qty button{background:var(--light);color:var(--pink);padding:6px 11px;border-radius:5px}
+.total{display:flex;justify-content:space-between;padding:12px 0;font-size:18px;font-weight:bold}
+.order{padding:12px;border:1px solid #eee;border-radius:8px;margin:10px 0;font-size:13px;line-height:1.7;overflow-wrap:anywhere}
+.badge{display:inline-block;background:var(--light);color:var(--pink);padding:4px 8px;border-radius:5px;font-size:11px}
+.adminbar{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}
+.adminbar button{padding:9px;border-radius:6px;background:#eee}
+.bottom{position:sticky;bottom:0;background:white;padding:10px;display:flex;justify-content:space-between;align-items:center;box-shadow:0 -2px 8px #0002;z-index:5}
+.bottom button{background:var(--pink);color:white;padding:11px 17px;border-radius:7px}
+footer{background:#222;color:white;text-align:center;padding:25px;margin-top:20px}
+footer p{margin-top:8px;font-size:13px}
+
+/* Navi UPI payment design */
+.upi-card{background:#fff;color:#222;text-align:center;padding:22px 12px;border:1px solid #eee;border-radius:10px;max-width:520px;margin:15px auto}
+.navi-logo{font-size:48px;font-weight:800;color:#31004b;letter-spacing:-2px;margin:10px}
+.navi-symbol{display:inline-block;color:#20c98b;font-size:45px;font-weight:bold;margin-right:9px}
+.upi-caption{font-size:21px;margin:35px 0 18px;color:#444}
+.upi-apps{display:flex;justify-content:center;gap:17px;flex-wrap:wrap;font-size:18px;font-weight:bold;margin-bottom:30px}
+.upi-apps span:nth-child(1){color:#4285f4}
+.upi-apps span:nth-child(2){color:#673ab7}
+.upi-apps span:nth-child(3){color:#163a85}
+.upi-apps span:nth-child(4){color:#31004b}
+#qrcode{display:flex;justify-content:center;align-items:center;margin:15px auto 30px;background:white;min-height:230px}
+#qrcode img,#qrcode canvas{max-width:100%;height:auto}
+.upi-name{font-size:21px;font-weight:bold;margin:15px 0}
+.upi-id{font-size:18px;color:#555;overflow-wrap:anywhere}
+.payment-amount{font-size:26px;color:var(--pink);font-weight:bold;margin:15px}
+@media(min-width:650px){.products{grid-template-columns:repeat(3,1fr)}.categories{grid-template-columns:repeat(6,1fr)}}
+@media(min-width:950px){.products{grid-template-columns:repeat(4,1fr)}.categories{grid-template-columns:repeat(8,1fr)}.product img{height:190px}}
+</style>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+</head>
+
+<body>
+<header>
+ <div class="wrap">
+  <div class="head">
+   <div class="logo">🌾 किसान अनाज बाजार<small>किसानों का अपना ऑनलाइन बाजार</small></div>
+   <button onclick="showPage('cart')">🛒 कार्ट <span id="cartCount">0</span></button>
+  </div>
+  <input class="search" id="search" placeholder="दाल, चावल, गेहूं खोजें..." oninput="renderProducts()">
+ </div>
+</header>
+
+<nav>
+ <a href="#home">होम</a>
+ <a href="#categories">कैटेगरी</a>
+ <a href="#products">प्रोडक्ट</a>
+ <a href="#" onclick="showPage('account')">मेरा अकाउंट</a>
+ <a href="#" onclick="showPage('orders')">मेरे ऑर्डर</a>
+ <a href="#" onclick="showPage('admin')">एडमिन</a>
+ <a href="#contact">संपर्क</a>
+</nav>
+
+<main>
+<section class="hero" id="home">
+ <h1>किसान अनाज बाजार में आपका स्वागत है</h1>
+ <p>अनाज, दाल, चावल, मसाले और रोजमर्रा का सामान एक ही जगह।</p>
+ <button class="btn" style="margin-top:13px" onclick="document.getElementById('products').scrollIntoView({behavior:'smooth'})">खरीदारी शुरू करें</button>
+</section>
+
+<section class="section" id="categories">
+ <h2>सामान की श्रेणियां</h2>
+ <div class="categories" id="categoryList"></div>
+</section>
+
+<section class="section" id="products">
+ <h2>सभी प्रोडक्ट</h2>
+ <div class="field">
+  <select id="sort" onchange="renderProducts()">
+   <option value="default">सामान्य क्रम</option>
+   <option value="low">कम कीमत पहले</option>
+   <option value="high">ज्यादा कीमत पहले</option>
+   <option value="name">नाम के अनुसार</option>
+  </select>
+ </div>
+ <div class="products" id="productList"></div>
+</section>
+
+<section class="panel hidden" id="accountPage">
+ <h2>ग्राहक अकाउंट</h2>
+ <div id="loginBox">
+  <div class="field"><label>ईमेल</label><input id="email" type="email"></div>
+  <div class="field"><label>पासवर्ड</label><input id="password" type="password"></div>
+  <button class="btn full" onclick="login()">लॉगिन करें</button>
+  <button class="btn full secondary" onclick="register()">नया अकाउंट बनाएं</button>
+ </div>
+ <div id="userBox" class="hidden">
+  <p id="userEmail"></p>
+  <button class="btn full" onclick="showPage('orders')">मेरे ऑर्डर</button>
+  <button class="btn full danger" onclick="logout()">लॉगआउट</button>
+ </div>
+</section>
+
+<section class="panel hidden" id="cartPage">
+ <h2>आपका कार्ट</h2>
+ <div id="cartItems"></div>
+ <div class="total"><span>कुल राशि</span><span>₹<span id="cartTotal">0</span></span></div>
+ <button class="btn full" onclick="goCheckout()">आगे बढ़ें</button>
+ <button class="btn full secondary" onclick="showPage('shop')">खरीदारी जारी रखें</button>
+</section>
+
+<section class="panel hidden" id="checkoutPage">
+ <h2>डिलीवरी की जानकारी</h2>
+ <form id="checkoutForm">
+  <div class="field"><label>पूरा नाम</label><input id="custName" maxlength="80" required></div>
+  <div class="field"><label>मोबाइल नंबर</label><input id="custPhone" inputmode="numeric" pattern="[6-9][0-9]{9}" maxlength="10" required></div>
+  <div class="field"><label>पूरा पता</label><textarea id="custAddress" maxlength="500" required></textarea></div>
+  <div class="field"><label>पेमेंट का तरीका</label>
+   <select id="paymentMethod">
+    <option value="COD">कैश ऑन डिलीवरी</option>
+    <option value="UPI">UPI ऑनलाइन पेमेंट</option>
+   </select>
+  </div>
+  <div class="total">कुल: ₹<span id="checkoutTotal">0</span></div>
+  <button class="btn full" type="submit">ऑर्डर आगे बढ़ाएं</button>
+ </form>
+</section>
+
+<section class="panel hidden" id="paymentPage">
+ <h2>UPI ऑनलाइन पेमेंट</h2>
+ <div class="upi-card">
+  <div class="navi-logo"><span class="navi-symbol">◩</span>navi</div>
+  <div class="upi-caption">Pay using any UPI app</div>
+  <div class="upi-apps">
+   <span>G Pay</span><span>PhonePe</span><span>paytm</span><span>navi</span>
+  </div>
+  <div id="qrcode"></div>
+  <div class="upi-name">Nitesh Kumar</div>
+  <div class="upi-id">UPI ID : niteshai64910@nyes</div>
+  <div class="payment-amount">₹<span id="payAmount">0</span></div>
+ </div>
+ <button class="btn full" onclick="payWithUPI()">UPI ऐप से भुगतान करें</button>
+ <button class="btn full secondary" onclick="copyUPI()">UPI ID कॉपी करें</button>
+ <p class="muted" style="margin-top:12px">पेमेंट करने के बाद Transaction ID दर्ज करें। भुगतान की पुष्टि बैंक रिकॉर्ड से की जाएगी।</p>
+ <div class="field"><label>UPI Transaction ID</label><input id="transactionId" maxlength="100" placeholder="Transaction ID"></div>
+ <button class="btn full" onclick="confirmPaymentRequest()">भुगतान जानकारी जमा करें</button>
+</section>
+
+<section class="panel hidden" id="successPage">
+ <h2>आपका ऑर्डर दर्ज हो गया</h2>
+ <p id="successText"></p>
+ <button class="btn full" onclick="showPage('shop')">खरीदारी जारी रखें</button>
+</section>
+
+<section class="panel hidden" id="ordersPage">
+ <h2>मेरे ऑर्डर</h2>
+ <div id="myOrders">ऑर्डर देखने के लिए लॉगिन करें।</div>
+</section>
+
+<section class="panel hidden" id="adminPage">
+ <h2>एडमिन डैशबोर्ड</h2>
+ <p id="adminMessage">एडमिन अधिकार जाँचे जा रहे हैं...</p>
+ <div id="adminContent" class="hidden">
+  <div class="adminbar">
+   <button onclick="loadAdminOrders()">ऑर्डर देखें</button>
+   <button onclick="showAdminProducts()">प्रोडक्ट जोड़ें</button>
+  </div>
+  <div id="adminOrders"></div>
+  <div id="adminProducts" class="hidden">
+   <h3>नया प्रोडक्ट</h3>
+   <form id="productForm">
+    <div class="field"><label>नाम</label><input id="newName" required></div>
+    <div class="field"><label>कीमत</label><input id="newPrice" type="number" min="1" required></div>
+    <div class="field"><label>यूनिट</label><input id="newUnit" value="किलो" required></div>
+    <div class="field"><label>कैटेगरी</label><input id="newCategory" required></div>
+    <div class="field"><label>फोटो HTTPS लिंक</label><input id="newImage" type="url" required></div>
+    <div class="field"><label>स्टॉक</label><input id="newStock" type="number" min="0" value="100" required></div>
+    <button class="btn full" type="submit">प्रोडक्ट सेव करें</button>
+   </form>
+   <div id="adminProductList"></div>
+  </div>
+ </div>
+</section>
+</main>
+
+<div class="bottom">
+ <b>कार्ट ₹<span id="bottomTotal">0</span></b>
+ <button onclick="showPage('cart')">कार्ट देखें</button>
+</div>
+
+<footer id="contact">
+ <h3>किसान अनाज बाजार</h3>
+ <p>ग्राहक सहायता: 7042894282</p>
+ <p>ताजा सामान, उचित दाम</p>
+ <p>© किसान अनाज बाजार</p>
+</footer>
+
+<script type="module">
+import {initializeApp} from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
+import {getAuth,onAuthStateChanged,createUserWithEmailAndPassword,signInWithEmailAndPassword,signOut} from "https://www.gstatic.com/firebasejs/11.6.0/firebase-auth.js";
+import {getFirestore,collection,doc,getDocs,addDoc,updateDoc,query,where,serverTimestamp} from "https://www.gstatic.com/firebasejs/11.6.0/firebase-firestore.js";
+
+/* Firebase Console से अपनी असली जानकारी यहाँ डालें */
+const firebaseConfig={
+ apiKey:"YOUR_API_KEY",
+ authDomain:"YOUR_PROJECT.firebaseapp.com",
+ projectId:"YOUR_PROJECT_ID",
+ storageBucket:"YOUR_PROJECT.firebasestorage.app",
+ messagingSenderId:"YOUR_SENDER_ID",
+ appId:"YOUR_APP_ID"
+};
+
+/* आपकी नई UPI जानकारी */
+const UPI_ID="niteshai64910@nyes";
+const UPI_NAME="Nitesh Kumar";
+
+const app=initializeApp(firebaseConfig);
+const auth=getAuth(app);
+const db=getFirestore(app);
+
+let user=null;
+let isAdmin=false;
+let products=[];
+let cart=[];
+let currentOrderId=null;
+let pendingOrder=null;
+let currentUpiLink="";
+let category="सभी";
+
+const $=id=>document.getElementById(id);
+const money=n=>Number(n||0).toLocaleString("en-IN");
+const clean=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const categories=["सभी","अनाज","चावल","दाल","मसाले","सब्जियां","तेल","आटा","अन्य"];
+
+const starter=[
+ {name:"बासमती चावल",price:90,unit:"किलो",category:"चावल",image:"https://images.unsplash.com/photo-1586201375761-83865001e31c?w=500",stock:100},
+ {name:"साधारण चावल",price:45,unit:"किलो",category:"चावल",image:"https://images.unsplash.com/photo-1516684732162-798a0062be99?w=500",stock:100},
+ {name:"गेहूं",price:30,unit:"किलो",category:"अनाज",image:"https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?w=500",stock:100},
+ {name:"मूंग दाल",price:110,unit:"किलो",category:"दाल",image:"https://images.unsplash.com/photo-1515543904379-3d757afe72e4?w=500",stock:100},
+ {name:"मसूर दाल",price:95,unit:"किलो",category:"दाल",image:"https://images.unsplash.com/photo-1515543904379-3d757afe72e4?w=500",stock:100},
+ {name:"चना दाल",price:85,unit:"किलो",category:"दाल",image:"https://images.unsplash.com/photo-1515543904379-3d757afe72e4?w=500",stock:100},
+ {name:"अरहर दाल",price:125,unit:"किलो",category:"दाल",image:"https://images.unsplash.com/photo-1515543904379-3d757afe72e4?w=500",stock:100},
+ {name:"उड़द दाल",price:115,unit:"किलो",category:"दाल",image:"https://images.unsplash.com/photo-1515543904379-3d757afe72e4?w=500",stock:100},
+ {name:"मक्का",price:28,unit:"किलो",category:"अनाज",image:"https://images.unsplash.com/photo-1551754655-cd27e38d2076?w=500",stock:100},
+ {name:"गेहूं का आटा",price:35,unit:"किलो",category:"आटा",image:"https://images.unsplash.com/photo-1509440159596-0249088772ff?w=500",stock:100},
+ {name:"हल्दी",price:70,unit:"किलो",category:"मसाले",image:"https://images.unsplash.com/photo-1615485500704-8e990f9900f5?w=500",stock:100},
+ {name:"लाल मिर्च",price:140,unit:"किलो",category:"मसाले",image:"https://images.unsplash.com/photo-1596040033229-a9821ebd058d?w=500",stock:100},
+ {name:"आलू",price:25,unit:"किलो",category:"सब्जियां",image:"https://images.unsplash.com/photo-1518977676601-b53f82aba655?w=500",stock:100},
+ {name:"प्याज",price:30,unit:"किलो",category:"सब्जियां",image:"https://images.unsplash.com/photo-1508747703725-719777637510?w=500",stock:100}
+];
+
+function notice(msg){alert(msg)}
+
+window.showPage=function(page){
+ ["accountPage","cartPage","checkoutPage","paymentPage","successPage","ordersPage","adminPage"].forEach(id=>$(id).classList.add("hidden"));
+ const map={account:"accountPage",cart:"cartPage",checkout:"checkoutPage",payment:"paymentPage",success:"successPage",orders:"ordersPage",admin:"adminPage"};
+ if(page==="shop"){$("products").scrollIntoView({behavior:"smooth"});return;}
+ if(map[page])$(map[page]).classList.remove("hidden");
+ if(page==="cart")renderCart();
+ if(page==="orders")loadMyOrders();
+ if(page==="admin")checkAdmin();
+ window.scrollTo({top:0,behavior:"smooth"});
+};
+
+function renderCategories(){
+ $("categoryList").innerHTML=categories.map(c=>`
+ <div class="cat ${category===c?"active":""}" data-cat="${clean(c)}">
+ <div style="font-size:25px;margin-bottom:6px">${c==="सभी"?"▦":c==="अनाज"?"🌾":c==="चावल"?"🍚":c==="दाल"?"🥣":c==="मसाले"?"🌶️":c==="सब्जियां"?"🥬":"🛒"}</div>${clean(c)}</div>`).join("");
+ $("categoryList").querySelectorAll("[data-cat]").forEach(b=>b.onclick=()=>{category=b.dataset.cat;renderCategories();renderProducts();});
+}
+
+window.renderProducts=function(){
+ const q=$("search").value.trim().toLowerCase();
+ let list=products.filter(p=>p.active!==false&&(category==="सभी"||p.category===category)&&p.name.toLowerCase().includes(q));
+ const sort=$("sort").value;
+ if(sort==="low")list.sort((a,b)=>a.price-b.price);
+ if(sort==="high")list.sort((a,b)=>b.price-a.price);
+ if(sort==="name")list.sort((a,b)=>a.name.localeCompare(b.name,"hi"));
+ $("productList").innerHTML=list.length?list.map(p=>`
+ <article class="product">
+ <img src="${clean(p.image)}" alt="${clean(p.name)}" loading="lazy">
+ <div class="info">
+ <h3>${clean(p.name)}</h3>
+ <div class="price">₹${money(p.price)} / ${clean(p.unit)}</div>
+ <div class="muted">${clean(p.category)} · स्टॉक ${money(p.stock)}</div>
+ <button class="btn add" ${Number(p.stock)<=0?"disabled":""} data-add="${clean(p.id)}">कार्ट में जोड़ें</button>
+ </div></article>`).join(""):"<p>कोई प्रोडक्ट नहीं मिला।</p>";
+ $("productList").querySelectorAll("[data-add]").forEach(b=>b.onclick=()=>addCart(b.dataset.add));
+};
+
+async function loadProducts(){
+ try{
+  const snap=await getDocs(collection(db,"products"));
+  products=snap.docs.map(d=>({id:d.id,...d.data()}));
+  if(!products.length)products=starter.map((p,i)=>({...p,id:"starter-"+i}));
+ }catch(e){
+  console.error(e);
+  products=starter.map((p,i)=>({...p,id:"starter-"+i}));
+ }
+ renderProducts();
+}
+
+function addCart(id){
+ const p=products.find(x=>x.id===id);
+ if(!p)return;
+ if(p.id.startsWith("starter-"))return notice("यह शुरुआती प्रोडक्ट है। असली ऑर्डर के लिए एडमिन को Firebase में प्रोडक्ट जोड़ना होगा।");
+ if(Number(p.stock)<=0)return notice("यह सामान अभी उपलब्ध नहीं है।");
+ const item=cart.find(x=>x.id===id);
+ if(item)item.qty++;
+ else cart.push({...p,qty:1});
+ updateCart();
+ notice("सामान कार्ट में जुड़ गया।");
+}
+
+function updateCart(){
+ const count=cart.reduce((s,p)=>s+p.qty,0);
+ const total=cart.reduce((s,p)=>s+p.price*p.qty,0);
+ $("cartCount").textContent=count;
+ $("cartTotal").textContent=money(total);
+ $("bottomTotal").textContent=money(total);
+ $("checkoutTotal").textContent=money(total);
+}
+
+function renderCart(){
+ $("cartItems").innerHTML=cart.length?cart.map(p=>`
+ <div class="item">
+ <div><b>${clean(p.name)}</b><div class="muted">₹${money(p.price)} / ${clean(p.unit)}</div>
+ <div class="qty"><button data-minus="${clean(p.id)}">−</button><b>${p.qty}</b><button data-plus="${clean(p.id)}">+</button></div></div>
+ <b>₹${money(p.price*p.qty)}</b></div>`).join(""):"आपका कार्ट खाली है।";
+ $("cartItems").querySelectorAll("[data-minus]").forEach(b=>b.onclick=()=>changeQty(b.dataset.minus,-1));
+ $("cartItems").querySelectorAll("[data-plus]").forEach(b=>b.onclick=()=>changeQty(b.dataset.plus,1));
+ updateCart();
+}
+
+function changeQty(id,n){
+ const p=cart.find(x=>x.id===id);
+ if(!p)return;
+ p.qty+=n;
+ if(p.qty<=0)cart=cart.filter(x=>x.id!==id);
+ updateCart();renderCart();
+}
+
+window.goCheckout=function(){
+ if(!cart.length)return notice("कार्ट खाली है।");
+ if(!user){notice("ऑर्डर करने के लिए पहले लॉगिन करें।");showPage("account");return;}
+ if(cart.some(p=>p.id.startsWith("starter-")))return notice("एडमिन को पहले वास्तविक प्रोडक्ट Firebase में जोड़ना होगा।");
+ showPage("checkout");
+};
+
+window.register=async function(){
+ try{
+  await createUserWithEmailAndPassword(auth,$("email").value.trim(),$("password").value);
+  notice("अकाउंट बन गया।");
+ }catch(e){notice(e.message);}
+};
+
+window.login=async function(){
+ try{
+  await signInWithEmailAndPassword(auth,$("email").value.trim(),$("password").value);
+  notice("लॉगिन सफल।");
+ }catch(e){notice(e.message);}
+};
+
+window.logout=async function(){await signOut(auth);notice("लॉगआउट हो गया।");};
+
+onAuthStateChanged(auth,async u=>{
+ user=u;
+ $("loginBox").classList.toggle("hidden",!!u);
+ $("userBox").classList.toggle("hidden",!u);
+ $("userEmail").textContent=u?u.email:"";
+ if(u){
+  const token=await u.getIdTokenResult(true);
+  isAdmin=token.claims.admin===true;
+ }else isAdmin=false;
+});
+
+$("checkoutForm").addEventListener("submit",async e=>{
+ e.preventDefault();
+ if(!user)return notice("पहले लॉगिन करें।");
+ if(!cart.length)return notice("कार्ट खाली है।");
+ const phone=$("custPhone").value.trim();
+ if(!/^[6-9][0-9]{9}$/.test(phone))return notice("सही 10 अंकों का मोबाइल नंबर डालें।");
+ if(cart.some(p=>p.id.startsWith("starter-")))return notice("शुरुआती प्रोडक्ट का ऑर्डर नहीं किया जा सकता।");
+
+ pendingOrder={
+  uid:user.uid,
+  email:user.email,
+  customerName:$("custName").value.trim(),
+  phone,
+  address:$("custAddress").value.trim(),
+  paymentMethod:$("paymentMethod").value,
+  paymentStatus:"PENDING",
+  status:"नया ऑर्डर",
+  items:cart.map(p=>({productId:p.id,name:p.name,price:Number(p.price),qty:p.qty,unit:p.unit})),
+  total:cart.reduce((s,p)=>s+p.price*p.qty,0),
+  createdAt:serverTimestamp()
+ };
+
+ try{
+  const ref=await addDoc(collection(db,"orders"),pendingOrder);
+  currentOrderId=ref.id;
+  if(pendingOrder.paymentMethod==="UPI"){
+   showPayment();
+  }else{
+   finishOrder(ref.id,"कैश ऑन डिलीवरी ऑर्डर दर्ज हुआ।");
+  }
+ }catch(err){notice("ऑर्डर सेव नहीं हुआ: "+err.message);}
+});
+
+function showPayment(){
+ showPage("payment");
+ $("payAmount").textContent=money(pendingOrder.total);
+ const params=new URLSearchParams({
+  pa:UPI_ID,
+  pn:UPI_NAME,
+  am:pendingOrder.total.toFixed(2),
+  cu:"INR",
+  tn:"Kisan Anaj Bazar Order "+currentOrderId
+ });
+ currentUpiLink="upi://pay?"+params.toString();
+ $("qrcode").innerHTML="";
+ if(window.QRCode){
+  new QRCode($("qrcode"),{
+   text:currentUpiLink,
+   width:260,
+   height:260,
+   colorDark:"#000000",
+   colorLight:"#ffffff",
+   correctLevel:QRCode.CorrectLevel.H
+  });
+ }else{
+  $("qrcode").textContent="QR कोड लोड नहीं हुआ। UPI ऐप बटन इस्तेमाल करें।";
+ }
+}
+
+window.payWithUPI=function(){
+ if(!currentUpiLink)return notice("पहले ऑर्डर बनाएं।");
+ window.location.href=currentUpiLink;
+};
+
+window.copyUPI=async function(){
+ try{
+  await navigator.clipboard.writeText(UPI_ID);
+  notice("UPI ID कॉपी हो गई।");
+ }catch(e){notice("UPI ID: "+UPI_ID);}
+};
+
+window.confirmPaymentRequest=async function(){
+ if(!currentOrderId)return;
+ const txn=$("transactionId").value.trim();
+ if(txn.length<6)return notice("Transaction ID दर्ज करें।");
+ try{
+  await updateDoc(doc(db,"orders",currentOrderId),{
+   transactionId:txn,
+   paymentStatus:"VERIFY_REQUIRED"
+  });
+  finishOrder(currentOrderId,"आपकी भुगतान जानकारी जमा हो गई है। बैंक रिकॉर्ड से पुष्टि होने तक भुगतान लंबित रहेगा।");
+ }catch(e){notice("जानकारी सेव नहीं हुई: "+e.message);}
+};
+
+function finishOrder(id,message){
+ cart=[];
+ updateCart();
+ $("checkoutForm").reset();
+ showPage("success");
+ $("successText").textContent=message+" ऑर्डर नंबर: "+id;
+}
+
+window.loadMyOrders=async function(){
+ if(!user){$("myOrders").textContent="ऑर्डर देखने के लिए लॉगिन करें।";return;}
+ $("myOrders").textContent="लोड हो रहा है...";
+ try{
+  const q=query(collection(db,"orders"),where("uid","==",user.uid));
+  const snap=await getDocs(q);
+  const list=snap.docs.map(d=>({id:d.id,...d.data()}));
+  $("myOrders").innerHTML=list.length?list.map(o=>`
+  <div class="order"><b>ऑर्डर ${clean(o.id)}</b><br>
+  कुल: ₹${money(o.total)}<br>
+  पेमेंट: ${clean(o.paymentMethod)} / ${clean(o.paymentStatus)}<br>
+  स्थिति: <span class="badge">${clean(o.status)}</span><br>
+  ${o.items.map(i=>clean(i.name)+" × "+i.qty).join("<br>")}
+  </div>`).join(""):"अभी कोई ऑर्डर नहीं है।";
+ }catch(e){$("myOrders").textContent=e.message;}
+};
+
+window.checkAdmin=async function(){
+ if(!user){$("adminMessage").textContent="एडमिन पैनल के लिए लॉगिन करें।";return;}
+ const token=await user.getIdTokenResult(true);
+ isAdmin=token.claims.admin===true;
+ $("adminMessage").textContent=isAdmin?"एडमिन लॉगिन सफल।":"आपके अकाउंट में एडमिन अधिकार नहीं हैं।";
+ $("adminContent").classList.toggle("hidden",!isAdmin);
+ if(isAdmin)loadAdminOrders();
+};
+
+window.loadAdminOrders=async function(){
+ if(!isAdmin)return;
+ $("adminProducts").classList.add("hidden");
+ $("adminOrders").classList.remove("hidden");
+ $("adminOrders").textContent="ऑर्डर लोड हो रहे हैं...";
+ try{
+  const snap=await getDocs(collection(db,"orders"));
+  const list=snap.docs.map(d=>({id:d.id,...d.data()}));
+  $("adminOrders").innerHTML=list.length?list.map(o=>`
+  <div class="order">
+  <b>ऑर्डर ${clean(o.id)}</b><br>
+  ग्राहक: ${clean(o.customerName)}<br>
+  मोबाइल: ${clean(o.phone)}<br>
+  पता: ${clean(o.address)}<br>
+  कुल: ₹${money(o.total)}<br>
+  भुगतान: ${clean(o.paymentMethod)} / ${clean(o.paymentStatus)}<br>
+  Transaction ID: ${clean(o.transactionId||"नहीं दिया")}<br>
+  स्थिति: ${clean(o.status)}
+  <div class="adminbar">
+   <button data-status="${o.id}|स्वीकृत">स्वीकृत</button>
+   <button data-status="${o.id}|डिलीवर">डिलीवर</button>
+   <button data-status="${o.id}|रद्द">रद्द</button>
+   <button data-paid="${o.id}">भुगतान सत्यापित</button>
+  </div></div>`).join(""):"कोई ऑर्डर नहीं।";
+
+  $("adminOrders").querySelectorAll("[data-status]").forEach(b=>b.onclick=async()=>{
+   const [id,status]=b.dataset.status.split("|");
+   await updateDoc(doc(db,"orders",id),{status});
+   loadAdminOrders();
+  });
+
+  $("adminOrders").querySelectorAll("[data-paid]").forEach(b=>b.onclick=async()=>{
+   if(!confirm("क्या बैंक रिकॉर्ड से भुगतान की पुष्टि कर ली है?"))return;
+   await updateDoc(doc(db,"orders",b.dataset.paid),{paymentStatus:"PAID_VERIFIED"});
+   loadAdminOrders();
+  });
+ }catch(e){$("adminOrders").textContent=e.message;}
+};
+
+window.showAdminProducts=function(){
+ if(!isAdmin)return;
+ $("adminOrders").classList.add("hidden");
+ $("adminProducts").classList.remove("hidden");
+ loadAdminProducts();
+};
+
+$("productForm").addEventListener("submit",async e=>{
+ e.preventDefault();
+ if(!isAdmin)return notice("एडमिन अधिकार जरूरी हैं।");
+ const image=$("newImage").value.trim();
+ if(!image.startsWith("https://"))return notice("फोटो का HTTPS लिंक जरूरी है।");
+ try{
+  await addDoc(collection(db,"products"),{
+   name:$("newName").value.trim(),
+   price:Number($("newPrice").value),
+   unit:$("newUnit").value.trim(),
+   category:$("newCategory").value.trim(),
+   image,
+   stock:Number($("newStock").value),
+   active:true,
+   createdAt:serverTimestamp()
+  });
+  notice("प्रोडक्ट सेव हो गया।");
+  $("productForm").reset();
+  await loadProducts();
+  loadAdminProducts();
+ }catch(e){notice("प्रोडक्ट सेव नहीं हुआ: "+e.message);}
+});
+
+async function loadAdminProducts(){
+ if(!isAdmin)return;
+ const snap=await getDocs(collection(db,"products"));
+ const list=snap.docs.map(d=>({id:d.id,...d.data()}));
+ $("adminProductList").innerHTML=list.map(p=>`
+ <div class="order"><b>${clean(p.name)}</b> — ₹${money(p.price)} / ${clean(p.unit)}
+ <button class="btn danger" data-delete="${p.id}">हटाएं</button></div>`).join("");
+ $("adminProductList").querySelectorAll("[data-delete]").forEach(b=>b.onclick=async()=>{
+  if(!confirm("क्या यह प्रोडक्ट हटाना है?"))return;
+  await updateDoc(doc(db,"products",b.dataset.delete),{active:false});
+  await loadProducts();
+  loadAdminProducts();
+ });
+}
+
+renderCategories();
+loadProducts();
+updateCart();
+</script>
+</body>
+</html>
